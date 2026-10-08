@@ -1,0 +1,17 @@
+{
+  "$comment": "Fragment a fusionner dans opencode.json du projet : autorise le Build a invoquer les 6 subagents via Task.",
+  "agent": {
+    "build": {
+      "permission": {
+        "task": {
+          "specs": "allow",
+          "doc": "allow",
+          "architect": "allow",
+          "test": "allow",
+          "dev": "allow",
+          "review": "allow"
+        }
+      }
+    }
+  }
+}
