@@ -1,0 +1,3 @@
+# Specs officielles
+
+> Déposer ici l'extraction **texte** du document de specs (jamais le PDF source).
