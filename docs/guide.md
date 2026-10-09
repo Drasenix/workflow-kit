@@ -21,17 +21,17 @@ La promesse : la logique de travail est écrite **une fois**, dans le kit, et se
 
 ## 2. Architecture & notion d'agnostisme
 
-### 2.1 Les trois couches
+### 2.1 Les couches
 
-Le kit sépare trois choses qui ne doivent jamais se mélanger :
+Le kit sépare des choses qui ne doivent jamais se mélanger :
 
 ```
 workflow-kit/                    (dépôt git IMBRIQUÉ, ignoré par le projet)
-├─ core/          → monté en LIEN sur  <projet>/.opencode   (AGNOSTIQUE : techno + projet)
-├─ packs/<stack>/ → copié dans        <projet>/.agents/     (TECHNO : Laravel, React…)
-├─ project/       → copié dans        <projet>/.agents/     (GÉNÉRIQUE : glossaire, specs)
-├─ scripts/       → installation (init / bootstrap)
-├─ tools/         → audit (verify-kit)
+├─ core/          → lu EN DIRECT   à <projet>/workflow-kit/core/   (AGNOSTIQUE : techno + projet + outil IA)
+├─ adapters/      → génèrent       <projet>/.opencode/ et/ou <projet>/.claude/  (un adaptateur par outil IA)
+├─ packs/<stack>/ → copié dans     <projet>/.agents/     (TECHNO : Laravel, React…)
+├─ project/       → copié dans     <projet>/.agents/     (GÉNÉRIQUE : glossaire, specs)
+├─ bin/ lib/      → outillage Node : `workflow-kit init | sync | verify`
 └─ docs/          → documentation du kit (ce fichier, mise-a-jour.md)
 ```
 
@@ -39,35 +39,41 @@ Et côté projet consommateur :
 
 ```
 <projet>/
-├─ workflow-kit/            # le kit, gitignore par le projet
-├─ .opencode  ──► workflow-kit/core   # SYMLINK (Linux) / JUNCTION (Windows)
+├─ workflow-kit/            # le kit, gitignoré par le projet ; son core/ est lu en direct
+├─ .opencode/               # GÉNÉRÉ (runtime opencode), gitignoré : agents, commandes, skills
+├─ .claude/                 # runtime Claude Code : agents + skills GÉNÉRÉS (agents/* et skills/* gitignorés)
 ├─ .agents/                 # COMMITÉ : conventions, glossaire, specs, templates…
 ├─ AGENTS.md                # COMMITÉ
-└─ opencode.json            # COMMITÉ : permissions subagents + instructions
+├─ CLAUDE.md                # COMMITÉ : un bloc géré par le kit (runtime claude)
+└─ opencode.json            # COMMITÉ : permissions subagents + instructions (runtime opencode)
 ```
+
+Le projet choisit son runtime à l'installation : `opencode`, `claude`, ou `both`.
 
 ### 2.2 Ce que veut dire « agnostique »
 
-- **`core/` ne connaît ni la techno ni le métier.** Il parle de **rôles génériques** : « le fichier de conventions », « la stack », « le spec officiel ». Il référence des **noms de fichiers fixes** (interface stable : `conventions.md`, `architecture.md`, `stack.md`…) mais jamais leur contenu. Chaque projet les remplit à sa façon.
+- **`core/` ne connaît ni la techno, ni le métier, ni l'outil IA.** Il parle de **rôles génériques** : « le fichier de conventions », « la stack », « le spec officiel », « l'outil de délégation de sous-agent ». Il référence des **noms de fichiers fixes** (interface stable : `conventions.md`, `architecture.md`, `stack.md`…) mais jamais leur contenu. Chaque projet les remplit à sa façon.
+- **Les agents sont écrits une seule fois**, dans un format neutre (`name`, `description`, `tools: {read: allow, shell: deny…}`). Chaque adaptateur les traduit dans le format de son outil.
 - **`packs/<stack>/` ne connaît que la techno, jamais le métier.** Le pack `laravel-livewire/` décrit Laravel/Livewire/PHPUnit, mais aucun nom d'entité métier.
 - **`project/` est générique à tout projet** : glossaire, spec, spec parallèle, `AGENTS.md`.
 
-> **Règle d'or :** le kit ne contient jamais de contenu propre à un projet, et un pack ne contient jamais de métier. Le `core/` est en plus agnostique de la techno.
+> **Règle d'or :** le kit ne contient jamais de contenu propre à un projet, et un pack ne contient jamais de métier. Le `core/` est en plus agnostique de la techno et de l'outil IA.
 
-### 2.3 Le modèle « kit imbriqué + lien »
+### 2.3 Le modèle « kit imbriqué + adaptateurs »
 
 - `workflow-kit/` est un **dépôt git imbriqué**, ignoré par le projet. On le met à jour avec `git -C workflow-kit …`.
-- `.opencode` est un **lien** vers `workflow-kit/core`. Conséquence : le contenu agnostique (index, agents, skills, commandes, templates) est **LIVE**. On édite `core/`, le projet suit — pas de copie à rafraîchir.
-- Le **projet ne commite que ce qui lui est propre** : `.agents/`, `AGENTS.md`, `opencode.json`, `.gitignore`. Rien d'agnostique.
+- Le **cœur** (index, règles du Build, workflow, templates) n'est ni copié ni lié : les textes le citent à `workflow-kit/core/…`, il est donc **LIVE**.
+- `.opencode/` et `.claude/` sont **générés** depuis `core/` par `workflow-kit sync` : un changement des agents, skills ou commandes demande de relancer `sync`.
+- Le **projet ne commite que ce qui lui est propre** : `.agents/`, `AGENTS.md`, `CLAUDE.md`, `opencode.json`, `.gitignore`. Rien d'agnostique.
 
 Contraste à retenir :
 
-| | `.opencode` | `.agents/` |
-|---|---|---|
-| Nature | lien → `workflow-kit/core` | copie matérialisée |
-| Contenu | agnostique | propre au projet |
-| Commitée ? | non (gitignore) | oui |
-| Mise à jour | live (pull du kit) | relancer le script si le seed change |
+| | `workflow-kit/core/` | `.opencode/`, `.claude/` | `.agents/` |
+|---|---|---|---|
+| Nature | cœur lu en direct | fichiers générés | copie matérialisée |
+| Contenu | agnostique | agnostique, au format de l'outil | propre au projet |
+| Commité ? | non (le kit est gitignoré) | non (gitignore) | oui |
+| Mise à jour | live (pull du kit) | relancer `sync` | relancer `sync` si le seed change |
 
 ---
 
@@ -75,33 +81,41 @@ Contraste à retenir :
 
 ### 3.1 Point d'entrée
 
-- **Nouveau projet** : `scripts/init.ps1` (interactif si les paramètres manquent).
-- **Matérialisation seule** (mise à jour des seeds) : `scripts/bootstrap.ps1` (Windows) ou `scripts/bootstrap.sh` (Linux/macOS).
+Une CLI Node (Node ≥ 18, aucune dépendance), `workflow-kit/bin/workflow-kit.mjs` :
+
+- **Nouveau projet** : `init` (interactif si les options manquent).
+- **Mise à jour des seeds et régénération des adaptateurs** : `sync`.
+- **Audit du kit** : `verify`.
 
 Exemple :
 
-```powershell
-./scripts/init.ps1 -Target C:\www\mon-projet -Stack laravel-livewire -Name mon-projet -KitRepo http://gogs.../workflow-kit.git
+```bash
+node workflow-kit/bin/workflow-kit.mjs init --target C:\www\mon-projet --stack laravel-livewire --name mon-projet --runtime both --kit-repo http://gogs.../workflow-kit.git
 ```
+
+Si le kit n'est pas encore dans le projet, lancer la commande depuis une copie du kit ; `init` le place dans `<projet>/workflow-kit/`.
 
 ### 3.2 Ce que fait l'installation, dans l'ordre
 
-1. **Clone le kit** dans `<projet>/workflow-kit/` (sinon copie locale sans `.git`), et l'ajoute au `.gitignore` du projet avec `.opencode/`.
-2. **Crée le lien** `.opencode` → `workflow-kit/core` (junction Windows / symlink Linux).
-3. **Matérialise les seeds** : `packs/<stack>/agents/**` + `project/agents/**` → `.agents/`, et `project/AGENTS.md` → `AGENTS.md`.
-4. **Fusionne `opencode.json`** : ajoute les permissions `agent.build.permission.task` (autorise le Build à invoquer les 6 subagents) et `instructions: [".agents/workflow-commands.md"]` (commandes techno toujours en contexte). Le reste (`plugin`, `mcp`) est préservé.
-5. **Crée `.agents/feature/`** et affiche la checklist post-installation.
+1. **Place le kit** dans `<projet>/workflow-kit/` (clone, sinon copie locale sans `.git`) et enregistre la stack et les runtimes dans `workflow.config.json`.
+2. **Matérialise les seeds** : `packs/<stack>/agents/**` + `project/agents/**` → `.agents/`, et `project/AGENTS.md` → `AGENTS.md`.
+3. **Génère les adaptateurs** demandés :
+   - `opencode` : `.opencode/{agents,command,skills}` et fusion de `opencode.json` (permissions `agent.build.permission.task` pour les 6 subagents, `instructions: [".agents/workflow-commands.md"]`). Le reste (`plugin`, `mcp`) est préservé.
+   - `claude` : `.claude/{agents,skills}` et un bloc géré dans `CLAUDE.md` (imports `@AGENTS.md` et `@.agents/workflow-commands.md`). Le reste de `CLAUDE.md` n'est jamais touché.
+4. **Complète le `.gitignore`** : `workflow-kit/`, `.opencode`, et pour Claude `.claude/agents/*` et `.claude/skills/*` (le reste de `.claude/`, par ex. `settings.json`, n'est pas ignoré ; pour versionner un agent ou une skill à toi, ajoute une exception `!.claude/skills/ma-skill/`).
+5. **Réécrit les anciens chemins** `.opencode/…` et `.workflow/…` cités dans `.agents/**.md` et `AGENTS.md` (voir `docs/mise-a-jour.md`, « Migration »).
+6. **Crée `.agents/feature/`** et affiche la checklist post-installation.
 
 ### 3.3 Sécurité d'écrasement
 
 | Zone | Emplacement | Si la cible existe déjà |
 |---|---|---|
-| **Agnostique** | `.opencode` (lien vers `workflow-kit/core`) | live, jamais copié |
+| **Agnostique** | `workflow-kit/core/` (lu en direct), `.opencode/` et `.claude/` (générés) | rien à écraser / régénéré à chaque `sync` |
 | **Projet** | `.agents/**`, `AGENTS.md` | **jamais écrasé** : la version du kit part en quarantaine dans `.agents/doublons/` |
 
-- `-Force` (ou `-OnConflict Overwrite`) écrase aussi les fichiers projet.
+- `--force` (ou `--on-conflict overwrite`) écrase aussi les fichiers projet.
 - `.agents/doublons/` reste visible dans `git status` (à traiter à la main, puis supprimer).
-- `CLAUDE.md` n'est **jamais** une cible.
+- `CLAUDE.md` : seul le bloc entre les marqueurs `<!-- workflow-kit:start -->` et `<!-- workflow-kit:end -->` est géré par le kit. Si `CLAUDE.md` est un lien (par ex. vers `AGENTS.md`), le kit n'y écrit pas.
 
 ### 3.4 Après l'installation (manuel)
 
@@ -111,13 +125,14 @@ Exemple :
 
 ### 3.5 Mise à jour du kit
 
-```powershell
+```bash
 git -C workflow-kit fetch
 git -C workflow-kit pull
+node workflow-kit/bin/workflow-kit.mjs sync
 ```
 
-- `core/` a bougé → rien à faire côté fichiers, mais repartir sur une **nouvelle session opencode** (config, agents, skills et commandes sont lus au démarrage).
-- `packs/`, `project/` ou `opencode.agent.json` ont bougé → relancer `bootstrap.ps1`.
+- `core/` a bougé → le cœur est déjà à jour (lu en direct) ; lancer `sync` pour régénérer `.opencode/` et `.claude/`, puis repartir sur une **nouvelle session** de l'outil (config, agents, skills et commandes sont lus au démarrage).
+- `packs/` ou `project/` ont bougé → `sync` aussi.
 
 Détails, nuances et pièges : `docs/mise-a-jour.md`.
 
@@ -125,7 +140,7 @@ Détails, nuances et pièges : `docs/mise-a-jour.md`.
 
 ## 4. Le workflow d'une feature (étapes 0→7)
 
-Orchestré par l'agent **Build** (agent principal), qui délègue chaque étape à un **subagent** via le tool `Task`.
+Orchestré par l'agent **Build** (agent principal), qui délègue chaque étape à un **subagent** via l'outil de délégation (`Task` sous opencode, `Agent` sous Claude Code).
 
 | # | Étape | Agent | Livrable | Pause |
 |---|---|---|---|---|
@@ -164,7 +179,7 @@ Ils ne s'invoquent **pas** entre eux : seul le Build orchestre. L'utilisateur pe
 
 Chargées **à la demande** (via leur `description`), jamais systématiquement. Chaque skill est **invocable directement par l'utilisateur** : en la nommant en langage naturel, ou via sa **slash-commande** `/nom` (voir § 4.4).
 
-- `consult-workflow` — pilote le lazy-loading de `.opencode`. → `/consult-workflow`
+- `consult-workflow` — pilote le lazy-loading du workflow. → `/consult-workflow`
 - `cadrage-po` — patron PO amont (SPECS / BACKLOG / FICHE-REUNION). → `/cadrage-po`
 - `analyse-flashback` — analyse du code à une date passée via tags prod. → `/analyse-flashback`
 - `doc` — questions métier, réponse sourcée en 2 blocs. → `/doc`
@@ -196,23 +211,23 @@ Fichiers-mémoire :
 
 ## 5. Les skills expliquées, avec exemples
 
-### 5.1 `consult-workflow` — lazy-loading de `.opencode`
+### 5.1 `consult-workflow` — lazy-loading du workflow
 
 **But** : conserver la conscience projet sans tout charger (l'ancienne règle « lire tout le dossier » coûtait cher en contexte).
 
-**Déclencheur** : « consulte .opencode », « va voir dans .opencode », « lis .opencode », ou « je commence [feature] ».
+**Déclencheur** : « consulte le workflow », « charge le workflow », ou « je commence [feature] ».
 
 **Ce qu'il charge toujours** (4 fichiers) :
-1. `.opencode/index.md` — la carte de routage (qui lit quoi, quand) ;
-2. `.opencode/agent-workflow.md` — les étapes, pauses, jalons ;
-3. `.opencode/agent-opencode.md` — les règles du Build ;
+1. `workflow-kit/core/index.md` — la carte de routage (qui lit quoi, quand) ;
+2. `workflow-kit/core/agent-workflow.md` — les étapes, pauses, jalons ;
+3. `workflow-kit/core/agent-build.md` — les règles du Build ;
 4. `.agents/feature/<slug>.md` **actif** — l'état courant.
 
 **Ce qu'il charge conditionnellement** : début de feature → `templates-index.md` ; avant un run de test → `.agents/skills/tests/SKILL.md` ; sinon selon la table de `index.md` et l'étape **en cours**.
 
-**Ce qu'il ne charge JAMAIS** : les prompts `agents/*.md` (auto-injectés par `Task`), `ui-rules` / `component-rules`, `reference-utilitaires`, les `DONE-*`, les docs de chantier PO (`SPECS.md` / `BACKLOG.md` / `FICHE-REUNION.md`), les maquettes.
+**Ce qu'il ne charge JAMAIS** : les prompts `agents/*.md` (auto-injectés à la délégation), `ui-rules` / `component-rules`, `reference-utilitaires`, les `DONE-*`, les docs de chantier PO (`SPECS.md` / `BACKLOG.md` / `FICHE-REUNION.md`), les maquettes.
 
-**Exemple** : « consulte .opencode, je démarre la feature remboursement ». Le Build charge les 4 fichiers + `templates-index.md`, puis travaille sur l'étape **en cours** du tableau Progression — pas les étapes futures.
+**Exemple** : « consulte le workflow, je démarre la feature remboursement ». Le Build charge les 4 fichiers + `templates-index.md`, puis travaille sur l'étape **en cours** du tableau Progression — pas les étapes futures.
 
 ### 5.2 `cadrage-po` — cadrer un sujet métier avant de coder
 
@@ -297,12 +312,12 @@ Fichiers-mémoire :
 | Je veux… | Faire |
 |---|---|
 | Comprendre le kit | lire `README.md` puis ce guide |
-| Installer sur un nouveau projet | `scripts/init.ps1` |
-| Mettre à jour les seeds après un pull | `scripts/bootstrap.ps1` (-Mode Link) |
+| Installer sur un nouveau projet | `workflow-kit init` |
+| Mettre à jour les seeds après un pull | `workflow-kit sync` |
 | Comprendre ce qui se met à jour tout seul | `docs/mise-a-jour.md` |
 | Démarrer une feature | « je commence [feature] » ou `/consult-workflow` |
 | Cadrer un sujet métier (PO) | `/cadrage-po [sujet]` |
 | Diagnostiquer un ticket antidaté | `/analyse-flashback [date/domaine]` |
 | Poser une question métier | `/doc [question]` |
-| Auditer le kit (agnostisme, neutralité) | `tools/verify-kit.ps1` |
+| Auditer le kit (agnostisme, neutralité) | `workflow-kit verify` |
 | Créer un nouveau pack techno | copier `packs/_blank/`, remplir, voir `packs/_schema.md` |

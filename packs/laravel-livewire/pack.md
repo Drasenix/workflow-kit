@@ -1,7 +1,7 @@
 # Pack : laravel-livewire
 
 > Seeds **techno** pour une application Laravel 12 + Livewire 3 + PHPUnit + Tailwind/DaisyUI.
-> Le contenu de `agents/` est copié vers `.agents/` par `init.ps1` / `bootstrap.ps1`.
+> Le contenu de `agents/` est copié vers `.agents/` par `workflow-kit init` / `workflow-kit sync`.
 >
 > **Neutralité** : ce pack ne contient **aucune** donnée de projet (entité, structure, dépendance
 > optionnelle présentée comme acquise). Il décrit la **stack**, pas un métier. Les éléments

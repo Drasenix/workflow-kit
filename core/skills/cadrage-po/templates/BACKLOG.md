@@ -1,7 +1,7 @@
 # <Sujet> — Backlog dev
 
 > Roadmap ordonnée des lots de développement. **Specs métier** : `SPECS.md` (même dossier).
-> **Convention** : un lot = une feature exécutable `.agents/feature/<slug>.md`, créée depuis `.opencode/templates/feature.md` au démarrage du lot.
+> **Convention** : un lot = une feature exécutable `.agents/feature/<slug>.md`, créée depuis `workflow-kit/core/templates/feature.md` au démarrage du lot.
 >
 > Parcours : **<étape 1> → <étape 2> → <étape 3> → …**.
 

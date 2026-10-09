@@ -1,7 +1,7 @@
 # <Nom de la feature>
 
 > Date : YYYY-MM-DD
-> Taille : Standard | S *(validée par l'utilisateur — critères : `.opencode/agent-workflow.md`)*
+> Taille : Standard | S *(validée par l'utilisateur — critères : `workflow-kit/core/agent-workflow.md`)*
 
 ## Résumé métier
 

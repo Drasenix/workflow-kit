@@ -1,25 +1,13 @@
 ---
+name: architect
 description: Propose l'architecture (DTO, Service, Action, routes, composants) avec arbre indenté (prompt)
-mode: subagent
-permissions:
-  - action: read
-    resource: "*"
-    effect: allow
-  - action: edit
-    resource: "*"
-    effect: allow
-  - action: shell
-    resource: "*"
-    effect: deny
-  - action: glob
-    resource: "*"
-    effect: allow
-  - action: grep
-    resource: "*"
-    effect: allow
-  - action: webfetch
-    resource: "*"
-    effect: deny
+tools:
+  read: allow
+  edit: allow
+  shell: deny
+  glob: allow
+  grep: allow
+  webfetch: deny
 ---
 
 Tu es l'agent Architecture.

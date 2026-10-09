@@ -89,7 +89,7 @@ Build vérifie .agents/feature/<slug>.md → tableau ## Progression
 - **Concis** : 10-15 lignes max.
 - **Pas de code, pas de nom de fichier**.
 
-**Recette nuances (obligatoire, dans la même pause que le résumé).** Le Build relit la feature (Décisions, arbitrages, ADR, réponses aux questions, plan de refacto) et identifie les **règles métier validées, durables et hors spec officiel** (critères : `.opencode/agent-opencode.md#Spec parallèle (garde-fou)`). Il propose les entrées `SP-*` (ID, type `AMENDE`/`PRECISE`/`ETEND`, ancre officielle, règle, supersession éventuelle) dans `## Nuances consignées` de `.agents/feature/<slug>.md`, et les présente **en même temps** que le résumé métier.
+**Recette nuances (obligatoire, dans la même pause que le résumé).** Le Build relit la feature (Décisions, arbitrages, ADR, réponses aux questions, plan de refacto) et identifie les **règles métier validées, durables et hors spec officiel** (critères : `workflow-kit/core/agent-build.md#Spec parallèle (garde-fou)`). Il propose les entrées `SP-*` (ID, type `AMENDE`/`PRECISE`/`ETEND`, ancre officielle, règle, supersession éventuelle) dans `## Nuances consignées` de `.agents/feature/<slug>.md`, et les présente **en même temps** que le résumé métier.
 
 - Si la feature n'introduit ni n'amende aucune règle métier : `## Nuances consignées` porte `Aucune` (pas de pause supplémentaire).
 - **Pause utilisateur (fusionnée) :** le Build présente résumé **+** nuances. L'utilisateur valide, ajuste la formulation, ou refuse une entrée.
@@ -100,7 +100,7 @@ Build vérifie .agents/feature/<slug>.md → tableau ## Progression
 
 ## Dimensionnement de feature (S / Standard)
 
-Défini à la création de la feature, **validé par l'utilisateur** (jamais posé par la machine seule, cf. `.opencode/agent-opencode.md`, Gestion des features). Défaut : **Standard**. En cas de doute → Standard.
+Défini à la création de la feature, **validé par l'utilisateur** (jamais posé par la machine seule, cf. `workflow-kit/core/agent-build.md`, Gestion des features). Défaut : **Standard**. En cas de doute → Standard.
 
 ### Critères S (tous requis, sinon Standard)
 
@@ -125,7 +125,7 @@ Défini à la création de la feature, **validé par l'utilisateur** (jamais pos
 
 ## Orchestration par subagents
 
-Chaque étape est déléguée à un subagent spécifique (`.opencode/agents/`) :
+Chaque étape est déléguée à un subagent spécifique (`workflow-kit/core/agents/`) :
 
 - **`@specs`** : étapes 0-1 : lecture du fichier de specs (`.agents/specs/spec.txt`) + glossaire + questions specs sourcées + rédaction GWT baseline/évolution + edge cases sourcés
 - **`@test`** : étape 2 : traduction GWT → tests dans un **fichier unique** (`<Feature>Test.*`, nom de feature **sans identifiant de lot** ; méthodes d'après le comportement **sans identifiant de scénario** `B1`/`E1`), vérification baseline vert / évolution rouge
@@ -136,9 +136,9 @@ Chaque étape est déléguée à un subagent spécifique (`.opencode/agents/`) :
 
 L'agent principal (Build) :
 1. Consulte `.agents/templates-index.md` pour choisir les templates adaptés
-2. Crée `.agents/feature/<slug>.md` au début de la feature à partir de `.opencode/templates/feature.md`
+2. Crée `.agents/feature/<slug>.md` au début de la feature à partir de `workflow-kit/core/templates/feature.md`
 3. **Met à jour le tableau `## Progression`** : bascule l'étape en cours
-4. Invoque chaque subagent dans l'ordre via le `Task` tool
+4. Invoque chaque subagent dans l'ordre via l'outil de délégation (`Task` sous opencode, `Agent` sous Claude Code)
 5. **Après chaque étape** : met à jour le tableau `## Progression` dans `.agents/feature/<slug>.md`
    - Succès → `OK YYYY-MM-DD`
    - Étape déjà couverte / sautée → `sauté`
@@ -161,9 +161,9 @@ L'agent principal (Build) :
 - Le GWT dans `.agents/feature/<slug>.md` est la **source de vérité** du contrat. Le test en est une traduction 1:1.
 - Si `@review` (étape 5) détecte un problème, l'utilisateur peut demander un retour à l'étape 4 (ou autre).
 - Si `@review` (étape 5) produit un plan de refacto non vide → backtrack 4→5 (cf. « Refacto via backtrack 4→5 »).
-- Exécution des tests (TDD, fichier unique, global) : cf. `.opencode/agent-opencode.md` § « TDD » + § « Tests ».
-- **Primauté du spec parallèle** : cf. `.opencode/agent-opencode.md` § « Spec parallèle (garde-fou) » + § « Jalon 1→2 » ci-dessous.
-- **Aucune règle métier durable ne passe DONE sans être consignée** : cf. `.opencode/agent-opencode.md` § « Spec parallèle (garde-fou) » + § « Jalon 6→7 » ci-dessous.
+- Exécution des tests (TDD, fichier unique, global) : cf. `workflow-kit/core/agent-build.md` § « TDD » + § « Tests ».
+- **Primauté du spec parallèle** : cf. `workflow-kit/core/agent-build.md` § « Spec parallèle (garde-fou) » + § « Jalon 1→2 » ci-dessous.
+- **Aucune règle métier durable ne passe DONE sans être consignée** : cf. `workflow-kit/core/agent-build.md` § « Spec parallèle (garde-fou) » + § « Jalon 6→7 » ci-dessous.
 
 ## Pauses & anti-chaînage
 
@@ -177,7 +177,7 @@ L'agent principal (Build) :
 
 **Ne JAMAIS enchaîner deux étapes à décision sémantique dans le même tour.** Les seuls enchaînements autorisés sont les auto-gates (2→3 et 4→5) quand le jalon correspondant est OK.
 
-- Une étape = un subagent invoqué via le `Task` tool
+- Une étape = un subagent invoqué via l'outil de délégation (`Task` / `Agent`)
 - Les étapes à décision sémantique (0, 1, 3, 5, 6) exigent le "go" explicite de l'utilisateur avant la suivante
 - Auto-gates : après @test (étape 2), le Build peut enchaîner sur @architect (étape 3) **uniquement si le jalon 2→3 est OK**. Après @dev (étape 4), le Build peut enchaîner sur @review (étape 5) **uniquement si le jalon 4→5 est OK**
 - Si le jalon détecte une anomalie → **STOP**, pause utilisateur

@@ -7,7 +7,7 @@ L'arborescence du pack **est** la destination : `packs/<stack>/agents/**` → `.
 
 ```
 workflow-kit/
-├─ core/**                    -> .opencode/**   (agnostique : écrasé)
+├─ core/**                    -> lu en direct à workflow-kit/core/   (agnostique ; agents/skills générés dans .opencode/ et .claude/)
 ├─ packs/<stack>/agents/**    -> .agents/**     (projet : quarantaine si existe)
 ├─ project/agents/**          -> .agents/**     (projet, générique)
 └─ project/AGENTS.md          -> AGENTS.md      (projet)
@@ -36,7 +36,7 @@ workflow-kit/
 
 1. Copier `packs/_blank/` vers `packs/<ma-stack>/`.
 2. Remplir `agents/` avec le contenu de la stack (conventions, architecture, stack, commands, test-rules…).
-3. Lancer `init.ps1 -Stack <ma-stack>`.
+3. Lancer `workflow-kit init --stack <ma-stack>`.
 
 ## Règles
 

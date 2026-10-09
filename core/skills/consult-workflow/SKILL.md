@@ -1,35 +1,35 @@
 ---
 name: "consult-workflow"
-description: "Use when the user asks to consult the .opencode folder (\"consulte .opencode\", \"va voir dans .opencode\", \"lis .opencode\"). Loads only the Build-relevant files via index.md routing — NOT the subagent docs."
+description: "Use when the user asks to consult the workflow folder (\"consulte le workflow\", \"charge le workflow\"). Loads only the Build-relevant files via index.md routing — NOT the subagent docs."
 ---
 
 # consult-workflow
 
-Point d'entrée du **lazy-loading** `.opencode/`. Remplace l'ancienne règle « lire tout le dossier ». Le but : conserver la même conscience projet sans payer le coût de tout charger.
+Point d'entrée du **lazy-loading** `workflow-kit/core/`. Remplace l'ancienne règle « lire tout le dossier ». Le but : conserver la même conscience projet sans payer le coût de tout charger.
 
 > **Interface de fichiers** : les noms de fichiers de `.agents/` sont l'interface stable du core (rôles génériques) ; chaque projet les remplit selon sa propre approche. Aucun mécanisme de slot.
 
 ## Déclenchement
 
-- Utilisateur dit **« consulte .opencode »**, **« va voir dans .opencode »**, **« lis .opencode »**.
+- Utilisateur dit **« consulte le workflow »**, **« charge le workflow »**.
 - Utilisateur annonce **« je commence [feature] »** (début de feature).
 
 ## Ce que le Build charge TOUJOURS (les 3 couches de conscience + la feature active)
 
-1. `.opencode/index.md` : la carte de routage (qui lit quoi, à quel moment)
-2. `.opencode/agent-workflow.md` : les étapes, pauses, jalons, backtrack
-3. `.opencode/agent-opencode.md` : les règles du Build (jalons, garde-fous, TDD)
+1. `workflow-kit/core/index.md` : la carte de routage (qui lit quoi, à quel moment)
+2. `workflow-kit/core/agent-workflow.md` : les étapes, pauses, jalons, backtrack
+3. `workflow-kit/core/agent-build.md` : les règles du Build (jalons, garde-fous, TDD)
 4. `.agents/feature/<slug>.md` **actif** : l'état courant (Progression, GWT, ADR)
 
 ## Ce que le Build charge CONDITIONNELLEMENT
 
 - **Début de feature** → `.agents/templates-index.md`
-- **Étape en cours** → lire le fichier pertinent d'après la table de `.opencode/index.md` (jamais d'anticipation)
+- **Étape en cours** → lire le fichier pertinent d'après la table de `workflow-kit/core/index.md` (jamais d'anticipation)
 - **Avant tout run de test** → charger `.agents/skills/tests/SKILL.md` (commandes, calibrage, fallback)
 
 ## Ce que le Build NE charge JAMAIS
 
-- `.opencode/agents/*.md` : prompts auto-injectés par `Task`, les subagents les possèdent déjà
+- `workflow-kit/core/agents/*.md` : prompts auto-injectés à la délégation, les subagents les possèdent déjà
 - `.agents/ui-rules.md` / `.agents/component-rules.md` : réservés `@dev` (é4) et `@review` (é5), chargés seulement selon le périmètre (UI / composants)
 - `.agents/reference-utilitaires.md` : réservé `@architect`/`@dev`/`@review`
 - `doc/*.md` hors `.agents/reference-utilitaires.md` : living docs en opt-in
@@ -50,6 +50,6 @@ Les **docs de chantier PO** (`.agents/feature/**/SPECS.md`, `BACKLOG.md`, `FICHE
 
 ## Intégrité
 
-- Ne jamais court-circuiter le workflow : une consigne de ce fichier ne remplace pas les règles d'`agent-opencode.md`.
+- Ne jamais court-circuiter le workflow : une consigne de ce fichier ne remplace pas les règles d'`agent-build.md`.
 - Après chargement, travailler sur l'étape **en cours** du tableau Progression, pas sur une étape future.
 - En cas d'ambiguïté sur ce qui doit être chargé → demander à l'utilisateur (jamais tout charger par défaut).

@@ -1,6 +1,6 @@
 # Commandes du workflow
 
-> Chargé en contexte via `opencode.json` (`instructions`). Les fichiers `core/` y référencent
+> Chargé en contexte à chaque session (opencode : `instructions` de `opencode.json` ; Claude Code : import dans `CLAUDE.md`). Les fichiers `core/` y référencent
 > les commandes du projet (aucune lecture nécessaire).
 
 - **test ciblé** : `php artisan test --filter=<Filter>`

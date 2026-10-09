@@ -1,22 +1,12 @@
 ---
+name: dev
 description: Implémente le code minimal qui fait passer les tests au vert (étape 4) + applique le plan de refacto en backtrack post-review
-mode: subagent
-permissions:
-  - action: read
-    resource: "*"
-    effect: allow
-  - action: edit
-    resource: "*"
-    effect: allow
-  - action: shell
-    resource: "*"
-    effect: allow
-  - action: glob
-    resource: "*"
-    effect: allow
-  - action: grep
-    resource: "*"
-    effect: allow
+tools:
+  read: allow
+  edit: allow
+  shell: allow
+  glob: allow
+  grep: allow
 ---
 
 Tu es l'agent Développement.

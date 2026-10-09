@@ -1,4 +1,6 @@
-# opencode : règles de l'agent Build
+# Règles de l'agent Build
+
+> **Agent Build** = l'agent principal de la session (celui qui orchestre les subagents). Outil de délégation : `Task` sous opencode, `Agent` sous Claude Code.
 
 ## Environnement d'exécution (fallback)
 
@@ -10,9 +12,9 @@ Exécuter `commande de formatage (cf. .agents/workflow-commands.md)` uniquement 
 
 ## Consultation des specs métier
 
-→ `@specs` (`.opencode/agents/specs.md`) — workflow (étapes 0-1 : lecture des specs + rédaction GWT)
-→ `@doc` (`.opencode/agents/doc.md`) — questions ad hoc / clientes (lecture seule, réponse en deux blocs)
-→ `/doc` (`.opencode/command/doc.md`) — commande utilisateur équivalente : invoque le sous-agent `@doc`
+→ `@specs` (`workflow-kit/core/agents/specs.md`) — workflow (étapes 0-1 : lecture des specs + rédaction GWT)
+→ `@doc` (`workflow-kit/core/agents/doc.md`) — questions ad hoc / clientes (lecture seule, réponse en deux blocs)
+→ `/doc` (`workflow-kit/core/commands/doc.md`) — commande utilisateur équivalente : invoque le sous-agent `@doc`
 
 ## Analyse critique
 
@@ -27,7 +29,7 @@ Exécuter `commande de formatage (cf. .agents/workflow-commands.md)` uniquement 
 
 Les tests sont écrits par `@test` à l'étape 2, l'implémentation par `@dev` à l'étape 4. La frontière TDD est garantie par le workflow : le code n'est écrit qu'après avoir vu les tests 🔴.
 
-→ `@test` (`.opencode/agents/test.md`) pour l'écriture des tests, `@dev` (`.opencode/agents/dev.md`) pour l'implémentation, `@specs` (`.opencode/agents/specs.md`) pour le format GWT
+→ `@test` (`workflow-kit/core/agents/test.md`) pour l'écriture des tests, `@dev` (`workflow-kit/core/agents/dev.md`) pour l'implémentation, `@specs` (`workflow-kit/core/agents/specs.md`) pour le format GWT
 
 ## 🔴 Règle ABSOLUE — .md vs code (automatique)
 
@@ -49,7 +51,7 @@ Cette règle s'applique même si le `.md` décrit du code à écrire. Le `.md` e
 
 ## Séquence & pauses (processus)
 
-Le déroulé d'une feature — étapes, jalons, pauses/anti-chaînage, test global, résumé métier — vit dans **`.opencode/agent-workflow.md`** (en particulier § « Pauses & anti-chaînage », § « Checklist Build », § « Test global »).
+Le déroulé d'une feature — étapes, jalons, pauses/anti-chaînage, test global, résumé métier — vit dans **`workflow-kit/core/agent-workflow.md`** (en particulier § « Pauses & anti-chaînage », § « Checklist Build », § « Test global »).
 
 ## Tests
 
@@ -82,7 +84,7 @@ Les **règles métier validées** qui amendent, précisent ou étendent le spec 
 
 Pendant le workflow (étapes 3-4), si un pattern de code standardisé apparaît pour la **2ème fois** (même structure, seuls les noms changent), le signaler à l'utilisateur avec une question en pause :
 
-> *« Ce pattern revient pour la 2ème fois. Créer un template `.opencode/templates/...` ? »*
+> *« Ce pattern revient pour la 2ème fois. Créer un template `workflow-kit/core/templates/...` ? »*
 
 **Règles :**
 - La détection concerne les structures répétitives propres à la stack (contrôleur, job, mail, notification, rule, scope, cast, etc.)
@@ -124,9 +126,9 @@ Quand on adopte un pattern event-driven dans un module :
 
 ## Gestion des features
 
-- **Nouvelle feature** : quand l'utilisateur annonce "je commence [nom]", créer `.agents/feature/<slug>.md` à partir du template `.opencode/templates/feature.md`, remplacer les marqueurs (`<Nom>`, date), et considérer qu'on travaille sur cette feature
+- **Nouvelle feature** : quand l'utilisateur annonce "je commence [nom]", créer `.agents/feature/<slug>.md` à partir du template `workflow-kit/core/templates/feature.md`, remplacer les marqueurs (`<Nom>`, date), et considérer qu'on travaille sur cette feature
 - **Feature issue d'un lot de chantier** : si la feature découle d'un lot d'un chantier PO (dossier contenant `SPECS.md` / `BACKLOG.md` / `FICHE-REUNION.md`), lire le `BACKLOG` du chantier (ligne du lot) et le `SPECS` aux sections citées, reporter le lot dans l'en-tête de la feature (ligne `> Lot : …`), et transmettre ce **périmètre** (lot + sections + entrées `SP-*`) à `@specs` (étapes 0-1). Le fichier de feature suit la convention de chemin du projet (racine `.agents/feature/` **ou** sous-dossier du chantier)
-- **Dimensionnement** : à la création, proposer un tag de taille (`S` ou `Standard`, défaut Standard — critères dans `.opencode/agent-workflow.md`) dans l'en-tête du `.agents/feature/<slug>.md`. **Le tag n'est actif qu'après validation explicite de l'utilisateur** (pause 0, ou pause fusionnée 0+1 si S). L'utilisateur peut le corriger à tout moment
+- **Dimensionnement** : à la création, proposer un tag de taille (`S` ou `Standard`, défaut Standard — critères dans `workflow-kit/core/agent-workflow.md`) dans l'en-tête du `.agents/feature/<slug>.md`. **Le tag n'est actif qu'après validation explicite de l'utilisateur** (pause 0, ou pause fusionnée 0+1 si S). L'utilisateur peut le corriger à tout moment
 - **Consulter `.agents/templates-index.md`** en début de feature pour choisir les templates adaptés au type de code à produire
 - **Une tâche à la fois** : implémenter, tester, et nettoyer complètement une tâche avant de passer à la suivante
 - **Feature terminée** (implémentée, testée, livrée) → `DONE-<slug>.md`
@@ -134,11 +136,11 @@ Quand on adopte un pattern event-driven dans un module :
 - **Feature abandonnée** (hors scope, annulée) → `ABANDON-<slug>.md`
 - En cas d'ambiguïté sur le fichier à renommer, demander à l'utilisateur
 
-## Consultation `.opencode` — lazy loading
+## Consultation du workflow — lazy loading
 
-Quand l'utilisateur demande de consulter le dossier `.opencode/` (ou "va voir dans .opencode", "lis .opencode", ou annonce le début d'une feature), charger la skill `consult-workflow` (`.opencode/skills/consult-workflow/SKILL.md`) qui pilote le **lazy-loading** :
+Quand l'utilisateur demande de consulter le dossier `workflow-kit/core/` (ou "consulte le workflow", "charge le workflow", ou annonce le début d'une feature), charger la skill `consult-workflow` (`workflow-kit/core/skills/consult-workflow/SKILL.md`) qui pilote le **lazy-loading** :
 
-- Charger **toujours** : `.opencode/index.md` (carte de routage) + `.opencode/agent-workflow.md` + la feature active.
+- Charger **toujours** : `workflow-kit/core/index.md` (carte de routage) + `workflow-kit/core/agent-workflow.md` + la feature active.
 - Charger **conditionnellement** selon l'étape en cours (cf. table de `index.md`).
 - **Jamais** pré-charger les fichiers réservés aux subagents (`agents/*.md` auto-injectés, `.agents/reference-utilitaires.md`, `.agents/ui-rules.md`, `.agents/component-rules.md`, `doc/`, `templates/**`, `DONE-*`, ni les docs de chantier PO `.agents/feature/**/SPECS.md`/`BACKLOG.md`/`FICHE-REUNION.md`, ni les images `.agents/feature/**/maquettes/**`, etc.).
 
@@ -148,33 +150,33 @@ Pour inclure un fichier spécifique, l'utilisateur le mentionnera explicitement 
 
 Chercher avant de lire en entier (les `DONE-*` sont volumineux).
 
-- Le `path` du Grep = **dossier**, jamais un fichier (l'outil élargit au parent). Pour cibler un fichier précis → `include` avec le glob (`include: "DONE-xxx.md"`).
+- Le `path` du Grep = **dossier**, jamais un fichier (l'outil élargit au parent). Pour cibler un fichier précis → filtre de fichiers de l'outil (`include` sous opencode, `glob` sous Claude Code) avec le nom (`"DONE-xxx.md"`).
 - Pattern le plus **discriminant** d'abord : cibler la section (`^## Résumé métier`, `### SP-XXX`) plutôt qu'un mot-clé fréquent.
 - Ordre de lecture d'une `DONE-*` : `## Résumé métier` (tête) → grep de section → lecture à l'offset. Jamais full-read d'emblée.
-- Sortie tronquée / bruit ≥ ~20 matches → resserrer (`include` + pattern), ne pas dépouiller.
+- Sortie tronquée / bruit ≥ ~20 matches → resserrer (filtre de fichiers + pattern), ne pas dépouiller.
 
 ## Subagents disponibles
 
-Six subagents spécialisés sont définis dans `.opencode/agents/` :
+Six subagents spécialisés sont définis dans `workflow-kit/core/agents/` :
 
 | Agent | Fichier | Étapes | Permissions |
 |---|---|---|---|
-| `@specs` | `.opencode/agents/specs.md` | 0-1 (consulter specs + GWT baseline/évolution) | read, edit (.md only) |
-| `@doc` | `.opencode/agents/doc.md` | Hors workflow (consultation ad hoc — questions clientes, audit rapide) | read, glob, grep (lecture seule) |
-| `@test` | `.opencode/agents/test.md` | 2 (tests baseline/évolution, règle binaire unitaire/intégration) | read, edit, shell, glob, grep |
-| `@architect` | `.opencode/agents/architect.md` | 3 (proposition architecture + challenge GWT/edge cases) | read, edit (.md only), glob, grep |
-| `@dev` | `.opencode/agents/dev.md` | 4 (implémentation code minimal) + backtrack refacto | read, edit, bash, glob, grep |
-| `@review` | `.opencode/agents/review.md` | 5 (revue qualité + plan de refacto optionnel) | read, bash, glob, grep + écrit sa section dans le feature `.md` (jamais Progression) |
+| `@specs` | `workflow-kit/core/agents/specs.md` | 0-1 (consulter specs + GWT baseline/évolution) | read, edit (.md only) |
+| `@doc` | `workflow-kit/core/agents/doc.md` | Hors workflow (consultation ad hoc — questions clientes, audit rapide) | read, glob, grep (lecture seule) |
+| `@test` | `workflow-kit/core/agents/test.md` | 2 (tests baseline/évolution, règle binaire unitaire/intégration) | read, edit, shell, glob, grep |
+| `@architect` | `workflow-kit/core/agents/architect.md` | 3 (proposition architecture + challenge GWT/edge cases) | read, edit (.md only), glob, grep |
+| `@dev` | `workflow-kit/core/agents/dev.md` | 4 (implémentation code minimal) + backtrack refacto | read, edit, bash, glob, grep |
+| `@review` | `workflow-kit/core/agents/review.md` | 5 (revue qualité + plan de refacto optionnel) | read, bash, glob, grep + écrit sa section dans le feature `.md` (jamais Progression) |
 
-**Invocation :** l'agent principal les invoque automatiquement via le `Task` tool dans l'ordre du workflow. L'utilisateur peut aussi les invoquer manuellement avec `@nom` (ex: `@test lance les tests`).
+**Invocation :** l'agent principal les invoque automatiquement via l'outil de délégation (`Task` / `Agent`) dans l'ordre du workflow. L'utilisateur peut aussi les invoquer manuellement avec `@nom` (ex: `@test lance les tests`).
 
 **Périmètre :**
 - `@specs` et `@architect` ne touchent qu'aux fichiers `.md` (prompt, pas de restriction technique)
-- `@test` écrit les tests. Règle binaire unitaire/intégration : cf. `.opencode/agents/test.md`. Templates : `.agents/templates-index.md`.
+- `@test` écrit les tests. Règle binaire unitaire/intégration : cf. `workflow-kit/core/agents/test.md`. Templates : `.agents/templates-index.md`.
 - `@dev` implémente le code métier minimal, fait passer les tests au vert (étape 4). En backtrack refacto (post-review), applique le plan de `@review` sans changer le comportement.
 - `@review` analyse sans modifier le code (read+grep+glob+bash) et écrit **uniquement** sa section `## Revue qualité (étape 5)` dans le feature file — jamais le tableau `## Progression` (Build), jamais de code/test/config. Produit un `### Plan de refacto` actionnable (optionnel) que l'utilisateur peut déclencher via "go refacto".
 
-**Workflow complet** : voir `.opencode/agent-workflow.md`.
+**Workflow complet** : voir `workflow-kit/core/agent-workflow.md`.
 
 ## ADR (Architecture Decision Records)
 
