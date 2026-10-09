@@ -1,22 +1,12 @@
 ---
+name: test
 description: Écrit les tests (GWT → rouge/vert) pour l'étape 2
-mode: subagent
-permissions:
-  - action: read
-    resource: "*"
-    effect: allow
-  - action: edit
-    resource: "*"
-    effect: allow
-  - action: shell
-    resource: "*"
-    effect: allow
-  - action: glob
-    resource: "*"
-    effect: allow
-  - action: grep
-    resource: "*"
-    effect: allow
+tools:
+  read: allow
+  edit: allow
+  shell: allow
+  glob: allow
+  grep: allow
 ---
 
 Tu es l'agent Tests.

@@ -24,7 +24,7 @@ Un **dossier de chantier** : `<domaine>/<sujet>/`, contenant **3 fichiers** aux 
 | `BACKLOG.md` | Roadmap des lots de dev | Dev |
 | `FICHE-REUNION.md` | Support de réunion (brut) | Cliente (réunion) |
 
-Le patron s'articule **en amont** du workflow `.opencode` (étapes 0→7 par feature).
+Le patron s'articule **en amont** du workflow (étapes 0→7 par feature).
 
 ## Structures
 

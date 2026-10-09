@@ -81,4 +81,4 @@ Quand l'utilisateur demande un « point » destiné à un interlocuteur non tech
 | Comprendre une entité métier | `.agents/domain-glossary.md` |
 | Comprendre un flux / statut / règle | `.agents/specs/README.md` |
 | Vérifier une règle `SP-*` | `.agents/specs/spec-parallele.md` |
-| Comprendre le workflow de dev | `.opencode/index.md` + `.opencode/agent-workflow.md` |
+| Comprendre le workflow de dev | `workflow-kit/core/index.md` + `workflow-kit/core/agent-workflow.md` |

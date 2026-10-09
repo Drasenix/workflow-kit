@@ -1,0 +1,11 @@
+{
+  "name": "workflow-kit",
+  "private": true,
+  "type": "module",
+  "bin": { "workflow-kit": "bin/workflow-kit.mjs" },
+  "engines": { "node": ">=18.3" },
+  "scripts": {
+    "verify": "node bin/workflow-kit.mjs verify",
+    "sync": "node bin/workflow-kit.mjs sync"
+  }
+}

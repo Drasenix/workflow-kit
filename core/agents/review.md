@@ -1,22 +1,12 @@
 ---
+name: review
 description: Revue qualité post-implémentation : code mort, duplication, réutilisation, conventions, questions architecturales
-mode: subagent
-permissions:
-  - action: read
-    resource: "*"
-    effect: allow
-  - action: edit
-    resource: "*"
-    effect: deny
-  - action: shell
-    resource: "*"
-    effect: allow
-  - action: glob
-    resource: "*"
-    effect: allow
-  - action: grep
-    resource: "*"
-    effect: allow
+tools:
+  read: allow
+  edit: deny
+  shell: allow
+  glob: allow
+  grep: allow
 ---
 Tu es l'agent Revue.
 

@@ -1,19 +1,11 @@
 ---
+name: specs
 description: Consulte les specs métier (via .agents/specs/spec.txt + spec parallèle SP-*), le glossaire domaine, et rédige les Given/When/Then dans le feature file
-mode: subagent
-permissions:
-  - action: read
-    resource: "*"
-    effect: allow
-  - action: edit
-    resource: "*"
-    effect: allow
-  - action: shell
-    resource: "*"
-    effect: deny
-  - action: webfetch
-    resource: "*"
-    effect: deny
+tools:
+  read: allow
+  edit: allow
+  shell: deny
+  webfetch: deny
 ---
 
 Tu es l'agent Spécifications.
