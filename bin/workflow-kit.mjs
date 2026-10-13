@@ -2,6 +2,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
+import { checkCompaction, compactFeature } from '../lib/compact.mjs';
 import { init } from '../lib/init.mjs';
 import { resolveRuntimes, sync } from '../lib/sync.mjs';
 import { verify } from '../lib/verify.mjs';
@@ -13,6 +14,8 @@ const HELP = `workflow-kit <commande> [options]
   init     Installe le kit dans un projet (clone imbrique, seeds, adaptateurs)
   sync     Rematerialise les seeds et les adaptateurs .opencode/ .claude/ (apres un pull du kit)
   verify   Audit du kit (agnosticisme, packs, references, round-trip)
+  compact <fichier>  Squelette compacte d'un fichier de feature clos (skill compacter-feature)
+                     --check : controle le resultat ; --dry-run : decrit sans ecrire
 
 Options communes
   --target <dir>        Projet cible (defaut : cwd)
@@ -34,6 +37,8 @@ const { values, positionals } = parseArgs({
     runtime: { type: 'string' },
     'on-conflict': { type: 'string' },
     force: { type: 'boolean', default: false },
+    check: { type: 'boolean', default: false },
+    'dry-run': { type: 'boolean', default: false },
     help: { type: 'boolean', short: 'h', default: false },
   },
 });
@@ -50,6 +55,10 @@ try {
     sync({ kitRoot, target: values.target || process.cwd(), stack: values.stack, projectName: values.name, onConflict, runtimes: resolveRuntimes(kitRoot, values.runtime) });
   } else if (command === 'verify') {
     process.exitCode = verify({ kitRoot }) === 0 ? 0 : 1;
+  } else if (command === 'compact') {
+    const file = positionals[1];
+    if (!file) throw new Error('compact : fichier manquant (ex. compact .agents/feature/DONE-x.md)');
+    process.exitCode = values.check ? checkCompaction({ file }) : compactFeature({ file, dryRun: values['dry-run'] });
   } else {
     console.error(`Commande inconnue : ${command}\n\n${HELP}`);
     process.exitCode = 2;

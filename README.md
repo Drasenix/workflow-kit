@@ -33,7 +33,7 @@ Squelette portable du workflow de développement multi-agents (Build + 6 subagen
 ```
 workflow-kit/
 ├─ README.md  workflow.config.json  package.json
-├─ bin/workflow-kit.mjs          CLI : init | sync | verify  (Node >= 18, aucune dépendance)
+├─ bin/workflow-kit.mjs          CLI : init | sync | verify | compact  (Node >= 18, aucune dépendance)
 ├─ lib/                          sync, init, verify, migrate, gitignore, frontmatter…
 ├─ adapters/
 │  ├─ opencode/  index.mjs  opencode.agent.json
@@ -41,9 +41,9 @@ workflow-kit/
 ├─ core/**                       le cœur, cité à workflow-kit/core/ (AGNOSTIQUE, live)
 │  ├─ index.md  agent-workflow.md  agent-build.md
 │  ├─ agents/{specs,test,architect,dev,review,doc}.md     (format neutre)
-│  ├─ skills/{consult-workflow,analyse-flashback,cadrage-po,doc}/
-│  ├─ commands/{consult-workflow,cadrage-po,analyse-flashback,doc}.md
-│  └─ templates/feature.md
+│  ├─ skills/{consult-workflow,analyse-flashback,cadrage-po,doc,compacter-feature}/
+│  ├─ commands/{consult-workflow,cadrage-po,analyse-flashback,doc,compacter-feature}.md
+│  └─ templates/{feature,feature-cloturee}.md
 ├─ packs/<stack>/agents/**       -> .agents/     (SEEDS TECHNO)
 │  └─ laravel-livewire/  _blank/
 └─ project/
@@ -86,6 +86,7 @@ node workflow-kit/bin/workflow-kit.mjs init --target C:\www\mon-projet --stack l
 
 - `--force` (ou `--on-conflict overwrite`) écrase aussi les fichiers **projet**.
 - `opencode.json` : seuls `agent.build.permission.task` et `instructions` sont fusionnés (`plugin`/`mcp` intacts).
+- **`.claude/settings.json`** : seule la clé `attribution.commit` est fusionnée (valeur vide : aucune ligne `Co-Authored-By` dans les commits) ; le reste du fichier n'est jamais touché, un JSON invalide est signalé et laissé tel quel. `attribution: false` est respecté mais jamais écrit (avant Claude Code 2.1.281, il fait ignorer tout le fichier).
 - **`CLAUDE.md`** : seul le bloc entre `<!-- workflow-kit:start … -->` et `<!-- workflow-kit:end -->` est géré par le kit, le reste n'est jamais touché. Si `CLAUDE.md` est un lien (ex. vers `AGENTS.md`), le kit n'y écrit pas.
 - `.claude/` : seul le contenu de `agents/` et `skills/` est gitignoré (`.claude/agents/*`, `.claude/skills/*`) ; `.claude/settings.json` et le reste ne le sont pas. Pour versionner un agent ou une skill à toi, ajoute une exception, par ex. `!.claude/skills/ma-skill/` (elle marche avec `/*`, pas avec `/`).
 - `.agents/doublons/` reste visible dans `git status` (à traiter puis supprimer).
@@ -111,8 +112,8 @@ Voir `packs/_schema.md`.
 ## Capacités incluses (core/)
 
 - **Workflow feature** : `agent-workflow.md` (étapes 0→7), `agent-build.md`, `agents/*.md` (6 subagents).
-- **Skills génériques** : `consult-workflow`, `analyse-flashback`, `cadrage-po`, `doc` (+ 3 templates).
-- **Commandes** : `consult-workflow`, `cadrage-po`, `analyse-flashback`, `doc`. Sous opencode, ce sont des commandes ; sous Claude Code, ce sont les skills du même nom (`/doc`, …), donc aucune commande n'est dupliquée dans `.claude/commands/`.
+- **Skills génériques** : `consult-workflow`, `analyse-flashback`, `cadrage-po`, `doc`, `compacter-feature` (+ 3 templates).
+- **Commandes** : `consult-workflow`, `cadrage-po`, `analyse-flashback`, `doc`, `compacter-feature`. Sous opencode, ce sont des commandes ; sous Claude Code, ce sont les skills du même nom (`/doc`, …), donc aucune commande n'est dupliquée dans `.claude/commands/`.
 
 ## Auditer
 

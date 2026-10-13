@@ -34,7 +34,7 @@ Point d'entrée du **lazy-loading** `workflow-kit/core/`. Remplace l'ancienne r�
 - `.agents/reference-utilitaires.md` : réservé `@architect`/`@dev`/`@review`
 - `doc/*.md` hors `.agents/reference-utilitaires.md` : living docs en opt-in
 - Templates du pack : copiés par `@test`/`@dev`
-- `DONE-*.md`, `ABANDON-*.md`, `IRREPRODUCTIBLE-*.md`, `PLAN-*.md`, `REFACTO-*.md` : terminés
+- `DONE-*.md`, `ABANDON-*.md`, `IRREPRODUCTIBLE-*.md`, `PLAN-*.md`, `REFACTO-*.md` : terminés (compactés ou non ; version de travail d'un fichier compacté via `git show`)
 - `.agents/feature/**/SPECS.md`, `BACKLOG.md`, `FICHE-REUNION.md` : docs de **chantier PO** (skill `cadrage-po`), jamais auto, lus sur demande explicite (opt-in/grep, comme `DONE-*`)
 - `.agents/feature/**/maquettes/**` : images (maquettes), jamais auto, lues sur demande explicite (opt-in/grep)
 

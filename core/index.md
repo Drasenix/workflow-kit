@@ -23,6 +23,7 @@
 | `.agents/templates-index.md` | début feature | | é2 | | é4 | é5 | |
 | `.agents/feature/<slug>.md` actif | lecture | é0-1 | é2 | é3 | é4 | é5 | |
 | `DONE-*.md`, `ABANDON-*.md`… | opt-in/grep | | | | | | |
+| `workflow-kit/core/templates/feature-cloturee.md` | compaction (skill `compacter-feature`) | | | | | | |
 | `.agents/feature/**/SPECS.md`, `BACKLOG.md`, `FICHE-REUNION.md` (chantier PO) | opt-in/grep | | | | | | |
 | `.agents/feature/**/maquettes/**` (images) | opt-in/grep | | | | | | |
 | `workflow-kit/core/agents/<son>.md` | auto via délégation | (le sien) | (le sien) | (le sien) | (le sien) | (le sien) | (le sien) |
@@ -56,6 +57,7 @@
 | `doc` | question métier / cliente / audit rapide (« comment ça marche X ? ») — lecture seule, réponse en deux blocs |
 | `.agents/skills/tests/SKILL.md` | avant tout run de test (ciblé ou global) : commandes, calibrage, fallback |
 | `.agents/skills/recette/SKILL.md` | après une US passée en `DONE-*` : recette manuelle (scénarios + seeder jetable) |
+| `compacter-feature` | après le commit de livraison d'un fichier clos (`DONE-*`, `ABANDON-*`, `IRREPRODUCTIBLE-*`) : compaction (garde l'apprentissage, retire le pilotage) |
 
 > Une skill n'est **pas** toujours chargée : déclenchement par sa `description` + pointeur depuis une règle toujours chargée. **Ne jamais y déplacer un garde-fou.**
 

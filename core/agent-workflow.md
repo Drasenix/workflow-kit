@@ -19,6 +19,8 @@ Quand une pause est obligatoire, et le régime des auto-gates (2, 4) : § « Pau
 | 7 | **Passage DONE (mécanique)** | Build | Renommage `.agents/feature/<slug>.md` → `DONE-<slug>.md` + ligne 7 → OK dans le tableau Progression | **Auto (jalon 6→7)** |
 | X | **Backtrack** | Build | Sur demande utilisateur, reprise à l'étape indiquée | |
 
+> **Après le commit de livraison (hors étapes)** : le Build propose la compaction du fichier clos (skill `compacter-feature`) : garde l'apprentissage, retire le pilotage. Garde-fous : `workflow-kit/core/agent-build.md` § Gestion des features.
+
 ### Refacto via backtrack 4→5
 
 Le refacto n'est **pas une étape distincte** : c'est un retour aux étapes 4 puis 5 avec un périmètre restreint.
@@ -268,6 +270,7 @@ Avant de passer de l'étape N à N+1, l'agent Build vérifie systématiquement l
 - [ ] La section `## Nuances consignées` du `.agents/feature/<slug>.md` est remplie : liste des `SP-*` créés/superseded **ou** `Aucune`
 - [ ] La section `## Conventions (fichiers-rôles)` du `.agents/feature/<slug>.md` est traitée : fichiers-rôles impactés **à jour** (ou `Aucune`) ; **aucune référence morte**
 - [ ] Les entrées validées par l'utilisateur sont écrites dans `.agents/specs/spec-parallele.md` (index + entrées ; marquage caduc posé sur les entrées remplacées)
+- [ ] Les entrées et reports d'un **lot antérieur** que cette feature rend **faux** (backlog, fichiers-rôles, `.agents/reference-utilitaires.md`) sont corrigés, ou signalés à l'utilisateur
 
 **Issue :** tout OK → passage DONE (renommage). Un seul échec → **pause utilisateur** (l'écriture du spec parallèle est de la responsabilité du Build et conditionne le passage DONE).
 
@@ -279,6 +282,8 @@ Quand l'utilisateur dit "retour étape N" (ou équivalent) :
 2. Sur confirmation, l'étape N est ré-exécutée avec le subagent correspondant
 3. Les étapes ultérieures sont refaites dans l'ordre (N+1, N+2…)
 4. Chaque étape refaite respecte le protocole de pause
+
+**Backtrack limité** : si les étapes suivantes supposent déjà le résultat de l'étape reprise (ex. renforcer une assertion que l'architecture présume déjà), le Build peut proposer de ne refaire **que** cette étape. Il le dit explicitement dans la demande de confirmation, l'utilisateur confirme, et la décision est tracée par un ADR.
 
 ## Format de présentation (prompt)
 
