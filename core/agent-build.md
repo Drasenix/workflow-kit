@@ -135,6 +135,13 @@ Quand on adopte un pattern event-driven dans un module :
 - **Bug non reproductible** (investigation faite, pas de reproduction) → `IRREPRODUCTIBLE-<slug>.md`
 - **Feature abandonnée** (hors scope, annulée) → `ABANDON-<slug>.md`
 - En cas d'ambiguïté sur le fichier à renommer, demander à l'utilisateur
+- **Compaction post-livraison** : une fois le fichier clos (`DONE-*`, `ABANDON-*`, `IRREPRODUCTIBLE-*`) committé, **proposer** sa compaction (skill `compacter-feature`, squelette `workflow-kit/core/templates/feature-cloturee.md`) : on garde ce qui a une valeur d'apprentissage, on retire ce qui ne servait que pendant la réalisation. Garde-fous :
+  - **jamais avant le commit de livraison** : le fichier doit être dans git en version complète et sans modification locale (sinon la version de travail est perdue) ;
+  - tout **identifiant interne cité ailleurs** (spec parallèle, backlog, autres features) reste présent dans le fichier compacté ;
+  - **rien de transversal** n'est supprimé sans être consigné ailleurs (sinon proposition de remontée, avec accord) ;
+  - pas de compaction si une **feature en cours** cite des sections destinées à être supprimées ;
+  - **nom du fichier inchangé** ;
+  - **validation du diff** par l'utilisateur, commit séparé **sur demande explicite** uniquement.
 
 ## Consultation du workflow — lazy loading
 
@@ -148,11 +155,12 @@ Pour inclure un fichier spécifique, l'utilisateur le mentionnera explicitement 
 
 ## Découverte d'information — réflexes de recherche
 
-Chercher avant de lire en entier (les `DONE-*` sont volumineux).
+Chercher avant de lire en entier (les `DONE-*` non compactés sont volumineux).
 
 - Le `path` du Grep = **dossier**, jamais un fichier (l'outil élargit au parent). Pour cibler un fichier précis → filtre de fichiers de l'outil (`include` sous opencode, `glob` sous Claude Code) avec le nom (`"DONE-xxx.md"`).
 - Pattern le plus **discriminant** d'abord : cibler la section (`^## Résumé métier`, `### SP-XXX`) plutôt qu'un mot-clé fréquent.
-- Ordre de lecture d'une `DONE-*` : `## Résumé métier` (tête) → grep de section → lecture à l'offset. Jamais full-read d'emblée.
+- Ordre de lecture d'une `DONE-*` : `## Résumé métier` (tête) → grep de section (fichier compacté : `## Registre des décisions`, `## Décisions & Justifications`, `## Leçons de réalisation`, `## Vigilances`, `## Dette connue`) → lecture à l'offset. Jamais full-read d'emblée.
+- Version de travail d'un fichier compacté (contrat, revue, texte des questions) : `git show <hash>:<chemin>`, hash donné par la ligne de clôture de l'en-tête.
 - Sortie tronquée / bruit ≥ ~20 matches → resserrer (filtre de fichiers + pattern), ne pas dépouiller.
 
 ## Subagents disponibles

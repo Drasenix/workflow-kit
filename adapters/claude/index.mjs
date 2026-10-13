@@ -17,6 +17,8 @@ const BLOCK = `${START}
 @.agents/workflow-commands.md
 
 Pour travailler sur une feature : « consulte le workflow » (skill \`consult-workflow\`, regles dans \`workflow-kit/core/\`).
+
+Commits : jamais de ligne \`Co-Authored-By\`.
 ${END}`;
 
 /** Une action absente de la source = autorisée (défaut opencode), pour garder la même sémantique des deux côtés. */
@@ -49,6 +51,32 @@ function ensureClaudeMd({ target, log }) {
 }
 
 /**
+ * Fusionne dans .claude/settings.json la seule clé `attribution.commit` : vide = aucun trailer `Co-Authored-By` dans les commits.
+ * Le reste du fichier n'est jamais touché ; un JSON invalide est signalé et laissé tel quel.
+ * `attribution: false` (tout masqué) est respecté, mais jamais écrit par le kit : avant Claude Code 2.1.281, il fait ignorer tout le fichier.
+ */
+function ensureSettings({ target, log }) {
+  const p = path.join(target, '.claude', 'settings.json');
+  let cfg = {};
+  if (exists(p)) {
+    try {
+      cfg = JSON.parse(readUtf8(p).replace(/^﻿/, ''));
+    } catch {
+      cfg = null;
+    }
+    if (!cfg || typeof cfg !== 'object' || Array.isArray(cfg)) {
+      log.warn('[claude] .claude/settings.json invalide : attribution des commits non desactivee (corriger le JSON puis relancer sync)');
+      return;
+    }
+  }
+  if (cfg.attribution === false || cfg.attribution?.commit === '') return;
+  const current = cfg.attribution && typeof cfg.attribution === 'object' ? cfg.attribution : {};
+  cfg.attribution = { ...current, commit: '' };
+  writeUtf8(p, JSON.stringify(cfg, null, 2) + '\n');
+  log.info('[claude] .claude/settings.json : attribution des commits desactivee');
+}
+
+/**
  * Motifs .gitignore d'un dossier généré (.claude/<dir>) :
  * - dossier sans contenu étranger : `.claude/<dir>/*` (pas `<dir>/` : l'exception `!.claude/<dir>/ma-skill/` reste possible) ;
  * - dossier où le projet a déjà ses propres agents / skills / commandes (ex. skills Laravel Boost, suivies par git) :
@@ -63,7 +91,7 @@ function ignoreFor(claudeDir, dir, generated, suffix = '') {
 }
 
 /**
- * core/ (neutre) -> .claude/{agents,skills,commands} + bloc CLAUDE.md.
+ * core/ (neutre) -> .claude/{agents,skills,commands} + bloc CLAUDE.md + `attribution.commit` de .claude/settings.json.
  * Retourne les motifs à ignorer (voir `ignoreFor`). Le reste de .claude/ (settings.json…) n'est jamais ignoré.
  */
 export function render(ctx) {
@@ -100,6 +128,7 @@ export function render(ctx) {
   log.info(`[claude] agents/, skills/${skipped.length ? '' : ', commands/'} -> .claude/ [genere]${skipped.length ? ` (commandes ${skipped.join(', ')} = skills du meme nom, non dupliquees)` : ''}`);
 
   ensureClaudeMd(ctx);
+  ensureSettings(ctx);
   return {
     ignore: [
       ...ignoreFor(claudeDir, 'agents', agentFiles),

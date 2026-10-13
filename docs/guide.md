@@ -153,6 +153,8 @@ Orchestré par l'agent **Build** (agent principal), qui délègue chaque étape 
 | 6 | Résumé métier + nuances | Build | `## Résumé métier` + `SP-*` | **OUI** |
 | 7 | DONE | Build | Renommage `DONE-<slug>.md` | auto |
 
+**Après le commit de livraison** (hors étapes) : le Build propose de **compacter** le fichier clos (skill `compacter-feature`, § 5.5). On garde ce qui a une valeur d'apprentissage, on retire ce qui ne servait que pendant la réalisation ; la version de travail reste lisible via `git show`.
+
 ### 4.1 Règles structurantes
 
 - **Anti-chaînage** : jamais deux étapes « à décision sémantique » (0, 1, 3, 5, 6) dans le même tour ; il faut un « go » explicite. Seuls les auto-gates 2→3 et 4→5 enchaînent automatiquement, et **seulement si le jalon est OK**.
@@ -175,7 +177,7 @@ Orchestré par l'agent **Build** (agent principal), qui délègue chaque étape 
 
 Ils ne s'invoquent **pas** entre eux : seul le Build orchestre. L'utilisateur peut aussi les appeler manuellement avec `@nom`.
 
-### 4.3 Les 4 skills (`core/skills/*/SKILL.md`)
+### 4.3 Les 5 skills (`core/skills/*/SKILL.md`)
 
 Chargées **à la demande** (via leur `description`), jamais systématiquement. Chaque skill est **invocable directement par l'utilisateur** : en la nommant en langage naturel, ou via sa **slash-commande** `/nom` (voir § 4.4).
 
@@ -183,8 +185,9 @@ Chargées **à la demande** (via leur `description`), jamais systématiquement. 
 - `cadrage-po` — patron PO amont (SPECS / BACKLOG / FICHE-REUNION). → `/cadrage-po`
 - `analyse-flashback` — analyse du code à une date passée via tags prod. → `/analyse-flashback`
 - `doc` — questions métier, réponse sourcée en 2 blocs. → `/doc`
+- `compacter-feature` — compaction d'un fichier de feature clos après son commit de livraison. → `/compacter-feature`
 
-### 4.4 Les 4 slash-commandes (`core/command/*.md`)
+### 4.4 Les 5 slash-commandes (`core/command/*.md`)
 
 Chaque skill du kit dispose d'une **slash-commande** `/nom` : c'est le raccourci avec lequel l'utilisateur l'invoque directement. La commande charge la skill correspondante :
 
@@ -194,6 +197,7 @@ Chaque skill du kit dispose d'une **slash-commande** `/nom` : c'est le raccourci
 | `/cadrage-po` | `cadrage-po` |
 | `/analyse-flashback` | `analyse-flashback` |
 | `/doc` | `doc` |
+| `/compacter-feature` | `compacter-feature` |
 
 Elles prennent `$ARGUMENTS` et demandent la précision manquante si besoin.
 
@@ -305,6 +309,20 @@ Fichiers-mémoire :
 
 **Règles** : pas de mélange entre les deux blocs ; incertitude → une seule ligne `⚠️ Zone d'ombre : …` ; règle durable non consignée → terminer par `[À CONSIGNER]` ; **aucune invention**. **Interdits** : modifier un fichier, lire le PDF, dumper le `.txt` entier, lancer une commande.
 
+### 5.5 `compacter-feature` — dépolluer un fichier de feature clos
+
+**But** : un `DONE-*` (ou `ABANDON-*`, `IRREPRODUCTIBLE-*`) garde par défaut tout le document de travail. La skill le réduit à ce qui **sert encore aux agents après coup**, sans perte : git conserve la version de travail.
+
+**On garde** : le pourquoi (ADR, registre des décisions datées), le comportement garanti (scénarios GWT), le parcours dans le code (arbre de flux), la dette connue, les leçons de réalisation, les vigilances résiduelles, la recette manuelle.
+
+**On retire** : le pilotage (Progression, texte des questions, contrat, fichiers prévus, checklists, revue) et les **copies** d'une source qui fait foi (spec parallèle, fichiers-rôles, référence des utilitaires, backlog), qui deviennent fausses quand la source évolue.
+
+**Garde-fous** : jamais avant le commit de livraison ; identifiants cités ailleurs préservés ; rien de transversal supprimé sans être consigné ailleurs ; nom de fichier inchangé ; diff validé par l'utilisateur, commit séparé sur demande explicite.
+
+**Mécanique / jugement** : `workflow-kit compact <fichier>` écrit le squelette (sections reprises recopiées à l'octet près, sections à rédiger marquées `[À COMPLÉTER]`, résiduel et renvois externes listés) ; l'agent rédige les sections marquées ; `workflow-kit compact <fichier> --check` bloque toute section reprise modifiée ou incomplète.
+
+**Exemple** : « compacte DONE-paiement-par-lot ». Le script produit le squelette, l'agent rédige dette, vigilances et traçabilité à partir du résiduel, le contrôle passe, puis le diff est présenté.
+
 ---
 
 ## 6. Aide-mémoire
@@ -319,5 +337,6 @@ Fichiers-mémoire :
 | Cadrer un sujet métier (PO) | `/cadrage-po [sujet]` |
 | Diagnostiquer un ticket antidaté | `/analyse-flashback [date/domaine]` |
 | Poser une question métier | `/doc [question]` |
+| Dépolluer un fichier de feature clos | `/compacter-feature [fichier]` |
 | Auditer le kit (agnostisme, neutralité) | `workflow-kit verify` |
 | Créer un nouveau pack techno | copier `packs/_blank/`, remplir, voir `packs/_schema.md` |

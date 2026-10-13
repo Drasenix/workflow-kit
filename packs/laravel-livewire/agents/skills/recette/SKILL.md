@@ -29,12 +29,12 @@ Charger cette skill après une **US passée en `DONE-*.md`** pour préparer et d
 
 ### Étape 1 — Analyser l'US
 
-Lire le `DONE-<slug>.md` :
+Lire le `DONE-<slug>.md` (version de travail ou compactée, cf. skill `compacter-feature`) :
 - `## Résumé métier` (le problème et les effets visibles) ;
 - scénarios **baseline** et **évolution** (GWT étape 1) ;
-- `## Edge cases identifiés` ;
-- `## Décisions & Justifications (ADR)` ;
-- `## Nuances consignées` (règles métier `SP-*`).
+- `## Edge cases identifiés` (fichier compacté : `## Dette connue` + ligne « Couverts ») ;
+- `## Décisions & Justifications (ADR)` et, si présentes, `## Leçons de réalisation` / `## Vigilances` ;
+- règles métier `SP-*` : identifiants dans `## Nuances consignées` (fichier compacté : `## Traçabilité`), **texte** dans `.agents/specs/spec-parallele.md`.
 
 Compléter par les changements livrés pour cerner le visible :
 
