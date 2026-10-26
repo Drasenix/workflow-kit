@@ -6,7 +6,7 @@
 >
 > **Périmètre** : règles de **comportement / flux / calculs**. Définitions d'entités → `.agents/domain-glossary.md`. Méthodes de code → `.agents/reference-utilitaires.md`.
 >
-> **Écriture** : **Build uniquement**, après validation explicite de l'utilisateur, à la **recette nuances de l'étape 6**. `@specs` et `@review` détectent et proposent, ils n'écrivent jamais.
+> **Écriture** : **Build uniquement**, après validation explicite de l'utilisateur, à la **recette nuances de l'étape 6**. Le raffineur et `@review` détectent et proposent, ils n'écrivent jamais.
 >
 > **Lecture** : jamais le fichier entier. Index puis entrées ciblées (grep).
 >
@@ -32,7 +32,7 @@ Liste fermée : extension sur validation utilisateur.
 
 ## Contrôle d'intégrité
 
-> Exécuté par `@review` à l'étape 5 et par le Build après chaque écriture. 4 vérifications, tout écart = signalement.
+> Exécuté par `@review` à l'étape 5 et par le Build après chaque écriture : `node workflow-kit/bin/workflow-kit.mjs check-meta --spec` (mécanique, ne se fait pas à la main). 4 vérifications, tout écart = signalement.
 
 1. **Index ↔ entrées** : autant de lignes `| SP-…` que d'entrées `### SP-…`, mêmes IDs.
 2. **Statuts cohérents** : statut de l'index = ligne `> **Statut**` de l'entrée.

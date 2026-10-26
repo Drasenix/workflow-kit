@@ -1,12 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { parseAgent } from '../../lib/frontmatter.mjs';
-import { exists, readUtf8, rel, walk, writeUtf8 } from '../../lib/util.mjs';
+import { parseAgent, RETIRED_AGENTS } from '../../lib/frontmatter.mjs';
+import { exists, readUtf8, rel, remove, walk, writeUtf8 } from '../../lib/util.mjs';
 
 export const id = 'claude';
 
 // action neutre -> outils Claude Code
-const TOOLS = { read: ['Read'], edit: ['Edit', 'Write'], shell: ['Bash'], glob: ['Glob'], grep: ['Grep'], webfetch: ['WebFetch'] };
+const TOOLS = { read: ['Read'], edit: ['Edit', 'Write'], shell: ['Bash'], glob: ['Glob'], grep: ['Grep'], webfetch: ['WebFetch', 'WebSearch'], task: ['Agent'] };
 
 const START = '<!-- workflow-kit:start (genere par workflow-kit, ne pas editer ce bloc) -->';
 const END = '<!-- workflow-kit:end -->';
@@ -16,17 +16,21 @@ const BLOCK = `${START}
 @AGENTS.md
 @.agents/workflow-commands.md
 
-Pour travailler sur une feature : « consulte le workflow » (skill \`consult-workflow\`, regles dans \`workflow-kit/core/\`).
+Pour travailler sur une feature, une session par phase : \`/raffiner [feature]\` (raffinement), puis \`/realiser [feature]\` dans une nouvelle session (realisation). « consulte le workflow » dit ou en est une feature (regles dans \`workflow-kit/core/\`).
 
 Commits : jamais de ligne \`Co-Authored-By\`.
 ${END}`;
 
-/** Une action absente de la source = autorisée (défaut opencode), pour garder la même sémantique des deux côtés. */
+/**
+ * Une action absente de la source = autorisée (défaut opencode), pour garder la même sémantique des deux côtés.
+ * Exception : `task` (délégation) n'est accordée que si la source l'autorise explicitement (agent principal).
+ * `mode` n'a pas d'équivalent : un agent principal se lance comme session (`claude --agent <nom>`).
+ */
 function renderAgent(text) {
   const a = parseAgent(text);
   const effect = new Map(a.tools);
   const tools = Object.keys(TOOLS)
-    .filter((action) => effect.get(action) !== 'deny')
+    .filter((action) => (action === 'task' ? effect.get(action) === 'allow' : effect.get(action) !== 'deny'))
     .flatMap((action) => TOOLS[action]);
   // description en JSON : un scalaire YAML non quoté casse sur « : »
   return `---\nname: ${a.name}\ndescription: ${JSON.stringify(a.description)}\ntools: ${tools.join(', ')}\n---\n${a.body}`;
@@ -103,6 +107,14 @@ export function render(ctx) {
     const r = rel(path.join(coreDir, 'agents'), f);
     writeUtf8(path.join(claudeDir, 'agents', r), renderAgent(readUtf8(f)));
     agentFiles.push(r);
+  }
+  // Agent retiré du kit : son fichier généré est supprimé (jamais un fichier du projet portant le même nom).
+  for (const retired of RETIRED_AGENTS) {
+    const stale = path.join(claudeDir, 'agents', `${retired}.md`);
+    if (exists(stale) && new RegExp(`^---\\r?\\nname: ${retired}\\r?\\n`).test(readUtf8(stale))) {
+      remove(stale);
+      log.info(`[claude] agent retire du kit supprime : agents/${retired}.md`);
+    }
   }
 
   const skillsDir = path.join(coreDir, 'skills');

@@ -34,7 +34,7 @@
 
 | J'ai besoin de… | Template | Agent concerné |
 |---|---|---|
-| Une feature complète (spéc + GWT + archi + dev) | `workflow-kit/core/templates/feature.md` | `@specs`, `@architect` |
+| Une feature complète (spéc + GWT + archi + dev) | `workflow-kit/core/templates/feature.md` | raffineur, `@dev` |
 
 ## Marqueurs remplaçables
 

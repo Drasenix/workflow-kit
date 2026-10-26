@@ -113,7 +113,7 @@ La liste est « Done » quand **toutes les lentilles ont été appliquées** :
 ### Filet de sécurité
 
 - **Ajout de Q à tout moment** (`Qn+`) : une Q ratée n'est pas perdue.
-- **Re-balayage à l'étape 0-1 de chaque feature** : `@specs` remonte les edge cases du lot concerné.
+- **Re-balayage à l'étape 0-1 de chaque feature** : le raffineur remonte les edge cases du lot concerné.
 
 ### Répartition skill / chantier
 
@@ -132,7 +132,7 @@ La liste est « Done » quand **toutes les lentilles ont été appliquées** :
 6. Exécution             → .agents/feature/<slug>.md + workflow 0→7
 ```
 
-Lien avec le workflow : `SPECS` + `BACKLOG` = phase PO **amont** ; `.agents/feature/<slug>.md` = unité exécutable (étapes 0→7) ; `@specs` (étapes 0-1) consomme spec officielle + parallèle + glossaire + le feature file ; l'**étape 6** est le moment d'écriture/affinage des `SP-*`.
+Lien avec le workflow : `SPECS` + `BACKLOG` = phase PO **amont** ; `.agents/feature/<slug>.md` = unité exécutable (étapes 0→7) ; le raffineur (étapes 0-1) consomme spec officielle + parallèle + glossaire (via `@doc`), le code (via `@explorateur`) et le feature file ; l'**étape 6** est le moment d'écriture/affinage des `SP-*`.
 
 ## Instanciation
 

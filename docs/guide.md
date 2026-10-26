@@ -11,7 +11,7 @@
 Le workflow-kit apporte, à **n'importe quel projet** et **n'importe quelle stack**, une même façon de travailler :
 
 - un **workflow de feature en 8 étapes** (0→7), avec TDD strict et pauses de validation ;
-- **6 subagents spécialisés** (specs, tests, architecture, dev, revue, doc) orchestrés par l'agent principal ;
+- **deux agents principaux** — le raffineur (étapes 0-1) et le Build (étapes 2-7) — et **6 subagents spécialisés** (doc, explorateur, challenger, tests, dev, revue) ;
 - des **skills** transverses : consulter le workflow, cadrer un sujet métier (PO), diagnostiquer un ticket antidaté, répondre à une question métier ;
 - une **mémoire projet** : glossaire, conventions, spec officielle + **spec parallèle** (`SP-*`).
 
@@ -86,6 +86,8 @@ Une CLI Node (Node ≥ 18, aucune dépendance), `workflow-kit/bin/workflow-kit.m
 - **Nouveau projet** : `init` (interactif si les options manquent).
 - **Mise à jour des seeds et régénération des adaptateurs** : `sync`.
 - **Audit du kit** : `verify`.
+- **Contrôle d'un fichier de feature** : `check <fichier>` ; fichiers meta du projet seuls : `check-meta` (skill `controle-livraison`).
+- **Compaction d'un fichier de feature clos** : `compact <fichier>` (skill `compacter-feature`).
 
 Exemple :
 
@@ -100,7 +102,7 @@ Si le kit n'est pas encore dans le projet, lancer la commande depuis une copie d
 1. **Place le kit** dans `<projet>/workflow-kit/` (clone, sinon copie locale sans `.git`) et enregistre la stack et les runtimes dans `workflow.config.json`.
 2. **Matérialise les seeds** : `packs/<stack>/agents/**` + `project/agents/**` → `.agents/`, et `project/AGENTS.md` → `AGENTS.md`.
 3. **Génère les adaptateurs** demandés :
-   - `opencode` : `.opencode/{agents,command,skills}` et fusion de `opencode.json` (permissions `agent.build.permission.task` pour les 6 subagents, `instructions: [".agents/workflow-commands.md"]`). Le reste (`plugin`, `mcp`) est préservé.
+   - `opencode` : `.opencode/{agents,command,skills}` et fusion de `opencode.json` (permissions `agent.<agent principal>.permission.task` des subagents du Build et du raffineur, `instructions: [".agents/workflow-commands.md"]`). Le reste (`plugin`, `mcp`) est préservé.
    - `claude` : `.claude/{agents,skills}` et un bloc géré dans `CLAUDE.md` (imports `@AGENTS.md` et `@.agents/workflow-commands.md`). Le reste de `CLAUDE.md` n'est jamais touché.
 4. **Complète le `.gitignore`** : `workflow-kit/`, `.opencode`, et pour Claude `.claude/agents/*` et `.claude/skills/*` (le reste de `.claude/`, par ex. `settings.json`, n'est pas ignoré ; pour versionner un agent ou une skill à toi, ajoute une exception `!.claude/skills/ma-skill/`).
 5. **Réécrit les anciens chemins** `.opencode/…` et `.workflow/…` cités dans `.agents/**.md` et `AGENTS.md` (voir `docs/mise-a-jour.md`, « Migration »).
@@ -140,68 +142,116 @@ Détails, nuances et pièges : `docs/mise-a-jour.md`.
 
 ## 4. Le workflow d'une feature (étapes 0→7)
 
-Orchestré par l'agent **Build** (agent principal), qui délègue chaque étape à un **subagent** via l'outil de délégation (`Task` sous opencode, `Agent` sous Claude Code).
+Deux phases, chacune dans sa session. **Raffinement** (étapes 0-1) : l'utilisateur parle directement au **raffineur**, agent principal qui délègue la lecture des specs (`@doc`), du code (`@explorateur`) et la relecture à froid des GWT (`@challenger`). **Réalisation** (étapes 2-7) : l'agent **Build** délègue chaque étape à un **subagent** via l'outil de délégation (`Task` sous opencode, `Agent` sous Claude Code).
 
 | # | Étape | Agent | Livrable | Pause |
 |---|---|---|---|---|
-| 0 | Consulter les specs | `@specs` | Résumé sourcé + questions | **OUI** |
-| 1 | Given/When/Then | `@specs` | Scénarios baseline + évolution | **OUI** |
+| 0 | Compréhension | raffineur (+ `@doc`, `@explorateur`) | Synthèse spec / code + questions | **OUI** |
+| 1 | Given/When/Then + challenge | raffineur (+ `@challenger`) | Scénarios + edge cases + écarts arbitrés | **OUI** |
 | 2 | Test ROUGE | `@test` | Tests qui échouent | auto (jalon) |
-| 3 | Architecture | `@architect` | Arbre + challenge GWT | **OUI** |
-| 4 | Dev VERT | `@dev` | Code minimal qui passe | auto (jalon) |
-| 5 | Revue qualité | `@review` | Checklist + plan de refacto | **OUI** |
+| 3 | Plan | `@dev` | Arbre de flux + fichiers + choix + signatures publiques | **OUI** |
+| 4 | Dev VERT | `@dev` (repris) | Code minimal qui passe + écarts au plan | auto (jalon) |
+| 5 | Revue qualité | `@review` | Checklist + plan de refacto + décisions techniques | **OUI** |
 | 6 | Résumé métier + nuances | Build | `## Résumé métier` + `SP-*` | **OUI** |
 | 7 | DONE | Build | Renommage `DONE-<slug>.md` | auto |
 
 **Après le commit de livraison** (hors étapes) : le Build propose de **compacter** le fichier clos (skill `compacter-feature`, § 5.5). On garde ce qui a une valeur d'apprentissage, on retire ce qui ne servait que pendant la réalisation ; la version de travail reste lisible via `git show`.
 
-### 4.1 Règles structurantes
+### 4.1 Mener une feature, pas à pas
+
+Le fichier `.agents/feature/<slug>.md` fait le lien entre les deux sessions : chacune y lit l'état (`## Progression`) et y écrit son travail.
+
+**1. Ouvrir une session de raffinement**
+
+| Outil | Comment |
+|---|---|
+| Partout (application de bureau, IDE, terminal, opencode) | `/raffiner [feature]` : l'agent principal endosse le rôle du raffineur |
+| Terminal Claude Code | ou `claude --agent raffineur`, puis « je commence [feature] » |
+| opencode | ou l'agent `raffineur` choisi avec **Tab**, puis « je commence [feature] » |
+
+Pour une feature issue d'un cadrage PO : « le lot X du chantier Y » à la place du nom. Le raffineur crée le fichier et charge la phase raffinement.
+
+Lancée sur l'agent `raffineur`, la session a ses outils restreints par l'outil (pas de code, pas de test) ; par `/raffiner`, l'agent garde ses outils et ces limites tiennent par la règle.
+
+**2. Raffiner (étapes 0-1), en conversation**
+
+- **Compréhension** : le raffineur interroge `@doc` (spec, spec parallèle, glossaire) et `@explorateur` (code, tests, contraintes), puis s'arrête sur une synthèse : ce que dit la spec, ce que fait le code, les questions bloquantes (**arrêt 1**).
+- **Rédaction** : GWT et edge cases écrits avec toi ; le raffineur relance une recherche ciblée dès qu'un point est contesté.
+- **Challenge** : `@challenger` relit les GWT contre le code ; tu arbitres chaque écart.
+- **Gel** : contrôle de la Definition of Ready, puis ta validation (**arrêt 2**). Le raffineur annonce que le fichier est prêt.
+
+**3. Ouvrir une session de réalisation**
+
+Une **nouvelle** session sur l'agent par défaut (le Build) : opencode, l'agent `build` ; Claude Code, application de bureau ou `claude`. Puis : `/realiser [feature]`. La skill vérifie que le raffinement est gelé (Progression, contrôle de la Definition of Ready), puis charge le socle et la phase réalisation.
+
+**4. Réaliser (étapes 2-7)**
+
+- **Tests rouges** (`@test`), puis enchaînement automatique sur le **plan** de `@dev` : tu le valides (**pause 3**).
+- **Code vert** (`@dev` repris) : un écart mineur au plan est déclaré, un écart majeur l'arrête et te revient.
+- **Revue** (`@review`) : plan de refacto éventuel et **récapitulatif technique** (utilitaires, conventions) — tu contestes ce que tu veux, le reste est accepté (**pause 5**).
+- **Clôture** (Build) : test global, résumé métier et nuances `SP-*` (**pause 6**), passage DONE, proposition de commit puis de compaction.
+
+**Trou métier pendant la réalisation** (comportement que les GWT ne spécifient pas) : retour au raffineur sur le seul point en question — `/raffiner` dans une nouvelle session, ou rebasculer sur `raffineur` avec Tab (opencode), ou `claude --agent raffineur`. Il met les GWT à jour et refait un gel limité ; la réalisation reprend dans une nouvelle session (`/realiser [feature]`), à `@test` sur les scénarios touchés. Une simple formulation se corrige sur place par le Build.
+
+**Reprendre une feature** dans une nouvelle session : `/raffiner [feature]` ou `/realiser [feature]` selon sa phase. Si tu ne sais plus où elle en est : « consulte le workflow » — il lit la Progression et te dit quelle commande lancer, sans rien démarrer.
+
+### 4.2 Règles structurantes
 
 - **Anti-chaînage** : jamais deux étapes « à décision sémantique » (0, 1, 3, 5, 6) dans le même tour ; il faut un « go » explicite. Seuls les auto-gates 2→3 et 4→5 enchaînent automatiquement, et **seulement si le jalon est OK**.
 - **TDD** : le code n'est écrit qu'après avoir vu les tests 🔴.
+- **Une conversation reste là où est son contexte** : les specs se discutent avec le raffineur (session de raffinement), jamais par l'intermédiaire du Build.
+- **Plan validé** (pause 3) : `@dev` déclare ses écarts mineurs dans `### Écarts au plan` ; un écart majeur (fichier ou couche non prévu, signature publique modifiée, réutilisation abandonnée) l'arrête et passe par toi.
+- **Métier / technique** : tu tranches le métier un à un (spec parallèle, glossaire) ; l'équipe tranche le technique (utilitaires, conventions), récapitulé à la pause 5 et accepté sauf contestation.
 - **Test global** : réservé au Build, **une seule fois**, après que `## Progression` (lignes 0–5) est entièrement OK et que le plan de refacto de l'étape 5 est vide. Max 2 par feature.
 - **Spec parallèle `SP-*`** (`.agents/specs/spec-parallele.md`) : les règles métier validées qui amendent le spec officiel **priment** dessus. Écrites uniquement par le Build à l'étape 6, après « go ».
 - **Pauses** : l'agent s'arrête, présente le livrable, attend une réponse. « stop » / « pause » interrompt immédiatement toute action.
 - **Suivi** : tout vit dans `.agents/feature/<slug>.md` (template `core/templates/feature.md`), notamment le tableau `## Progression`.
 
-### 4.2 Les 6 subagents (`core/agents/*.md`)
+### 4.3 Les agents (`core/agents/*.md`)
 
 | Agent | Étapes | Rôle | Permissions |
 |---|---|---|---|
-| `@specs` | 0-1 | Consulter la spec + rédiger les GWT | read, edit (.md) |
-| `@doc` | hors workflow | Questions métier (lecture seule) | read, glob, grep |
+| raffineur (agent principal) | 0-1 | Mener le raffinement avec l'utilisateur, rédiger les GWT | read, edit (.md), task, shell (contrôle), web (ciblé, sourcé) |
+| `@doc` | 0-1 (mode raffinement) + hors workflow | Specs, spec parallèle, glossaire (lecture seule) | read, glob, grep |
+| `@explorateur` | 0 | Faits sur le code existant (lecture seule) | read, glob, grep |
+| `@challenger` | 1 | Écarts entre les GWT et le code (lecture seule) | read, glob, grep |
 | `@test` | 2 | Écrire les tests | read, edit, shell |
-| `@architect` | 3 | Proposer l'architecture + challenger | read, edit (.md) |
-| `@dev` | 4 | Implémenter le code minimal | read, edit, bash |
-| `@review` | 5 | Revue qualité + plan de refacto | read, bash, grep |
+| `@dev` | 3-4 | Rédiger le plan, puis implémenter le code minimal | read, edit, bash |
+| `@review` | 5 | Revue qualité + plan de refacto + récapitulatif technique | read, bash, grep |
 
-Ils ne s'invoquent **pas** entre eux : seul le Build orchestre. L'utilisateur peut aussi les appeler manuellement avec `@nom`.
+Ils ne s'invoquent **pas** entre eux : seul l'agent principal de la session (raffineur ou Build) orchestre. L'utilisateur peut aussi les appeler manuellement avec `@nom`.
 
-### 4.3 Les 5 skills (`core/skills/*/SKILL.md`)
+### 4.4 Les 8 skills (`core/skills/*/SKILL.md`)
 
-Chargées **à la demande** (via leur `description`), jamais systématiquement. Chaque skill est **invocable directement par l'utilisateur** : en la nommant en langage naturel, ou via sa **slash-commande** `/nom` (voir § 4.4).
+Chargées **à la demande** (via leur `description`), jamais systématiquement. Chaque skill est **invocable directement par l'utilisateur** : en la nommant en langage naturel, ou via sa **slash-commande** `/nom` (voir § 4.5).
 
-- `consult-workflow` — pilote le lazy-loading du workflow. → `/consult-workflow`
+- `consult-workflow` — socle commun du lazy-loading ; seul, dit où en est une feature et quelle commande lancer. → `/consult-workflow`
+- `raffiner` — fait endosser le rôle du raffineur à l'agent principal (session non lancée sur l'agent raffineur). → `/raffiner`
+- `realiser` — point d'entrée de la réalisation : garde-fous, socle et phase réalisation. → `/realiser`
 - `cadrage-po` — patron PO amont (SPECS / BACKLOG / FICHE-REUNION). → `/cadrage-po`
 - `analyse-flashback` — analyse du code à une date passée via tags prod. → `/analyse-flashback`
 - `doc` — questions métier, réponse sourcée en 2 blocs. → `/doc`
 - `compacter-feature` — compaction d'un fichier de feature clos après son commit de livraison. → `/compacter-feature`
+- `controle-livraison` — contrôle mécanique d'un fichier de feature (Progression, Definition of Ready, traces non tranchées, fichiers meta). → `/controle-livraison`
 
-### 4.4 Les 5 slash-commandes (`core/command/*.md`)
+### 4.5 Les 8 slash-commandes (`core/commands/*.md`)
 
 Chaque skill du kit dispose d'une **slash-commande** `/nom` : c'est le raccourci avec lequel l'utilisateur l'invoque directement. La commande charge la skill correspondante :
 
 | Commande | Skill chargée |
 |---|---|
 | `/consult-workflow` | `consult-workflow` |
+| `/raffiner` | `raffiner` |
+| `/realiser` | `realiser` |
 | `/cadrage-po` | `cadrage-po` |
 | `/analyse-flashback` | `analyse-flashback` |
 | `/doc` | `doc` |
 | `/compacter-feature` | `compacter-feature` |
+| `/controle-livraison` | `controle-livraison` |
 
 Elles prennent `$ARGUMENTS` et demandent la précision manquante si besoin.
 
-### 4.5 Fichiers du projet (`.agents/`) et leur rôle
+### 4.6 Fichiers du projet (`.agents/`) et leur rôle
 
 Fichiers-rôles **fixes** que le `core/` référence en dur :
 
@@ -215,23 +265,24 @@ Fichiers-mémoire :
 
 ## 5. Les skills expliquées, avec exemples
 
-### 5.1 `consult-workflow` — lazy-loading du workflow
+### 5.1 `consult-workflow`, `raffiner`, `realiser` — lazy-loading par phase
 
-**But** : conserver la conscience projet sans tout charger (l'ancienne règle « lire tout le dossier » coûtait cher en contexte).
+**But** : conserver la conscience projet sans tout charger. Chaque session ne lit que le **socle** commun et **sa** phase.
 
-**Déclencheur** : « consulte le workflow », « charge le workflow », ou « je commence [feature] ».
+```
+SOCLE (consult-workflow)            index.md · agent-workflow.md · agent-build.md · feature active (par sections)
+  ├─ /raffiner [feature]   (raffiner) → + phase-raffinement.md + rôle du raffineur
+  └─ /realiser [feature]   (realiser) → + phase-realisation.md (après garde-fous : session neuve,
+                                          raffinement gelé, Definition of Ready)
+```
 
-**Ce qu'il charge toujours** (4 fichiers) :
-1. `workflow-kit/core/index.md` — la carte de routage (qui lit quoi, quand) ;
-2. `workflow-kit/core/agent-workflow.md` — les étapes, pauses, jalons ;
-3. `workflow-kit/core/agent-build.md` — les règles du Build ;
-4. `.agents/feature/<slug>.md` **actif** — l'état courant.
+**« Consulte le workflow » seul** : charge le socle, lit la Progression et dit **où en est la feature et quelle commande lancer** — sans charger de phase ni changer de rôle.
 
-**Ce qu'il charge conditionnellement** : début de feature → `templates-index.md` ; avant un run de test → `.agents/skills/tests/SKILL.md` ; sinon selon la table de `index.md` et l'étape **en cours**.
+**Ce qui se charge conditionnellement** : avant un run de test → `.agents/skills/tests/SKILL.md` ; sinon selon la table de `index.md` et l'étape **en cours**.
 
-**Ce qu'il ne charge JAMAIS** : les prompts `agents/*.md` (auto-injectés à la délégation), `ui-rules` / `component-rules`, `reference-utilitaires`, les `DONE-*`, les docs de chantier PO (`SPECS.md` / `BACKLOG.md` / `FICHE-REUNION.md`), les maquettes.
+**Ce qui ne se charge JAMAIS** : les prompts `agents/*.md` (auto-injectés à la délégation ; seule exception, `raffineur.md` lu par `raffiner`), la phase qui n'est pas celle de la session, `ui-rules` / `component-rules`, `reference-utilitaires` en entier, les `DONE-*`, les docs de chantier PO (`SPECS.md` / `BACKLOG.md` / `FICHE-REUNION.md`), les maquettes.
 
-**Exemple** : « consulte le workflow, je démarre la feature remboursement ». Le Build charge les 4 fichiers + `templates-index.md`, puis travaille sur l'étape **en cours** du tableau Progression — pas les étapes futures.
+**Exemple** : `/raffiner remboursement` — le socle, `phase-raffinement.md`, le rôle du raffineur. Plus tard, dans une **nouvelle** session, `/realiser remboursement` — le socle et `phase-realisation.md` ; le Build reprend à l'étape 2. Chacun travaille sur l'étape **en cours** du tableau Progression — pas les étapes futures.
 
 ### 5.2 `cadrage-po` — cadrer un sujet métier avant de coder
 
@@ -319,7 +370,9 @@ Fichiers-mémoire :
 
 **Garde-fous** : jamais avant le commit de livraison ; identifiants cités ailleurs préservés ; rien de transversal supprimé sans être consigné ailleurs ; nom de fichier inchangé ; diff validé par l'utilisateur, commit séparé sur demande explicite.
 
-**Mécanique / jugement** : `workflow-kit compact <fichier>` écrit le squelette (sections reprises recopiées à l'octet près, sections à rédiger marquées `[À COMPLÉTER]`, résiduel et renvois externes listés) ; l'agent rédige les sections marquées ; `workflow-kit compact <fichier> --check` bloque toute section reprise modifiée ou incomplète.
+**Mécanique / jugement** : `workflow-kit compact <fichier>` écrit le squelette (sections reprises recopiées à l'octet près, sections à rédiger marquées `[À COMPLÉTER]`, résiduel, blocs libres et renvois externes listés) ; l'agent rédige les sections marquées et tranche chaque bloc libre (gardé, ou cité avec son motif dans la ligne « Écarté à la compaction ») ; `workflow-kit compact <fichier> --check` bloque toute section reprise modifiée ou incomplète, tout arbre de flux absent et tout bloc libre non tranché.
+
+**Pourquoi c'est fiable** : ce qui se garde a un **emplacement fixe dans le gabarit de feature**, rempli pendant la réalisation (`## Registre des décisions` tenu par l'agent principal à chaque pause, `## Clé de lecture des scénarios` par le raffineur, `### Arbre de flux` par `@dev` dans le plan) ; un arbre écrit ailleurs est repéré par son contenu ; ce que le gabarit ne prévoit pas doit être tranché explicitement.
 
 **Exemple** : « compacte DONE-paiement-par-lot ». Le script produit le squelette, l'agent rédige dette, vigilances et traçabilité à partir du résiduel, le contrôle passe, puis le diff est présenté.
 
@@ -333,7 +386,10 @@ Fichiers-mémoire :
 | Installer sur un nouveau projet | `workflow-kit init` |
 | Mettre à jour les seeds après un pull | `workflow-kit sync` |
 | Comprendre ce qui se met à jour tout seul | `docs/mise-a-jour.md` |
-| Démarrer une feature | « je commence [feature] » ou `/consult-workflow` |
+| Démarrer une feature | `/raffiner [feature]` (partout), ou session lancée sur `raffineur` puis « je commence [feature] » |
+| Passer à la réalisation | nouvelle session, puis `/realiser [feature]` |
+| Reprendre une feature | `/raffiner` ou `/realiser` selon sa phase ; « consulte le workflow » pour savoir laquelle |
+| Contrôler une feature | `/controle-livraison` (ou `workflow-kit check <fichier>`) |
 | Cadrer un sujet métier (PO) | `/cadrage-po [sujet]` |
 | Diagnostiquer un ticket antidaté | `/analyse-flashback [date/domaine]` |
 | Poser une question métier | `/doc [question]` |

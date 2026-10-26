@@ -11,7 +11,6 @@
 # <Nom de la feature>
 
 > Date : YYYY-MM-DD
-> Taille : Standard | S
 > Lot : <lot, chantier, dépendances> *(si la feature découle d'un lot)*
 > Périmètre : <périmètre> *(si présent)*
 > Clôturé le YYYY-MM-DD · test global <N> verts · version de travail : `git show <hash>:<chemin du fichier>`
@@ -22,21 +21,27 @@
 
 ## Registre des décisions
 
-> Seulement les décisions qui ne sont portées ni par un ADR, ni par le périmètre, ni par un scénario, ou dont l'identifiant est cité ailleurs (spec parallèle, backlog, autres features). Souvent vide : section omise.
+> Tenu en direct pendant la feature : **intact**. Fichier antérieur sans registre : seulement les décisions qui ne sont portées ni par un ADR, ni par le périmètre, ni par un scénario, ou dont l'identifiant est cité ailleurs (spec parallèle, backlog, autres features) ; souvent vide, section omise.
 
 | ID | Décision | Date | → Consigné dans |
 |---|---|---|---|
 | <Q1 / A2 / Q-A4 / Q1 revue…> | <décision en une phrase> | YYYY-MM-DD | <ADR-n · `SP-*` · lot destinataire · —> |
 
+## Clé de lecture des scénarios
+
+<intacte, si présente : vocabulaire des GWT, jeu de données commun, ce qui n'est volontairement pas écrit>
+
 ## Scénarios baseline — comportement actuel
+
+<introduction de la section, intacte hors consignes du gabarit>
 
 > Déjà couverts ailleurs (texte complet : version de travail) : <B1 — titre> · <B2 — titre>.
 
-<intacte : scénarios GWT et leurs lignes « Source » ; sans les blocs d'introduction de pilotage>
+<intacte : scénarios GWT et leurs lignes « Source »>
 
 ## Scénarios évolution — nouveau comportement
 
-<intacte : idem>
+<intacte : idem, introduction comprise>
 
 ## Dette connue
 
@@ -50,7 +55,7 @@ Couverts : EC-… (voir scénarios).
 
 ## Arbre de flux
 
-<intacte, quel que soit son titre d'origine (« Arbre d'exécution », « Arbre de flux… »)>
+<intacte : section `### Arbre de flux` de l'Architecture, ou tout bloc de code en arbre (`├─`, `└─`) des sections supprimées, quel que soit son libellé d'origine>
 
 ## Décisions & Justifications — ADR
 
@@ -58,7 +63,7 @@ Couverts : EC-… (voir scénarios).
 
 ## Leçons de réalisation
 
-> Ce qui a mal tourné pendant la réalisation et comment on l'a corrigé (refacto appliqué, backtrack, jalon ou test global en échec).
+> Ce qui a mal tourné pendant la réalisation et comment on l'a corrigé (refacto appliqué, backtrack, rappel du raffineur, écart majeur au plan, jalon ou test global en échec).
 
 - <constat> → <correction> → <règle retenue> *(consignée dans <fichier-rôle / ADR-n / ici seulement>)*
 
@@ -78,6 +83,8 @@ Couverts : EC-… (voir scénarios).
 ## Recette manuelle
 
 <intacte, si présente>
+
+> Écarté à la compaction (texte complet : version de travail) : <libellé du bloc libre> (<motif : trace de revue · pilotage du développement · copie : fichier-rôle · → ADR-n / Dette connue / Leçons / fichier-rôle>) · … *(seulement s'il y a des blocs libres ; dernière ligne, toutes variantes)*
 
 ---
 
@@ -101,7 +108,7 @@ Couverts : EC-… (voir scénarios).
 
 ## Registre des décisions
 
-<même format que DONE>
+<intact s'il a été tenu en direct, sinon même règle que DONE>
 
 ## Questions restées ouvertes
 

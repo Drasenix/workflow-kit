@@ -75,6 +75,37 @@ Dans les deux cas, lancer `sync` sur le projet suffit :
 - Les références vers un chemin que le kit ne connaît pas ne sont **pas** réécrites : les chercher avec `grep -rn "\.opencode/\|\.workflow/" .agents AGENTS.md`.
 - Si `.workflow` figure dans le `.gitignore` du projet (version intermédiaire), la ligne peut être supprimée.
 
+## Passage au workflow à deux phases (raffinement / réalisation)
+
+Cette version sépare la feature en deux sessions : **raffinement** (étapes 0-1, agent principal `raffineur`, sous-agents `@doc`, `@explorateur`, `@challenger`) et **réalisation** (étapes 2-7, Build). Les agents `specs` et `architect` sont **retirés** : `@dev` rédige le plan (étape 3) avant le code. Mode d'emploi : `docs/guide.md` § 4.1.
+
+### Ce que `sync` fait seul
+
+- génère les nouveaux agents (`.opencode/agents/`, `.claude/agents/`) et **supprime** les fichiers générés de `specs` et `architect` ;
+- dans `opencode.json` : ajoute `agent.raffineur.permission.task` (doc, explorateur, challenger) et retire `specs` / `architect` des autorisations ;
+- complète le `.gitignore` (un projet qui a ses propres agents dans `.claude/agents/` reçoit les nouveaux fichiers un par un).
+
+### Ce qui reste à faire à la main
+
+1. **Commiter** dans le projet `opencode.json` et `.gitignore`, modifiés par `sync`.
+2. **Seeds déjà matérialisés** : `sync` ne les écrase pas (version du kit en quarantaine dans `.agents/doublons/`). Chercher les mentions des agents retirés et les remplacer (`@specs` → raffineur, `@architect` → `@dev`) :
+
+   ```bash
+   grep -rn "@specs\|@architect\|agents/specs\.md\|agents/architect\.md" .agents AGENTS.md --include=*.md
+   ```
+
+   Ignorer les fichiers de feature clos (`DONE-*`, `ABANDON-*`, `IRREPRODUCTIBLE-*`) : ce sont des archives. Typiquement : `.agents/templates-index.md`, l'en-tête de `.agents/specs/spec-parallele.md`. Puis supprimer `.agents/doublons/`.
+3. **Features en cours** (fichier sans préfixe de clôture, ouvert avec l'ancien gabarit) — selon la première étape non faite de sa Progression :
+
+   | Feature arrêtée à… | Que faire |
+   |---|---|
+   | étape 0 ou 1 | la reprendre dans une **session raffineur**. Les sections `## Contexte technique` et `## Arbitrages du challenge` peuvent être ajoutées depuis le gabarit : le contrôle ne les exige que si le fichier les porte |
+   | étape 2 ou 3 (architecture pas encore faite) | renommer `## Architecture (étape 3)` en `## Plan (étape 3)` et remplacer ses sous-sections par celles du gabarit : `@dev` y écrira le plan |
+   | étape 4 ou au-delà (architecture faite par l'ancien `@architect`) | renommer `## Architecture (étape 3)` en `## Plan (étape 3)` : l'arbre, les fichiers et le code réutilisé valent plan, le `### Contrat d'implémentation` vaut signatures publiques. Ajouter `### Écarts au plan` (rempli par `@dev` à l'étape 4) et, dans la revue, `### Décisions techniques` |
+
+   Une feature terminée sous l'ancien modèle (`DONE-*`) ne se modifie pas : la compaction reconnaît les deux formats.
+4. **Nouvelle session** de l'outil (agents et skills sont lus au démarrage).
+
 ## Nuance sur les seeds
 
 Sans `--force`, `sync` **n'écrase jamais** un fichier projet déjà présent : la version du kit part en quarantaine dans `.agents/doublons/`. Conséquence : un seed déjà matérialisé puis modifié côté kit ne se propage pas tout seul. Reporter le changement à la main, ou relancer avec `--force` (écrase), ou traiter `.agents/doublons/`.
@@ -109,5 +140,5 @@ node workflow-kit/bin/workflow-kit.mjs verify
 ## Voir aussi
 
 - `README.md` : modèle « kit imbriqué + adaptateurs », écrasement et quarantaine.
-- `bin/workflow-kit.mjs` (`init`, `sync`, `verify`) et `lib/` : installation, matérialisation, migration, audit.
+- `bin/workflow-kit.mjs` (`init`, `sync`, `verify`, `check`, `check-meta`, `compact`) et `lib/` : installation, matérialisation, migration, audit, contrôle et compaction des fichiers de feature.
 - `adapters/` : ce qui est généré pour chaque outil IA.
