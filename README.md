@@ -1,6 +1,6 @@
 # Workflow Kit
 
-Squelette portable du workflow de développement multi-agents (Build + 6 subagents), **agnostique de la techno, du projet et de l'outil IA** : il s'exporte vers **opencode**, vers **Claude Code**, ou vers les deux.
+Squelette portable du workflow de développement multi-agents (raffineur + Build, 6 subagents), **agnostique de la techno, du projet et de l'outil IA** : il s'exporte vers **opencode**, vers **Claude Code**, ou vers les deux.
 
 > Objectif : réutiliser la logique de workflow (étapes 0-7, jalons, pauses, TDD, spec parallèle, recette, cadrage PO) sur n'importe quel projet, n'importe quelle stack, avec l'outil IA de son choix.
 
@@ -33,16 +33,17 @@ Squelette portable du workflow de développement multi-agents (Build + 6 subagen
 ```
 workflow-kit/
 ├─ README.md  workflow.config.json  package.json
-├─ bin/workflow-kit.mjs          CLI : init | sync | verify | compact  (Node >= 18, aucune dépendance)
-├─ lib/                          sync, init, verify, migrate, gitignore, frontmatter…
+├─ bin/workflow-kit.mjs          CLI : init | sync | verify | check | check-meta | compact  (Node >= 18, aucune dépendance)
+├─ lib/                          sync, init, verify, check, compact, migrate, gitignore, frontmatter…
 ├─ adapters/
 │  ├─ opencode/  index.mjs  opencode.agent.json
 │  └─ claude/    index.mjs
 ├─ core/**                       le cœur, cité à workflow-kit/core/ (AGNOSTIQUE, live)
-│  ├─ index.md  agent-workflow.md  agent-build.md
-│  ├─ agents/{specs,test,architect,dev,review,doc}.md     (format neutre)
-│  ├─ skills/{consult-workflow,analyse-flashback,cadrage-po,doc,compacter-feature}/
-│  ├─ commands/{consult-workflow,cadrage-po,analyse-flashback,doc,compacter-feature}.md
+│  ├─ index.md  agent-workflow.md  agent-build.md   (règles communes)
+│  ├─ phase-raffinement.md  phase-realisation.md    (règles par phase, chargées à la demande)
+│  ├─ agents/{raffineur,explorateur,challenger,doc,test,dev,review}.md  (format neutre)
+│  ├─ skills/{consult-workflow,raffiner,realiser,analyse-flashback,cadrage-po,doc,compacter-feature,controle-livraison}/
+│  ├─ commands/{consult-workflow,raffiner,realiser,cadrage-po,analyse-flashback,doc,compacter-feature,controle-livraison}.md
 │  └─ templates/{feature,feature-cloturee}.md
 ├─ packs/<stack>/agents/**       -> .agents/     (SEEDS TECHNO)
 │  └─ laravel-livewire/  _blank/
@@ -77,6 +78,17 @@ node workflow-kit/bin/workflow-kit.mjs init --target C:\www\mon-projet --stack l
 - Déposer les specs dans `.agents/specs/spec.txt`.
 - Si stack `_blank` : compléter `.agents/` puis renommer le pack.
 
+## Mener une feature
+
+Deux phases, **chacune dans sa session** :
+
+1. **Raffinement** (étapes 0-1) : dans n'importe quelle session (application de bureau, IDE, terminal, opencode), `/raffiner [feature]` — l'agent principal endosse le rôle du raffineur. Là où l'outil permet de choisir l'agent (`claude --agent raffineur`, Tab sous opencode), on peut aussi lancer directement la session sur `raffineur`, puis « je commence [feature] ». Le raffineur mène la conversation (specs via `@doc`, code via `@explorateur`, relecture via `@challenger`) jusqu'au fichier de feature gelé.
+2. **Réalisation** (étapes 2-7) : dans une **nouvelle** session (agent par défaut, le Build), `/realiser [feature]` : tests rouges, plan validé, code vert, revue, clôture.
+
+« Consulte le workflow » seul dit où en est une feature et quelle commande lancer. Chaque commande ne charge que le socle commun et **sa** phase.
+
+Pas à pas, retour au raffinement en cas de trou métier, features ouvertes avant ce modèle : `docs/guide.md` § 4.1 et `docs/mise-a-jour.md`.
+
 ## Écrasement & sécurité
 
 | Zone | Emplacement | Si la cible existe |
@@ -85,7 +97,7 @@ node workflow-kit/bin/workflow-kit.mjs init --target C:\www\mon-projet --stack l
 | **Projet** | `.agents/**`, `AGENTS.md` | **jamais écrasé** : version du kit déposée dans `.agents/doublons/` |
 
 - `--force` (ou `--on-conflict overwrite`) écrase aussi les fichiers **projet**.
-- `opencode.json` : seuls `agent.build.permission.task` et `instructions` sont fusionnés (`plugin`/`mcp` intacts).
+- `opencode.json` : seuls les `agent.<agent principal>.permission.task` (Build et raffineur : les subagents que chacun peut invoquer) et `instructions` sont fusionnés (`plugin`/`mcp` intacts) ; un agent retiré du kit y perd son autorisation.
 - **`.claude/settings.json`** : seule la clé `attribution.commit` est fusionnée (valeur vide : aucune ligne `Co-Authored-By` dans les commits) ; le reste du fichier n'est jamais touché, un JSON invalide est signalé et laissé tel quel. `attribution: false` est respecté mais jamais écrit (avant Claude Code 2.1.281, il fait ignorer tout le fichier).
 - **`CLAUDE.md`** : seul le bloc entre `<!-- workflow-kit:start … -->` et `<!-- workflow-kit:end -->` est géré par le kit, le reste n'est jamais touché. Si `CLAUDE.md` est un lien (ex. vers `AGENTS.md`), le kit n'y écrit pas.
 - `.claude/` : seul le contenu de `agents/` et `skills/` est gitignoré (`.claude/agents/*`, `.claude/skills/*`) ; `.claude/settings.json` et le reste ne le sont pas. Pour versionner un agent ou une skill à toi, ajoute une exception, par ex. `!.claude/skills/ma-skill/` (elle marche avec `/*`, pas avec `/`).
@@ -97,7 +109,8 @@ node workflow-kit/bin/workflow-kit.mjs init --target C:\www\mon-projet --stack l
 
 - Le contenu **`core/`** (index, règles du Build, workflow, templates) est lu en direct : un `pull` suffit.
 - Les adaptateurs (`.opencode/`, `.claude/`) et les **seeds** (`packs/**`, `project/**` vers `.agents/` et `AGENTS.md`) sont **matérialisés** : relancer `sync` après un pull qui les touche.
-- **Anti-dérive** : tout **renommage / déplacement** de fichiers fournis par le kit (core ou seeds) **doit** fournir une **migration** (code dans `lib/migrate.mjs` / `lib/sync.mjs`) **ou** une **note explicite**. `sync` réécrit déjà les anciens chemins `.opencode/…` et `.workflow/…` cités dans `.agents/**.md` et `AGENTS.md` ; toute autre référence laissée vers un ancien chemin devient **morte**.
+- **Anti-dérive** : tout **renommage / déplacement / retrait** de fichiers fournis par le kit (core ou seeds) **doit** fournir une **migration** (code dans `lib/migrate.mjs` / `lib/sync.mjs`) **ou** une **note explicite**. `sync` réécrit déjà les anciens chemins `.opencode/…` et `.workflow/…` cités dans `.agents/**.md` et `AGENTS.md`, et supprime les fichiers générés des agents retirés du kit (`RETIRED_AGENTS`, `lib/frontmatter.mjs`) ; toute autre référence laissée vers un ancien chemin devient **morte**.
+- **Passage au workflow à deux phases** (agents `specs` et `architect` retirés) : note de migration dans `docs/mise-a-jour.md`.
 
 Procédure détaillée, nuances (quarantaine, `workflow.config.json`, nouvelle session) et pièges : **`docs/mise-a-jour.md`**.
 
@@ -111,9 +124,9 @@ Voir `packs/_schema.md`.
 
 ## Capacités incluses (core/)
 
-- **Workflow feature** : `agent-workflow.md` (étapes 0→7), `agent-build.md`, `agents/*.md` (6 subagents).
-- **Skills génériques** : `consult-workflow`, `analyse-flashback`, `cadrage-po`, `doc`, `compacter-feature` (+ 3 templates).
-- **Commandes** : `consult-workflow`, `cadrage-po`, `analyse-flashback`, `doc`, `compacter-feature`. Sous opencode, ce sont des commandes ; sous Claude Code, ce sont les skills du même nom (`/doc`, …), donc aucune commande n'est dupliquée dans `.claude/commands/`.
+- **Workflow feature** : `agent-workflow.md` (étapes 0→7, règles communes), `agent-build.md` (règles communes du Build), `phase-raffinement.md` (étapes 0-1), `phase-realisation.md` (étapes 2-7), `agents/*.md` (raffineur + 6 subagents).
+- **Skills génériques** : `consult-workflow`, `raffiner`, `realiser`, `analyse-flashback`, `cadrage-po`, `doc`, `compacter-feature`, `controle-livraison` (+ 3 templates).
+- **Commandes** : `consult-workflow`, `raffiner`, `realiser`, `cadrage-po`, `analyse-flashback`, `doc`, `compacter-feature`, `controle-livraison`. Sous opencode, ce sont des commandes ; sous Claude Code, ce sont les skills du même nom (`/doc`, …), donc aucune commande n'est dupliquée dans `.claude/commands/`.
 
 ## Auditer
 
@@ -125,3 +138,6 @@ Voir `packs/_schema.md`.
 4. **Fichiers requis** présents (core + packs).
 5. **Round-trip** : matérialisation générique pour `opencode`, `claude` et `opencode+claude` (jetons résolus, agents valides, bloc `CLAUDE.md`, `.gitignore`, aucun artefact d'un runtime non demandé).
 6. **Migration** : un projet installé avec un ancien modèle (`.opencode` lié au core, ou lien `.workflow`) est converti sans toucher aux anciens cores.
+7. **`.gitignore` Claude** : projet vierge (motifs de dossier) ou avec ses propres agents/skills (fichiers du kit un par un, contenu du projet intact).
+8. **Cohérence interne du core** : chemins, renvois §, sections du gabarit citées, commandes du CLI existent ; aucun reste d'une ancienne version.
+9. **Contrôle de feature** : cas de référence du script `check` pour les sections du gabarit à deux phases (Definition of Ready, plan, écarts au plan, décisions techniques), construits à partir du gabarit (`lib/check-cases.mjs`). Un gabarit modifié sans mettre à jour les cas est signalé.

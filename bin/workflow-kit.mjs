@@ -2,6 +2,8 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
+import { checkFiles, checkMeta } from '../lib/check.mjs';
+import { projectRoot } from '../lib/check-meta.mjs';
 import { checkCompaction, compactFeature } from '../lib/compact.mjs';
 import { init } from '../lib/init.mjs';
 import { resolveRuntimes, sync } from '../lib/sync.mjs';
@@ -13,7 +15,10 @@ const HELP = `workflow-kit <commande> [options]
 
   init     Installe le kit dans un projet (clone imbrique, seeds, adaptateurs)
   sync     Rematerialise les seeds et les adaptateurs .opencode/ .claude/ (apres un pull du kit)
-  verify   Audit du kit (agnosticisme, packs, references, round-trip)
+  verify   Audit du kit (agnosticisme, packs, references, round-trip, coherence interne du core, cas du controle)
+  check <fichiers...>  Controle d'un fichier de feature (jalons 1->2 et 6->7, avant commit, apres backtrack)
+  check-meta         Fichiers meta du projet : integrite du spec parallele + references mortes
+                     --spec : integrite seule ; --refs : references seules
   compact <fichier>  Squelette compacte d'un fichier de feature clos (skill compacter-feature)
                      --check : controle le resultat ; --dry-run : decrit sans ecrire
 
@@ -39,6 +44,8 @@ const { values, positionals } = parseArgs({
     force: { type: 'boolean', default: false },
     check: { type: 'boolean', default: false },
     'dry-run': { type: 'boolean', default: false },
+    spec: { type: 'boolean', default: false },
+    refs: { type: 'boolean', default: false },
     help: { type: 'boolean', short: 'h', default: false },
   },
 });
@@ -55,6 +62,15 @@ try {
     sync({ kitRoot, target: values.target || process.cwd(), stack: values.stack, projectName: values.name, onConflict, runtimes: resolveRuntimes(kitRoot, values.runtime) });
   } else if (command === 'verify') {
     process.exitCode = verify({ kitRoot }) === 0 ? 0 : 1;
+  } else if (command === 'check') {
+    const files = positionals.slice(1);
+    if (!files.length) throw new Error('check : fichier manquant (ex. check .agents/feature/x.md)');
+    process.exitCode = checkFiles(files);
+  } else if (command === 'check-meta') {
+    const root = projectRoot(values.target || process.cwd());
+    if (!root) throw new Error('check-meta : aucun dossier .agents/ trouve depuis le dossier courant (ou --target)');
+    const both = !values.spec && !values.refs;
+    process.exitCode = checkMeta(root, { spec: both || values.spec, refs: both || values.refs });
   } else if (command === 'compact') {
     const file = positionals[1];
     if (!file) throw new Error('compact : fichier manquant (ex. compact .agents/feature/DONE-x.md)');

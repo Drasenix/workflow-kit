@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { parseAgent } from '../../lib/frontmatter.mjs';
+import { parseAgent, RETIRED_AGENTS } from '../../lib/frontmatter.mjs';
 import { exists, isLink, move, readUtf8, remove, removeLink, rel, walk, writeUtf8 } from '../../lib/util.mjs';
 
 export const id = 'opencode';
@@ -11,7 +11,7 @@ const STALE_CORE = ['index.md', 'agent-workflow.md', 'agent-opencode.md', 'templ
 function renderAgent(text) {
   const a = parseAgent(text);
   const perms = a.tools.map(([action, effect]) => `  - action: ${action}\n    resource: "*"\n    effect: ${effect}\n`).join('');
-  return `---\ndescription: ${a.description}\nmode: subagent\npermissions:\n${perms}---\n${a.body}`;
+  return `---\ndescription: ${a.description}\nmode: ${a.mode}\npermissions:\n${perms}---\n${a.body}`;
 }
 
 function copyDir(src, dest) {
@@ -23,11 +23,16 @@ function mergeOpencodeJson({ kitRoot, target, log }) {
   const p = path.join(target, 'opencode.json');
   const cfg = exists(p) ? JSON.parse(readUtf8(p)) : { $schema: 'https://opencode.ai/config.json' };
 
+  // Un agent principal par entrée du fragment (build, raffineur) : ses subagents autorisés via Task ; un agent retiré du kit perd son autorisation.
   cfg.agent ??= {};
-  cfg.agent.build ??= {};
-  cfg.agent.build.permission ??= {};
-  cfg.agent.build.permission.task ??= {};
-  Object.assign(cfg.agent.build.permission.task, fragment.agent.build.permission.task);
+  for (const [name, def] of Object.entries(fragment.agent)) {
+    cfg.agent[name] ??= {};
+    cfg.agent[name].permission ??= {};
+    cfg.agent[name].permission.task ??= {};
+    const task = cfg.agent[name].permission.task;
+    for (const retired of RETIRED_AGENTS) delete task[retired];
+    Object.assign(task, def.permission.task);
+  }
 
   const instr = '.agents/workflow-commands.md';
   cfg.instructions = [].concat(cfg.instructions ?? []);
@@ -73,6 +78,13 @@ export function render(ctx) {
 
   for (const f of walk(path.join(coreDir, 'agents'))) {
     writeUtf8(path.join(dir, 'agents', rel(path.join(coreDir, 'agents'), f)), renderAgent(readUtf8(f)));
+  }
+  for (const retired of RETIRED_AGENTS) {
+    const stale = path.join(dir, 'agents', `${retired}.md`);
+    if (exists(stale)) {
+      remove(stale);
+      log.info(`[opencode] agent retire du kit supprime : agents/${retired}.md`);
+    }
   }
   copyDir(path.join(coreDir, 'commands'), path.join(dir, 'command'));
   copyDir(path.join(coreDir, 'skills'), path.join(dir, 'skills'));

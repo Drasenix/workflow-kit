@@ -1,7 +1,6 @@
 # <Nom de la feature>
 
 > Date : YYYY-MM-DD
-> Taille : Standard | S *(validée par l'utilisateur — critères : `workflow-kit/core/agent-workflow.md`)*
 
 ## Résumé métier
 
@@ -15,31 +14,56 @@
 
 | # | Étape | Agent | Statut | Date |
 |---|-------|-------|--------|------|
-| 0 | Consulter les specs | `@specs` | ⬜ | — |
-| 1 | GWT | `@specs` | ⬜ | — |
+| 0 | Compréhension (specs + code) | raffineur | ⬜ | — |
+| 1 | GWT + challenge | raffineur | ⬜ | — |
 | 2 | Test ROUGE | `@test` | ⬜ | — |
-| 3 | Architecture | `@architect` | ⬜ | — |
+| 3 | Plan | `@dev` | ⬜ | — |
 | 4 | Développement VERT | `@dev` | ⬜ | — |
 | 5 | Revue qualité | `@review` | ⬜ | — |
 | 6 | Résumé métier + recette nuances | Build | ⬜ | — |
 | 7 | Passage DONE | Build | ⬜ | — |
 
+## Registre des décisions
+
+> Tenu par l'agent principal (raffineur aux étapes 0-1, Build ensuite), **avant d'agir** : une ligne par parole de l'utilisateur qui change le cours (réponse à une pause, correction en cours d'étape, « go refacto », retour à une étape, accord ou refus d'une mise à jour meta). Le texte des questions reste dans leur section ; seule la décision vient ici. La colonne « Consigné dans » se complète au plus tard à l'étape 6. Repris tel quel à la compaction.
+
+| ID | Décision | Date | → Consigné dans |
+|---|---|---|---|
+| | | | |
+
 ## Specs consultées (étape 0)
+
+> Rempli par le raffineur à partir des références rendues par `@doc` : des références, pas de contenu recopié.
 
 - **Page(s)/sections de spec** (via `.agents/specs/spec.txt`) : 
 - **Spec parallèle (`SP-*`)** (`.agents/specs/spec-parallele.md`) : 
 - **Termes glossaire** : 
+- **Sources externes** (URL, date, ce qu'elles établissent) : 
 
 ---
 
 ## Questions specs (étape 0)
 
-> Rempli par @specs. Questions **bloquantes** uniquement (trou réel) — source + trou obligatoires.
-> Porter `Aucune` si la spec est claire.
+> Rempli par le raffineur. Questions **bloquantes** uniquement (trou réel, spec ou code) — source + trou obligatoires.
+> Porter `Aucune` si la spec et le code sont clairs.
 
 - [ ] 
 
 ---
+
+## Contexte technique (étape 0)
+
+> Rempli par le raffineur à partir des faits de `@explorateur` utiles à la réalisation, chacun avec son `fichier:ligne` : point d'entrée existant, tests existants touchés, contraintes techniques. Lu par `@test` et `@dev`. Porter `Aucun` si rien d'utile.
+
+- **Point d'entrée** : 
+- **Tests existants touchés** : 
+- **Contraintes techniques** : 
+
+---
+
+## Clé de lecture des scénarios (étape 1)
+
+> Rempli par le raffineur **si les scénarios en ont besoin** : vocabulaire des GIVEN / WHEN / THEN (« consulter l'écran X » = quelle requête), jeu de données commun, ce qui n'est volontairement pas écrit. Les scénarios y renvoient au lieu de le répéter. Repris tel quel à la compaction. Porter `Aucune` si les scénarios se lisent seuls.
 
 ## Scénarios baseline — comportement actuel (étape 1)
 
@@ -85,7 +109,7 @@ THEN
 
 ## Edge cases identifiés (étape 1)
 
-> Rempli par @specs. Un edge case se dérive d'une règle existante (spec, `SP-*`) et cite sa règle source.
+> Rempli par le raffineur. Un edge case se dérive d'une règle existante (spec, `SP-*`) ou d'une contrainte du `## Contexte technique`, et cite sa source.
 > Porter `Aucun` si aucun edge case n'est dérivable.
 
 | # | Edge case | GWT associé | Statut |
@@ -100,10 +124,20 @@ THEN
 
 ---
 
+## Arbitrages du challenge (étape 1)
+
+> Rempli par le raffineur après le passage de `@challenger` : une ligne par écart rapporté, avec l'arbitrage de l'utilisateur et l'endroit où il est répercuté (EC, scénario, Registre). Porter `Aucun écart` si le challenger n'en a rapporté aucun.
+
+| # | Cible | Écart | Arbitrage | Répercuté dans |
+|---|---|---|---|---|
+| | | | | |
+
+---
+
 ## Conventions (fichiers-rôles)
 
-> Rempli par le Build. Toute feature qui **établit ou modifie une convention** met à jour le **fichier-rôle** correspondant (`.agents/conventions.md`, `architecture.md`, `stack.md`, `commands.md`, `test-rules.md`, `ui-rules.md`, `component-rules.md`, `templates-index.md`) — et garde ses **références valides**.
-> Porter `Aucune` si la feature ne touche à aucune convention.
+> Rempli par le Build, à chaque décision : **toute mise à jour d'un fichier meta** décidée pendant la feature — fichiers-rôles (`.agents/conventions.md`, `architecture.md`, `stack.md`, `commands.md`, `test-rules.md`, `ui-rules.md`, `component-rules.md`, `templates-index.md`), `reference-utilitaires.md`, `domain-glossary.md`, références mortes à corriger. Ligne ⬜ à la décision, ✅ une fois écrite (au plus tard à l'étape 6). Le contrôle de livraison refuse une ligne ⬜.
+> Porter `Aucune` si la feature ne touche à aucun fichier meta.
 
 | Fichier-rôle | Action | Statut |
 |---|---|---|
@@ -111,17 +145,13 @@ THEN
 
 ---
 
-## Architecture (étape 3)
+## Plan (étape 3)
 
-> Rempli par @architect
+> Rempli par @dev à l'étape 3, validé par l'utilisateur à la pause 3 ; `### Écarts au plan` complété à l'étape 4. Dit **ce qui va être fait**, pas comment chaque ligne sera écrite.
 
-### Challenge GWT / edge cases
+### Arbre de flux
 
-> Constats justifiés (GWT/EC visé + règle source + trou). Porter `Aucun` si rien à signaler.
-
-| # | Scénario / EC | Constat | Statut | Proposition |
-|---|---------------|---------|--------|-------------|
-| | | | ✅ conforme / ❌ écart | |
+> L'arbre indenté présenté à la pause (point d'entrée → … → rendu), annoté des identifiants de scénarios. Repris tel quel à la compaction. Porter `Aucun` si la feature n'a pas de point d'entrée.
 
 ### Fichiers à créer / modifier
 
@@ -135,17 +165,19 @@ THEN
 |------------|---------|-------------|
 | | | |
 
-### Contrat d'implémentation
+### Choix structurants
 
-> 🔴 **À respecter strictement par @dev à l'étape 4.** Toute déviation sera relevée par @review.
-
-| Méthode | Signature attendue | Rôle | Appels obligatoires |
-|---------|-------------------|------|---------------------|
-| | | | |
-
-### Patterns retenus
+> Seulement quand il existait une vraie alternative. Chaque choix validé à la pause 3 devient un ADR. Porter `Aucun` sinon.
 
 - 
+
+### Signatures publiques
+
+> Points d'entrée et méthodes appelées d'ailleurs, typées. Rien de privé, aucune contrainte de rendu.
+
+| Méthode | Signature | Rôle |
+|---------|-----------|------|
+| | | |
 
 ### Questions à l'utilisateur
 
@@ -153,13 +185,21 @@ THEN
 
 ### Nouveaux utilitaires à référencer
 
+> Puces de @dev (étapes 3, 4 et refacto) et de @review. Tranchées à la pause 5 par le récapitulatif `### Décisions techniques` : `→ ✅ référencé` ou `→ ⛔ <raison>`.
+
+- 
+
+### Écarts au plan
+
+> Rempli par @dev à l'étape 4 : écarts **mineurs** (quoi, pourquoi). Un écart majeur arrête @dev et passe par l'utilisateur. Porter `Aucun` si le code suit le plan.
+
 - 
 
 ---
 
 ## Décisions & Justifications — ADR (étape 3)
 
-> Rempli par l'agent Build
+> Rempli par l'agent Build, à partir des choix structurants validés à la pause 3
 
 ### ADR-1 — 
 
@@ -180,6 +220,20 @@ THEN
 |---|-------|--------|
 | | | ✅ / ❌ |
 
+### Edge cases métier
+
+> Chaque edge case confronté au code (`Aucun` si la section des edge cases porte `Aucun`).
+
+| # | Edge case | Comportement observé | Conforme au GWT ? |
+|---|---|---|---|
+| | | | ✅ / ❌ |
+
+### Verdict et vérifications exécutées
+
+> Verdict, tests relancés, sondes. Trace de revue : retirée à la compaction (ce qui a mal tourné va dans « Problèmes détectés »).
+
+- 
+
 ### Problèmes détectés
 
 - 
@@ -194,9 +248,21 @@ THEN
 
 ### Nouveaux utilitaires à référencer
 
+> Tranchées à la pause 5 par le récapitulatif `### Décisions techniques` : `→ ✅ référencé` ou `→ ⛔ <raison>`.
+
 - 
 
+### Décisions techniques
+
+> Rempli par @review : une ligne par décision d'équipe (utilitaires de toutes les étapes, fichiers-rôles, références mortes), avec la décision proposée. Présenté à la pause 5 : ce que l'utilisateur ne conteste pas est accepté. Porter `Aucune` s'il n'y a rien à décider.
+
+| # | Objet | Décision proposée | Raison |
+|---|---|---|---|
+| | | | |
+
 ### Questions à l'utilisateur
+
+> Questions **métier** (`[À CONSIGNER]`, `[AMENDE SP-*]`) et points bloquants, arbitrés un à un.
 
 - 
 

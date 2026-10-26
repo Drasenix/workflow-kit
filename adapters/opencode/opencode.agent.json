@@ -1,15 +1,24 @@
 {
-  "$comment": "Fragment a fusionner dans opencode.json du projet : autorise le Build a invoquer les 6 subagents via Task.",
+  "$comment": "Fragment a fusionner dans opencode.json du projet : autorise chaque agent principal a invoquer ses subagents via Task (Build : realisation, et raffinement quand il endosse le role du raffineur par la skill raffiner ; raffineur : raffinement).",
   "agent": {
     "build": {
       "permission": {
         "task": {
-          "specs": "allow",
           "doc": "allow",
-          "architect": "allow",
+          "explorateur": "allow",
+          "challenger": "allow",
           "test": "allow",
           "dev": "allow",
           "review": "allow"
+        }
+      }
+    },
+    "raffineur": {
+      "permission": {
+        "task": {
+          "doc": "allow",
+          "explorateur": "allow",
+          "challenger": "allow"
         }
       }
     }

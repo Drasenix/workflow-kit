@@ -31,7 +31,7 @@ Charger cette skill après une **US passée en `DONE-*.md`** pour préparer et d
 
 Lire le `DONE-<slug>.md` (version de travail ou compactée, cf. skill `compacter-feature`) :
 - `## Résumé métier` (le problème et les effets visibles) ;
-- scénarios **baseline** et **évolution** (GWT étape 1) ;
+- scénarios **baseline** et **évolution** (GWT étape 1), avec leur introduction et `## Clé de lecture des scénarios` si présente (vocabulaire, jeu de données commun) ;
 - `## Edge cases identifiés` (fichier compacté : `## Dette connue` + ligne « Couverts ») ;
 - `## Décisions & Justifications (ADR)` et, si présentes, `## Leçons de réalisation` / `## Vigilances` ;
 - règles métier `SP-*` : identifiants dans `## Nuances consignées` (fichier compacté : `## Traçabilité`), **texte** dans `.agents/specs/spec-parallele.md`.
