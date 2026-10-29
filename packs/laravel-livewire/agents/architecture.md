@@ -20,7 +20,7 @@
 | `app/Providers/` | Service providers. |
 | `app/Services/` | Intégrations externes et comportements transverses. |
 
-Sous-dossiers optionnels (créer si besoin) : `app/Contracts/`, `app/Exports/`, `app/Notifications/`, `app/Traits/`.
+Sous-dossiers optionnels (créés au premier fichier qui en relève) : `app/Contracts/`, `app/Exports/`, `app/Notifications/`, `app/Traits/`. Interfaces et traits : règles de `.agents/conventions.md` § « Responsabilités et abstractions ».
 
 ## Routing
 

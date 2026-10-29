@@ -37,7 +37,11 @@ Le plan dit **ce qui va être fait**, pas comment chaque ligne sera écrite. Tu 
 
 1. **Réutilisation d'abord** : utilitaires de `.agents/reference-utilitaires.md`, services/actions à étendre plutôt que dupliquer, DTO existants.
 2. **Choix de conception** selon `.agents/conventions.md` (couche, transaction pour les écritures multiples, DTO plutôt que tableau brut, event ou appel direct).
-3. **Code mort potentiel** : aucun fichier, aucune méthode sans appelant. Quand la feature **supprime ou renomme** un écran, une route, une vue ou un libellé visible, chercher (grep) son nom technique **et** son libellé dans `.agents/` (fichiers-rôles, glossaire, spec parallèle, `reference-utilitaires`) et lister chaque occurrence dans ton rapport : le Build les inscrit dans `## Conventions (fichiers-rôles)`.
+3. **Simplicité** : la solution la plus directe qui satisfait les scénarios.
+   - Chaque fichier et chaque signature publique sert au moins un scénario (colonne `Scénarios`) ; chaque paramètre est exigé par un scénario ou par un appelant.
+   - Une **abstraction nouvelle** (interface, classe abstraite, trait, classe ou méthode générique, option de configuration) est un choix structurant : l'alternative écartée est la solution directe, la raison dit ce qui l'impose.
+   - Une **classe existante qui recevrait une nouvelle raison de changer** (une autre règle métier, une autre intégration) est un choix structurant : l'étendre ou créer une classe.
+4. **Code mort potentiel** : aucun fichier, aucune méthode sans appelant. Quand la feature **supprime ou renomme** un écran, une route, une vue ou un libellé visible, chercher (grep) son nom technique **et** son libellé dans `.agents/` (fichiers-rôles, glossaire, spec parallèle, `reference-utilitaires`) et lister chaque occurrence dans ton rapport : le Build les inscrit dans `## Conventions (fichiers-rôles)`.
 
 Tu ne remets pas en cause les GWT : ils ont été challengés et validés au raffinement. Un GWT inapplicable tel quel → clause d'échec ci-dessous.
 
@@ -52,8 +56,8 @@ Tu ne remets pas en cause les GWT : ils ont été challengés et validés au raf
 
 ### Fichiers à créer / modifier
 
-| Fichier | Type | Rôle |
-|---------|------|------|
+| Fichier | Type | Rôle | Scénarios |
+|---------|------|------|-----------|
 
 ### Code existant réutilisé
 
@@ -83,7 +87,7 @@ Tu ne remets pas en cause les GWT : ils ont été challengés et validés au raf
 ```
 
 - **Arbre de flux** : présenté aussi dans ton rapport ; uniquement sous `### Arbre de flux` (c'est cet emplacement que la compaction conserve).
-- **Choix structurants** : seulement quand il existait une vraie alternative ; `Aucun` sinon. Validés à la pause 3, le Build les consigne en ADR.
+- **Choix structurants** : seulement quand il existait une vraie alternative ; `Aucun` sinon. Toute abstraction nouvelle en est un (cf. point 3). Validés à la pause 3, le Build les consigne en ADR.
 - **Signatures publiques** : les points d'entrée et les méthodes appelées d'ailleurs, typées (paramètres et retour). Rien de privé, aucune contrainte de rendu, pas de code en prose.
 - **Questions** : seulement si elles bloquent la conception ; `Aucune` sinon.
 
@@ -91,7 +95,11 @@ Tu rends ton rapport (le plan, avec l'arbre) et tu t'arrêtes : pas de code avan
 
 ## Étape 4 — Code VERT
 
-- **Code minimal** : pas de surenchère, pas d'optimisation prématurée, **pas de refacto**.
+- **Code minimal** : pas d'optimisation prématurée, **pas de refacto**, pas de surenchère. Est de la surenchère, hors choix structurant validé :
+  - une interface, une classe abstraite ou un trait avec un seul utilisateur ;
+  - un paramètre, une option ou une branche que rien n'exerce avec deux valeurs différentes (ni appelant, ni scénario) ;
+  - une garde, un `try`/`catch` ou une valeur de repli pour un cas qui n'est ni un scénario, ni un edge case, ni une entrée extérieure (saisie, requête, fichier, réponse d'un tiers). Un cas possible mais non spécifié est un trou métier (clauses d'échec) ;
+  - une classe ou une méthode générique pour un seul usage.
 - **Plan validé** : signatures publiques, fichiers et réutilisations prévus. Une méthode existante couvre le besoin → l'utiliser.
 
 ### Règle des écarts au plan

@@ -54,4 +54,4 @@ features/<domaine>/
 ```
 
 - `engine/` = logique métier pure ; `facade/` = API publique.
-- Pas d'interface entre facade et service : l'appel IPC est direct.
+- Pas d'interface entre facade et service : l'appel IPC est direct (règle générale : `.agents/conventions.md` § « Responsabilités et abstractions »).

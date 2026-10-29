@@ -1,6 +1,6 @@
 ---
 name: review
-description: Revue qualité post-implémentation : code mort, duplication, réutilisation, conventions, questions architecturales
+description: Revue qualité post-implémentation : code mort, duplication, réutilisation, simplicité, conventions, questions architecturales
 tools:
   read: allow
   edit: allow
@@ -40,6 +40,8 @@ Pour chaque point : ✅ ou ❌ avec explication.
 - [ ] Bloc copié-collé depuis un autre fichier ?
 - [ ] Duplication partielle (même intention, implémentation voisine) ?
 
+Factoriser seulement des copies qui changeraient pour la **même raison** (même règle métier, même intégration), et le dire dans la justification. Deux codes voisins qui obéissent à des règles différentes restent séparés : ✅ avec la raison.
+
 ### 3. Réutilisation
 - [ ] Une méthode existante aurait-elle pu servir ?
 - [ ] Chaque nouvel utilitaire réutilisable figure-t-il dans `### Nouveaux utilitaires à référencer` ?
@@ -72,6 +74,16 @@ Pour chaque point : ✅ ou ❌ avec explication.
 ### 8. Edge cases métier
 Chaque edge case de `## Edge cases identifiés` confronté au code. Résultat dans la sous-section `### Edge cases métier` du livrable : le tableau, ou `Aucun` si la section des edge cases porte `Aucun`.
 
+### 9. Simplicité et responsabilités
+Hors choix structurant validé (`## Plan (étape 3)`, ADR) :
+- [ ] Interface, classe abstraite ou trait nouveau avec un seul utilisateur ?
+- [ ] Paramètre, option ou branche que rien n'exerce avec deux valeurs différentes (ni appelant, ni scénario) ?
+- [ ] Garde, `try`/`catch` ou valeur de repli pour un cas qui n'est ni un scénario, ni un edge case, ni une entrée extérieure (saisie, requête, fichier, réponse d'un tiers) ?
+- [ ] Classe ou méthode générique pour un seul usage ?
+- [ ] Classe existante qui reçoit une nouvelle raison de changer (une autre règle métier, une autre intégration) ?
+- [ ] Sous-classe ou implémentation nouvelle qui refuse une entrée acceptée par son parent, ou rend autre chose que ce qu'il promet ?
+- [ ] Trait nouveau qui utilise une propriété ou une méthode de la classe hôte sans la déclarer (méthode abstraite) ?
+
 ## Format du livrable
 
 ```markdown
@@ -93,7 +105,7 @@ Chaque edge case de `## Edge cases identifiés` confronté au code. Résultat da
 
 ### Problèmes détectés
 
-- **❌ Duplication** : `FooService::calculerX()` identique à `BarService::calculerY()`. Factoriser ?
+- **❌ Duplication** : `FooService::calculerX()` identique à `BarService::calculerY()`, les deux appliquent la même règle de remise. Factoriser ?
 
 ### Plan de refacto
 
@@ -116,7 +128,7 @@ Chaque edge case de `## Edge cases identifiés` confronté au code. Résultat da
 - …
 ```
 
-**Plan de refacto** : chaque ligne précise (fichier existant, lignes exactes, action concrète, justification) ; jamais de refacto hors des fichiers de la feature ; jamais de changement de comportement. Rien à refactorer → `> Aucun refacto nécessaire.`
+**Plan de refacto** : chaque ligne précise (fichier existant, lignes exactes, action concrète, justification) ; jamais de refacto hors des fichiers de la feature ; jamais de changement de comportement ; jamais d'abstraction que le point 9 relèverait. Rien à refactorer → `> Aucun refacto nécessaire.`
 
 **Décisions techniques** : le récapitulatif de **tout** ce qui relève de l'équipe et non du métier — chaque puce non tranchée de `### Nouveaux utilitaires à référencer` (plan, code, refacto et revue), chaque fichier-rôle à créer ou mettre à jour, chaque référence morte à corriger. Une ligne par objet, avec **ta décision proposée** et sa raison. Le Build le présente à l'utilisateur à la pause 5 : ce qu'il ne conteste pas est accepté. `Aucune` s'il n'y a rien à décider. Les règles **métier** (`[À CONSIGNER]`, `[AMENDE SP-*]`, glossaire) n'y figurent pas : elles restent dans `### Questions à l'utilisateur`, arbitrées une à une.
 
