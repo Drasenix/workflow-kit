@@ -146,6 +146,10 @@ Couverts : EC-… (voir scénarios).
 
 - <données, période, journaux>
 
+## Registre des décisions
+
+<repris tel quel s'il a été tenu en direct ; sinon les décisions de la version de travail qui ne sont portées ni par un ADR, ni par le périmètre, ni par un scénario ; section omise si elle est vide>
+
 ## Conditions de réouverture
 
 - <signal ou information qui justifierait de reprendre l'investigation>
