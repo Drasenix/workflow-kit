@@ -31,6 +31,14 @@
 - **Mass assignment** : toujours protéger avec `$fillable` ou `$guarded`.
 - **Transactions** : envelopper toute opération multi-écritures dans `DB::transaction()`.
 
+### Responsabilités et abstractions
+
+- **Une raison de changer par classe** : une Action porte une opération métier ; un Service, une intégration externe ou un comportement transverse nommé (génération PDF, journal…). Une règle d'un autre domaine ou une seconde intégration va dans une autre classe, pas dans une Action ou un Service existant.
+- **Où vit une règle** : dérivée d'une seule valeur énumérée → méthode de l'Enum ; ne lit que les attributs et relations d'un modèle → méthode du modèle ; écrit, orchestre plusieurs modèles ou appelle un Service → Action.
+- **Interface** : seulement si plusieurs implémentations existent dans le code, ou à la frontière d'un système externe qu'il faut remplacer par un bouchon en test et que les fakes du framework (`Http::fake()`, `Mail::fake()`, `Storage::fake()`, `Queue::fake()`…) ne couvrent pas. Sinon, injecter la classe concrète : le conteneur la résout sans liaison.
+- **Trait** : une propriété ou une méthode de la classe hôte dont il a besoin est déclarée dans le trait en méthode abstraite.
+- **Sous-classe** (y compris d'une classe vendor) : elle accepte tout ce que le parent accepte et rend ce qu'il promet.
+
 ## Modèles et migrations
 
 - **Ne jamais modifier une migration existante** déjà exécutée. Créer une nouvelle migration (`add_<truc>_to_<table>_table`, `drop_<truc>_from_<table>_table`).

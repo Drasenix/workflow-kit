@@ -155,9 +155,9 @@ THEN
 
 ### Fichiers à créer / modifier
 
-| Fichier | Type | Rôle |
-|---------|------|------|
-| | | |
+| Fichier | Type | Rôle | Scénarios |
+|---------|------|------|-----------|
+| | | | |
 
 ### Code existant réutilisé
 

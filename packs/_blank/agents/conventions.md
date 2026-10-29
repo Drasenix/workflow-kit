@@ -12,6 +12,12 @@
 
 - <regle de la stack>
 
+### Responsabilites et abstractions
+
+- Une raison de changer par classe : <ce que porte chaque couche>
+- Ou vit une regle : <couche selon ce que la regle lit ou ecrit>
+- Interface : <quand en creer une ; sinon, dependre de la classe concrete>
+
 ## Nommage et style
 
 - <regle>

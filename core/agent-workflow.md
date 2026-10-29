@@ -16,7 +16,7 @@ Ce fichier porte les règles **communes** aux deux phases. Les règles propres �
 | 2 | **Test ROUGE** | `@test` | Tests qui échouent (baseline + évolution), **fichier unique** `<Feature>Test.*` (sans identifiant de lot) | **Auto (jalon 2→3)** | Réalisation |
 | 3 | **Plan** | `@dev` | `## Plan (étape 3)` : arbre de flux (prompt, et dans le fichier sous `### Arbre de flux`), fichiers, code réutilisé, choix structurants, signatures publiques | **OUI** | Réalisation |
 | 4 | **Développement VERT** | `@dev` (repris ou réinvoqué) | Code minimal qui fait passer les tests, écarts au plan déclarés | **Auto (jalon 4→5)** | Réalisation |
-| 5 | **Revue qualité** | `@review` | Checklist code mort/duplication/réutilisation + plan de refacto optionnel | **OUI** | Réalisation |
+| 5 | **Revue qualité** | `@review` | Checklist code mort/duplication/réutilisation/simplicité + plan de refacto optionnel | **OUI** | Réalisation |
 | 6 | **Résumé métier + recette nuances** | Build | Résumé non technique dans `.agents/feature/<slug>.md` sous `## Résumé métier` **+** `## Nuances consignées` (entrées `SP-*` créées/superseded) → écriture dans `.agents/specs/spec-parallele.md` après validation | **OUI** | Réalisation |
 | 7 | **Passage DONE (mécanique)** | Build | Renommage `.agents/feature/<slug>.md` → `DONE-<slug>.md` + ligne 7 → OK dans le tableau Progression | **Auto (jalon 6→7)** | Réalisation |
 | X | **Backtrack** | Build | Sur demande utilisateur, reprise à l'étape indiquée | | Les deux |
