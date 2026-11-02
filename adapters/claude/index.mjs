@@ -55,8 +55,11 @@ function ensureClaudeMd({ target, log }) {
 }
 
 /**
- * Fusionne dans .claude/settings.json la seule clé `attribution.commit` : vide = aucun trailer `Co-Authored-By` dans les commits.
- * Le reste du fichier n'est jamais touché ; un JSON invalide est signalé et laissé tel quel.
+ * Fusionne dans .claude/settings.json deux clés, et rien d'autre :
+ * - `attribution.commit` vide : aucun trailer `Co-Authored-By` dans les commits ;
+ * - `worktree.symlinkDirectories` contient `workflow-kit` : un worktree créé par Claude Code reçoit un lien vers le kit,
+ *   dépôt imbriqué que ni git ni `.worktreeinclude` ne lui apportent.
+ * Un JSON invalide est signalé et laissé tel quel.
  * `attribution: false` (tout masqué) est respecté, mais jamais écrit par le kit : avant Claude Code 2.1.281, il fait ignorer tout le fichier.
  */
 function ensureSettings({ target, log }) {
@@ -69,15 +72,50 @@ function ensureSettings({ target, log }) {
       cfg = null;
     }
     if (!cfg || typeof cfg !== 'object' || Array.isArray(cfg)) {
-      log.warn('[claude] .claude/settings.json invalide : attribution des commits non desactivee (corriger le JSON puis relancer sync)');
+      log.warn('[claude] .claude/settings.json invalide : attribution des commits et lien du kit en worktree non regles (corriger le JSON puis relancer sync)');
       return;
     }
   }
-  if (cfg.attribution === false || cfg.attribution?.commit === '') return;
-  const current = cfg.attribution && typeof cfg.attribution === 'object' ? cfg.attribution : {};
-  cfg.attribution = { ...current, commit: '' };
+  const changes = [];
+  if (!(cfg.attribution === false || cfg.attribution?.commit === '')) {
+    const current = cfg.attribution && typeof cfg.attribution === 'object' ? cfg.attribution : {};
+    cfg.attribution = { ...current, commit: '' };
+    changes.push('attribution des commits desactivee');
+  }
+  const worktree = cfg.worktree && typeof cfg.worktree === 'object' && !Array.isArray(cfg.worktree) ? cfg.worktree : {};
+  const linked = Array.isArray(worktree.symlinkDirectories) ? worktree.symlinkDirectories : [];
+  if (!linked.includes('workflow-kit')) {
+    cfg.worktree = { ...worktree, symlinkDirectories: [...linked, 'workflow-kit'] };
+    changes.push('worktree.symlinkDirectories += workflow-kit');
+  }
+  if (!changes.length) return;
   writeUtf8(p, JSON.stringify(cfg, null, 2) + '\n');
-  log.info('[claude] .claude/settings.json : attribution des commits desactivee');
+  log.info(`[claude] .claude/settings.json : ${changes.join(' ; ')}`);
+}
+
+const WT_START = '# workflow-kit:start (genere par workflow-kit, ne pas editer ce bloc)';
+const WT_END = '# workflow-kit:end';
+const WT_BLOCK = `${WT_START}
+# Fichiers generes par le kit (ignores par git), copies dans chaque worktree cree par Claude Code.
+# Le kit lui-meme est un depot imbrique que cette copie ne voit pas : il arrive par worktree.symlinkDirectories.
+.claude/agents/**
+.claude/skills/**
+.claude/commands/**
+${WT_END}`;
+
+/**
+ * Insère ou met à jour le bloc géré de `.worktreeinclude` ; les lignes du projet (ex. `.env`) ne sont jamais touchées.
+ * Seuls les fichiers ignorés par git sont copiés : les motifs de dossier ne dupliquent pas les agents et skills suivis du projet.
+ */
+function ensureWorktreeInclude({ target, log }) {
+  const p = path.join(target, '.worktreeinclude');
+  const current = exists(p) ? readUtf8(p) : '';
+  const re = new RegExp(`${WT_START.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[\\s\\S]*?${WT_END}`);
+  const next = re.test(current) ? current.replace(re, () => WT_BLOCK) : current ? `${current.replace(/\s*$/, '')}\n\n${WT_BLOCK}\n` : `${WT_BLOCK}\n`;
+  if (next !== current) {
+    writeUtf8(p, next);
+    log.info('[claude] .worktreeinclude : bloc workflow-kit a jour');
+  }
 }
 
 /**
@@ -95,7 +133,8 @@ function ignoreFor(claudeDir, dir, generated, suffix = '') {
 }
 
 /**
- * core/ (neutre) -> .claude/{agents,skills,commands} + bloc CLAUDE.md + `attribution.commit` de .claude/settings.json.
+ * core/ (neutre) -> .claude/{agents,skills,commands} + bloc CLAUDE.md + `attribution.commit` et `worktree.symlinkDirectories`
+ * de .claude/settings.json + bloc de .worktreeinclude.
  * Retourne les motifs à ignorer (voir `ignoreFor`). Le reste de .claude/ (settings.json…) n'est jamais ignoré.
  */
 export function render(ctx) {
@@ -141,6 +180,7 @@ export function render(ctx) {
 
   ensureClaudeMd(ctx);
   ensureSettings(ctx);
+  ensureWorktreeInclude(ctx);
   return {
     ignore: [
       ...ignoreFor(claudeDir, 'agents', agentFiles),

@@ -103,8 +103,8 @@ Si le kit n'est pas encore dans le projet, lancer la commande depuis une copie d
 2. **Matérialise les seeds** : `packs/<stack>/agents/**` + `project/agents/**` → `.agents/`, et `project/AGENTS.md` → `AGENTS.md`.
 3. **Génère les adaptateurs** demandés :
    - `opencode` : `.opencode/{agents,command,skills}` et fusion de `opencode.json` (permissions `agent.<agent principal>.permission.task` des subagents du Build et du raffineur, `instructions: [".agents/workflow-commands.md"]`). Le reste (`plugin`, `mcp`) est préservé.
-   - `claude` : `.claude/{agents,skills}` et un bloc géré dans `CLAUDE.md` (imports `@AGENTS.md` et `@.agents/workflow-commands.md`). Le reste de `CLAUDE.md` n'est jamais touché.
-4. **Complète le `.gitignore`** : `workflow-kit/`, `.opencode`, et pour Claude `.claude/agents/*` et `.claude/skills/*` (le reste de `.claude/`, par ex. `settings.json`, n'est pas ignoré ; pour versionner un agent ou une skill à toi, ajoute une exception `!.claude/skills/ma-skill/`).
+   - `claude` : `.claude/{agents,skills}`, un bloc géré dans `CLAUDE.md` (imports `@AGENTS.md` et `@.agents/workflow-commands.md`) et un dans `.worktreeinclude`, et dans `.claude/settings.json` les seules clés `attribution.commit` et `worktree.symlinkDirectories` (voir § 3.6). Le reste de ces fichiers n'est jamais touché.
+4. **Complète le `.gitignore`** : `workflow-kit` (sans `/` final, pour couvrir aussi le lien d'un worktree), `.opencode`, et pour Claude `.claude/agents/*` et `.claude/skills/*` (le reste de `.claude/`, par ex. `settings.json`, n'est pas ignoré ; pour versionner un agent ou une skill à toi, ajoute une exception `!.claude/skills/ma-skill/`).
 5. **Réécrit les anciens chemins** `.opencode/…` et `.workflow/…` cités dans `.agents/**.md` et `AGENTS.md` (voir `docs/mise-a-jour.md`, « Migration »).
 6. **Crée `.agents/feature/`** et affiche la checklist post-installation.
 
@@ -137,6 +137,20 @@ node workflow-kit/bin/workflow-kit.mjs sync
 - `packs/` ou `project/` ont bougé → `sync` aussi.
 
 Détails, nuances et pièges : `docs/mise-a-jour.md`.
+
+### 3.6 Worktrees
+
+Un worktree git ne reçoit que les fichiers suivis : ni le kit (dépôt imbriqué, ignoré), ni `.opencode/`, ni les agents et skills générés dans `.claude/`. Sans eux, une session y tourne sans workflow. Le garde-fou d'`AGENTS.md` le fait remarquer dès le début de session.
+
+| Worktree créé par | Ce qui l'équipe |
+|---|---|
+| Claude Code (session en worktree, `claude --worktree`, sous-agent isolé) | automatique : `worktree.symlinkDirectories` de `.claude/settings.json` lie le kit ; le bloc de `.worktreeinclude` copie les agents et skills générés |
+| opencode (espaces de travail) | régler le script de démarrage du projet dans opencode sur `node <checkout principal>/workflow-kit/bin/workflow-kit.mjs worktree` |
+| `git worktree add`, ou si rien de ce qui précède n'a joué | depuis le worktree : `node "$(git rev-parse --path-format=absolute --git-common-dir)/../workflow-kit/bin/workflow-kit.mjs" worktree` |
+
+La commande `worktree` lie `workflow-kit` et `.opencode` à ceux du checkout principal (jonction sous Windows, sans droit particulier ; lien symbolique ailleurs), copie les fichiers générés absents de `.claude/`, et ajoute les deux liens à `info/exclude` (partagé par tous les worktrees) : ils restent invisibles pour git, même sur une branche dont le `.gitignore` est antérieur. Elle est idempotente et sans effet dans le checkout principal.
+
+Limites : une session cloud n'a pas de checkout principal, donc pas de kit ; en worktree, un conteneur Docker monté sur le checkout principal teste le code du principal, pas celui du worktree.
 
 ---
 

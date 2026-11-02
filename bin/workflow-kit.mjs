@@ -8,6 +8,7 @@ import { checkCompaction, compactFeature } from '../lib/compact.mjs';
 import { init } from '../lib/init.mjs';
 import { resolveRuntimes, sync } from '../lib/sync.mjs';
 import { verify } from '../lib/verify.mjs';
+import { prepareWorktree } from '../lib/worktree.mjs';
 
 const kitRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -21,6 +22,8 @@ const HELP = `workflow-kit <commande> [options]
                      --spec : integrite seule ; --refs : references seules
   compact <fichier>  Squelette compacte d'un fichier de feature clos (skill compacter-feature)
                      --check : controle le resultat ; --dry-run : decrit sans ecrire
+  worktree           Prepare un worktree git (opencode, git worktree add, Claude Code) : liens vers le kit et .opencode
+                     du checkout principal, fichiers generes de .claude/ copies (lance depuis le worktree, ou --target)
 
 Options communes
   --target <dir>        Projet cible (defaut : cwd)
@@ -75,6 +78,8 @@ try {
     const file = positionals[1];
     if (!file) throw new Error('compact : fichier manquant (ex. compact .agents/feature/DONE-x.md)');
     process.exitCode = values.check ? checkCompaction({ file }) : compactFeature({ file, dryRun: values['dry-run'] });
+  } else if (command === 'worktree') {
+    process.exitCode = prepareWorktree({ target: values.target || process.cwd() });
   } else {
     console.error(`Commande inconnue : ${command}\n\n${HELP}`);
     process.exitCode = 2;
