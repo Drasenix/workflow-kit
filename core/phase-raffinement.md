@@ -142,7 +142,7 @@ Quand la réalisation découvre un **trou métier** (comportement que les GWT ne
 
 1. Le Build inscrit le backtrack au Registre et passe les lignes concernées à `🔁 à refaire` (`workflow-kit/core/agent-workflow.md` § « Protocole de backtrack »), puis **s'arrête** : il ne mène jamais le raffinement lui-même et propose d'ouvrir une nouvelle session de raffinement (`/raffiner [feature]`).
 2. Le raffineur reprend **sur le seul point en question** : relecture ciblée des sections, `@doc` / `@explorateur` si besoin, mise à jour des GWT avec l'utilisateur.
-3. **Gel limité** : `@challenger` sur les scénarios ajoutés ou modifiés, contrôle de livraison, validation de l'utilisateur. La réalisation reprend à `@test` sur ces seuls scénarios.
+3. **Gel limité** : `@challenger` sur les scénarios ajoutés, modifiés ou retirés (trace : `workflow-kit/core/agent-workflow.md` § « Retrait de scénario »), contrôle de livraison, validation de l'utilisateur. La réalisation reprend à `@test` sur ces seuls scénarios.
 
 ## Chevauchement de features (étapes 0-1 en avance)
 

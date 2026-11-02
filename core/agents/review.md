@@ -54,7 +54,8 @@ Factoriser seulement des copies qui changeraient pour la **même raison** (même
 - [ ] **Fichiers-rôles** (`.agents/conventions.md`, `.agents/architecture.md`, `.agents/stack.md`, `.agents/commands.md`, `.agents/test-rules.md`, `.agents/ui-rules.md`, `.agents/component-rules.md`, `.agents/templates-index.md`) : chaque convention nouvelle ou modifiée par la feature figure-t-elle dans `## Conventions (fichiers-rôles)` ? Les références citées par les fichiers meta existent-elles ? → `node workflow-kit/bin/workflow-kit.mjs check-meta` --refs (mécanique, casse comprise) : coller la sortie dans le verdict
 
 ### 5. Cohérence test ↔ GWT
-- [ ] Chaque scénario a son test (jugé sur le libellé), et aucune assertion ne sort des GWT ?
+- [ ] Chaque scénario a son test (jugé sur le libellé) ou une marque `⏭️`, et aucune assertion ne sort des GWT ?
+- [ ] Chaque test a son scénario : aucun test d'un scénario marqué `⏭️ obsolète` ne subsiste, ni helper, fixture ou import devenu orphelin ?
 - [ ] Les `SP-*` ✅ en vigueur du périmètre sont-ils respectés ?
 - [ ] **Contrôle d'intégrité de l'index SP** : `node workflow-kit/bin/workflow-kit.mjs check-meta` --spec (mécanique) : sortie collée dans le verdict, tout écart signalé ?
 - [ ] Nuance métier validée en cours de feature mais absente du spec parallèle → signalée (puce `[À CONSIGNER]` dans `### Questions à l'utilisateur`) ?
@@ -128,9 +129,9 @@ Hors choix structurant validé (`## Plan (étape 3)`, ADR) :
 - …
 ```
 
-**Plan de refacto** : chaque ligne précise (fichier existant, lignes exactes, action concrète, justification) ; jamais de refacto hors des fichiers de la feature ; jamais de changement de comportement ; jamais d'abstraction que le point 9 relèverait. Rien à refactorer → `> Aucun refacto nécessaire.`
+**Plan de refacto** : chaque ligne précise (fichier existant, lignes exactes, action concrète, justification) ; jamais de refacto hors des fichiers de la feature ; jamais de changement de comportement ; jamais d'abstraction que le point 9 relèverait ; jamais de retrait de scénario ni de test — un test en doublon va dans `### Décisions techniques`, tout autre retrait dans `### Questions à l'utilisateur` (`workflow-kit/core/agent-workflow.md` § « Retrait de scénario »). Rien à refactorer → `> Aucun refacto nécessaire.`
 
-**Décisions techniques** : le récapitulatif de **tout** ce qui relève de l'équipe et non du métier — chaque puce non tranchée de `### Nouveaux utilitaires à référencer` (plan, code, refacto et revue), chaque fichier-rôle à créer ou mettre à jour, chaque référence morte à corriger. Une ligne par objet, avec **ta décision proposée** et sa raison. Le Build le présente à l'utilisateur à la pause 5 : ce qu'il ne conteste pas est accepté. `Aucune` s'il n'y a rien à décider. Les règles **métier** (`[À CONSIGNER]`, `[AMENDE SP-*]`, glossaire) n'y figurent pas : elles restent dans `### Questions à l'utilisateur`, arbitrées une à une.
+**Décisions techniques** : le récapitulatif de **tout** ce qui relève de l'équipe et non du métier — chaque puce non tranchée de `### Nouveaux utilitaires à référencer` (plan, code, refacto et revue), chaque fichier-rôle à créer ou mettre à jour, chaque référence morte à corriger, chaque test en doublon à retirer. Une ligne par objet, avec **ta décision proposée** et sa raison. Le Build le présente à l'utilisateur à la pause 5 : ce qu'il ne conteste pas est accepté. `Aucune` s'il n'y a rien à décider. Les règles **métier** (`[À CONSIGNER]`, `[AMENDE SP-*]`, glossaire) n'y figurent pas : elles restent dans `### Questions à l'utilisateur`, arbitrées une à une.
 
 ## Signalement des mises à jour meta (tu ne les écris jamais)
 

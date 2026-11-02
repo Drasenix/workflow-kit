@@ -68,6 +68,7 @@
 ## Scénarios baseline — comportement actuel (étape 1)
 
 > Tests qui figent l'existant avant modification. Servent de filet de sécurité.
+> Scénario retiré, fusionné ou reclassé après le gel (ici ou dans les évolutions) : laissé en place, marqué `⏭️ obsolète : …`, identifiant conservé — `workflow-kit/core/agent-workflow.md` § « Retrait de scénario ».
 
 ### Scénario B1 — 
 

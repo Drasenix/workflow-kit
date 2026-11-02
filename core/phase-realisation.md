@@ -51,7 +51,7 @@ Un **trou métier** (comportement que les GWT ne spécifient pas) se règle au r
 ### Pause 5 (revue → global)
 
 - [ ] @review a produit la section `### Edge cases métier` (tableau **ou** `Aucun`) et aucun écart non justifié
-- [ ] **Récapitulatif technique** : le Build présente `### Décisions techniques` (utilitaires à référencer de toutes les étapes, fichiers-rôles, références mortes), chaque ligne avec la décision proposée par `@review`. L'utilisateur conteste les lignes qu'il veut ; **le reste est accepté**. Une seule ligne au Registre (« récapitulatif technique accepté, sauf T… »), puis le Build répercute chaque décision sur sa trace (`workflow-kit/core/agent-workflow.md` § « Le Registre d'abord »)
+- [ ] **Récapitulatif technique** : le Build présente `### Décisions techniques` (utilitaires à référencer de toutes les étapes, fichiers-rôles, références mortes, tests en doublon à retirer), chaque ligne avec la décision proposée par `@review`. L'utilisateur conteste les lignes qu'il veut ; **le reste est accepté**. Une seule ligne au Registre (« récapitulatif technique accepté, sauf T… »), puis le Build répercute chaque décision sur sa trace (`workflow-kit/core/agent-workflow.md` § « Le Registre d'abord »)
 - [ ] Questions **métier** de la revue (`[À CONSIGNER]`, `[AMENDE SP-*]`) arbitrées une à une
 
 ### Jalon 6→7 (nuances → DONE), auto-gate
@@ -95,9 +95,10 @@ Le refacto n'est **pas une étape distincte** : c'est un retour aux étapes 4 pu
 
 **Règles :**
 - Chaque passage de `@dev` en backtrack est suivi d'un passage de `@review` : **tout code modifié est revu**
-- Le OK final de l'étape 5 signifie "code propre, rien à redire, plan de refacto vide"
+- Le OK final de l'étape 5 signifie "code propre, rien à redire, plan de refacto vide, aucun retrait en attente"
 - `@dev` en backtrack applique **uniquement** les lignes du plan, sans improviser
 - `@review` en backtrack ne vérifie que les fichiers touchés par le plan
+- Le plan de refacto ne retire jamais un scénario ni un test. Un retrait accepté à la pause 5 (`workflow-kit/core/agent-workflow.md` § « Retrait de scénario ») suit le même circuit, appliqué par `@test` avant `@dev`, puis re-revu par `@review`
 - Un utilitaire créé pendant le refacto (puce de `@dev` dans `### Nouveaux utilitaires à référencer`) est soumis à l'utilisateur à la pause qui suit la re-revue
 
 ## Test global (régression)

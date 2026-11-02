@@ -110,15 +110,28 @@ Quand l'utilisateur dit "retour étape N" (ou équivalent) :
 
 1. L'agent principal demande confirmation : "Reprendre à l'étape N : les étapes suivantes seront ré-exécutées. Confirmer ?"
 2. Sur confirmation, le Build inscrit le backtrack au `## Registre des décisions` **puis** passe les lignes N à 7 du tableau `## Progression` à `🔁 à refaire` (une ligne restée OK au-delà de N fausserait le diagnostic et déclencherait à tort la règle « incohérence de Progression »)
-3. L'étape N est ré-exécutée avec le subagent correspondant, avec en consigne les **éléments ajoutés ou modifiés** (scénarios, plan) — pas « refais tout »
+3. L'étape N est ré-exécutée avec le subagent correspondant, avec en consigne les **éléments ajoutés, modifiés ou retirés** (scénarios, plan) — pas « refais tout » ; un retrait suit § « Retrait de scénario »
 4. Les étapes ultérieures sont refaites dans l'ordre (N+1, N+2…)
 5. Chaque étape refaite respecte le protocole de pause
 6. Après le passage en 🔁, le Build lance le contrôle de livraison (skill `controle-livraison` (`workflow-kit/core/skills/controle-livraison/SKILL.md`)) : la partie structurelle (Progression cohérente, backtrack inscrit au Registre) doit être verte avant de réinvoquer le subagent
 
 Un backtrack qui fait changer de phase (retour à l'étape 0 ou 1 depuis la réalisation) se poursuit dans une **nouvelle** session de la phase reprise (`/raffiner [feature]`), puis la réalisation reprend dans une nouvelle session (`/realiser [feature]`).
 
-**Backtrack tardif (code déjà écrit).** Quand l'étape 4 a déjà tourné, le rouge attendu au jalon 2→3 ne porte que sur les scénarios **ajoutés ou modifiés** par le backtrack : les autres scénarios d'évolution restent **verts** (ils couvrent du code existant). Un scénario ajouté ou modifié vert avant la reprise de l'étape 4 reste une anomalie (pause) ; un scénario non touché qui passe au rouge est une régression (pause).
+**Backtrack tardif (code déjà écrit).** Quand l'étape 4 a déjà tourné, le rouge attendu au jalon 2→3 ne porte que sur les scénarios **ajoutés ou modifiés** par le backtrack : les autres scénarios d'évolution restent **verts** (ils couvrent du code existant). Un scénario ajouté ou modifié vert avant la reprise de l'étape 4 reste une anomalie (pause) ; un scénario non touché qui passe au rouge est une régression (pause). Un scénario retiré n'attend aucune couleur : son test a disparu.
 
 **Backtrack limité** : si les étapes suivantes supposent déjà le résultat de l'étape reprise (ex. renforcer une assertion que le plan présume déjà), le Build peut proposer de ne refaire **que** cette étape. Il le dit explicitement dans la demande de confirmation, l'utilisateur confirme, et la décision est tracée par un ADR ; les lignes non refaites repassent à OK avec la mention `(backtrack limité, ADR-n)`.
 
 **Les signalements meta survivent au backtrack** : une étape refaite ne supprime jamais une puce de `### Nouveaux utilitaires à référencer`, un tag ou une ligne de `## Conventions (fichiers-rôles)` sans la trancher (`→ ⛔ caduc après backtrack`).
+
+## Retrait de scénario
+
+Après le gel du raffinement (jalon 1→2), le scénario suit le **comportement**, le test suit la **couverture** : un scénario conservé garde son test, sauf `⏭️ déjà couvert`. Retirer l'un ou l'autre n'est jamais une initiative de subagent ni une ligne de plan de refacto : l'agent principal le décide avec l'utilisateur, à une pause, et l'inscrit d'abord au Registre. Avant le gel, retirer un scénario est une simple révision des GWT.
+
+| Cas | Scénario | Test | Où ça se décide |
+|---|---|---|---|
+| Comportement **plus voulu** | retiré | supprimé | au raffinement, comme un ajout (depuis la réalisation : `workflow-kit/core/phase-raffinement.md` § « Rappel depuis la réalisation ») |
+| Comportement **porté par un autre scénario** (fusion, évolution reclassée en baseline) | fusionné ou reclassé | supprimé ou déplacé | sur place, à la pause en cours |
+| Couverture **déjà assurée ailleurs** (doublon d'un test existant) | conservé, `⏭️ déjà couvert par <Test>` | supprimé | sur place ; à la pause 5, une ligne de `### Décisions techniques` |
+
+- **Trace** : l'agent principal laisse en place le titre, l'identifiant et le GIVEN/WHEN/THEN du scénario retiré, fusionné ou reclassé, et ajoute dessous `⏭️ obsolète : retiré, <raison> (D<n>)` — ou `fusionné dans E2 (D<n>)`, `reclassé en B5 (D<n>)` ; la compaction le réduira à son titre. Un retrait ne décale pas les numéros suivants : edge cases, arbre de flux et Registre citent ces identifiants. Un edge case `✅ couvert` qui citait le scénario est réaffecté ou justifié.
+- **Exécution** : `@test` seul supprime ou déplace le test, avec les helpers, fixtures et imports devenus orphelins dans le fichier, puis lance le run ciblé : les tests restants ne changent pas de couleur. Dans le fichier de test de la feature, `@dev` ne supprime jamais un test et n'en retire jamais une assertion qui traduit un THEN, même en refacto.

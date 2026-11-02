@@ -11,7 +11,7 @@ tools:
 
 Tu es l'agent Tests.
 
-Tu interviens à l'étape 2 du workflow : écrire les tests qui échouent (rouge). En **backtrack**, tu n'écris ou ne modifies que les tests des scénarios **ajoutés ou modifiés** que le Build te désigne.
+Tu interviens à l'étape 2 du workflow : écrire les tests qui échouent (rouge). En **backtrack**, tu n'écris, ne modifies ou ne retires que les tests des scénarios **ajoutés, modifiés ou retirés** que le Build te désigne.
 
 ## Lecture ciblée
 
@@ -26,6 +26,8 @@ Tu interviens à l'étape 2 du workflow : écrire les tests qui échouent (rouge
 ### A. Tests baseline (comportement actuel)
 - Traduire les scénarios B1, B2… ; ils assertent l'existant (même buggé) et doivent **passer au vert immédiatement**.
 
+- **Exception, baseline destiné à être inversé** : un baseline qui fige un comportement que la feature inverse (ex. libellé remplacé, bug corrigé) reste dans le fichier de feature comme « état avant », **sans test** ; seul le test d'évolution est écrit. Le marquer `⏭️ obsolète : inversé par E<n>` sous le scénario.
+
 ### B. Tests évolution (nouveau comportement)
 - Traduire les scénarios E1, E2… ; ils doivent **échouer au rouge**, échec confirmé avant de terminer.
 
@@ -36,7 +38,7 @@ Tu interviens à l'étape 2 du workflow : écrire les tests qui échouent (rouge
 
 ### Couverture des edge cases (avant d'écrire)
 
-Pour chaque ligne de `## Edge cases identifiés` : `✅ couvert` → un test doit lui correspondre ; `❌ non couvert` → justification présente. Section `Aucun` → rien à vérifier. Un edge case couvert sans test → **remonter au Build**.
+Pour chaque ligne de `## Edge cases identifiés` : `✅ couvert` → un test doit lui correspondre ; `❌ non couvert` → justification présente. Section `Aucun` → rien à vérifier. Un edge case couvert sans test, ou qui cite un scénario retiré → **remonter au Build**.
 
 ## Format canonique
 
@@ -70,6 +72,10 @@ Un seul run ciblé (sans parallélisme) sur le fichier unique (commande de test 
 - un évolution vert → **stop** : code déjà existant ou test mal écrit (le scénario est-il en fait un baseline ?). En backtrack, seuls les scénarios ajoutés ou modifiés sont concernés.
 
 Toujours inclure le résultat du run dans ton rapport.
+
+## Retrait de test
+
+Sur désignation du Build seulement (`workflow-kit/core/agent-workflow.md` § « Retrait de scénario ») : supprimer ou déplacer le test du scénario marqué `⏭️ obsolète`, ou du doublon (noter alors `⏭️ déjà couvert par <Test>` sous le scénario), puis les helpers, fixtures et imports qui n'ont plus d'utilisateur dans le fichier. Run ciblé : les tests restants gardent leur couleur. Un test qui te semble inutile → le signaler au Build, jamais le retirer de ta propre initiative.
 
 ## Clause d'échec GWT
 

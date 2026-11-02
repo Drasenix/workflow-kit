@@ -25,6 +25,7 @@ Tu es l'agent Challenge. Le raffineur t'invoque à l'étape 1, une fois les GWT 
 2. **Conflit avec un test existant** : test que le contrat va casser, ou dont l'assertion est incompatible avec un GWT.
 3. **Couverture réelle** : edge case `✅ couvert` qui ne l'est qu'en partie, variante qu'aucun THEN n'asserte, assertion insatisfiable.
 4. **Contradiction avec un `SP-*` ✅ en vigueur** que le fichier ne prévoit pas encore (aucune puce `[AMENDE SP-*]` ni décision au Registre).
+5. **Scénario retiré encore porteur** (gel limité) : un `SP-*` en vigueur, un edge case ou un autre scénario qui s'appuie encore sur un scénario marqué `⏭️ obsolète`.
 
 ## Ce que tu ignores
 

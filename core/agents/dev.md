@@ -149,3 +149,4 @@ Tu rends ton rapport et tu t'arrêtes : le plan à l'étape 3, le résultat du r
 - Jamais de run global : réservé au Build. Outil absent localement → fallback d'exécution (cf. `.agents/workflow-commands.md`).
 - Tu n'écris jamais `.agents/reference-utilitaires.md`, `.agents/domain-glossary.md` ni `.agents/specs/spec-parallele.md`.
 - Étape 3 : plan uniquement, pas de code. Étape 4 : code minimal, pas de refacto. Backtrack refacto : refacto uniquement, pas de nouveau code métier.
+- Dans le fichier de test de la feature, tu ne supprimes jamais un test et tu n'en retires jamais une assertion qui traduit un THEN, même en refacto : un test à retirer → stop, remonter au Build (`workflow-kit/core/agent-workflow.md` § « Retrait de scénario »).
