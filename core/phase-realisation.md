@@ -80,22 +80,24 @@ Le refacto n'est **pas une étape distincte** : c'est un retour aux étapes 4 pu
 Étape 5 → @review produit un rapport
     ├── Plan de refacto VIDE → Build demande "go global test ?"
     └── Plan de refacto NON VIDE → Build présente le plan à l'utilisateur
-            ├── Utilisateur : "go refacto"
+            ├── Utilisateur : "go refacto" (vaut aussi go du test global)
             │     → Registre : ligne « go refacto » AVANT d'invoquer @dev
             │     → Backtrack étape 4 : @dev applique le plan (tests ciblés restent verts)
             │     → Backtrack étape 5 : @review re-vérifie le code modifié
-            │           ├── Plan vide → Build demande "go global test ?"
+            │           ├── Plan vide, rien à soumettre → test global lancé sans nouvelle question
             │           │     → Global OK → Build produit le résumé métier (étape 6)
             │           │     → Pause utilisateur (validation du résumé)
+            │           ├── Plan vide, utilitaire ou question à soumettre → pause, puis "go global test ?"
             │           └── Plan non vide → nouvelle itération (re-demander à l'utilisateur)
-            └── Utilisateur : "skip refacto" → Build demande "go global test ?"
+            └── Utilisateur : "skip refacto" (vaut aussi go du test global) → test global lancé
                   → Global OK → Build produit le résumé métier (étape 6)
                   → Pause utilisateur (validation du résumé)
 ```
 
 **Règles :**
 - Chaque passage de `@dev` en backtrack est suivi d'un passage de `@review` : **tout code modifié est revu**
-- Le OK final de l'étape 5 signifie "code propre, rien à redire, plan de refacto vide, aucun retrait en attente"
+- Le OK final de l'étape 5 signifie "code propre, rien à redire, plan de refacto vide (ou écarté par « skip refacto »), aucun retrait en attente"
+- « go refacto » et « skip refacto » valent go du test global, inscrit dans la même ligne du Registre : la pause 5 est la dernière décision avant le global. Après la re-revue, le Build lance le global sans nouvelle question si le plan est vide et qu'il n'y a rien à soumettre (utilitaire créé pendant le refacto, question métier, `[À VALIDER]`) ; sinon il fait la pause et repose la question
 - `@dev` en backtrack applique **uniquement** les lignes du plan, sans improviser
 - `@review` en backtrack ne vérifie que les fichiers touchés par le plan
 - Le plan de refacto ne retire jamais un scénario ni un test. Un retrait accepté à la pause 5 (`workflow-kit/core/agent-workflow.md` § « Retrait de scénario ») suit le même circuit, appliqué par `@test` avant `@dev`, puis re-revu par `@review`
@@ -105,11 +107,11 @@ Le refacto n'est **pas une étape distincte** : c'est un retour aux étapes 4 pu
 
 Le run global (sans filtre) est la **responsabilité exclusive du Build** : **aucun subagent ne le lance**. Le Build l'exécute via la commande de test global (cf. `.agents/workflow-commands.md`), **une seule fois**. Jamais de global pendant l'itération dev (réservé à la fin de workflow, après l'étape 5). Commandes et calibrage : charger `.agents/skills/tests/SKILL.md`.
 
-**Déclencheur unique :** `@review` termine l'étape 5 avec OK **et** un `### Plan de refacto` **vide**. Le Build présente alors un prompt explicite à l'utilisateur :
+**Déclencheur unique :** `@review` termine l'étape 5 avec OK **et** un `### Plan de refacto` **vide** (ou écarté par « skip refacto »). Le Build présente alors un prompt explicite à l'utilisateur :
 
 > *"Toutes les étapes sont OK, le code a été revu sans problème restant. Lancer le test global ?"*
 
-L'utilisateur donne son **"go"**. Le Build exécute alors le global.
+L'utilisateur donne son **"go"**. Le Build exécute alors le global. Un « go refacto » ou un « skip refacto » donné à la pause 5 vaut ce go : pas de nouvelle question (§ « Refacto via backtrack 4→5 »).
 
 - [ ] **Check obligatoire AVANT de lancer le global** : `## Progression` entièrement OK (lignes 0 à 5), sinon **STRICTEMENT INTERDIT**.
 - [ ] **Diagnostic** : vert → fin. Rouge → le Build diagnostique (classes en erreur, messages) et fait une **pause utilisateur**
@@ -118,7 +120,7 @@ L'utilisateur donne son **"go"**. Le Build exécute alors le global.
 
 ## Résumé métier + recette nuances (étape 6, responsabilité du Build)
 
-**Déclencheur unique :** le test global est vert. **Check préalable** : lignes 0 à 5 de `## Progression` OK et plan de refacto de l'étape 5 vide — sinon le résumé est **STRICTEMENT INTERDIT**.
+**Déclencheur unique :** le test global est vert. **Check préalable** : lignes 0 à 5 de `## Progression` OK et plan de refacto de l'étape 5 vide ou écarté par « skip refacto » — sinon le résumé est **STRICTEMENT INTERDIT**.
 
 ### Structure obligatoire du résumé (`## Résumé métier`)
 
