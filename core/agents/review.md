@@ -22,28 +22,23 @@ Tu n'écris **que** ta section `## Revue qualité (étape 5)` dans `.agents/feat
 
 - **`.agents/feature/<slug>.md`** : jamais en entier. Sommaire (`grep -n '^## \|^### '`), puis `## Registre des décisions`, les deux sections de scénarios, `## Edge cases identifiés`, `## Plan (étape 3)` (fichiers, code réutilisé, signatures publiques, nouveaux utilitaires, écarts au plan), `## Décisions & Justifications`, `## Conventions (fichiers-rôles)`.
 - **Code** : les fichiers de `### Fichiers à créer / modifier` et le diff de la feature.
+- **`workflow-kit/core/qualite-code.md`** : critères des points 1, 2, 3 et 9 de la checklist.
 - **`.agents/conventions.md`** ; **`.agents/ui-rules.md`** / **`.agents/component-rules.md`** selon le périmètre ; **`.agents/test-rules.md`** pour les tests.
 - **`.agents/reference-utilitaires.md`** : jamais en entier — sommaire, grep des noms et mots-clés des méthodes créées, blocs ciblés. Balayer aussi les dossiers d'utilitaires transverses du projet (ils ne sont pas tous référencés).
 - **`.agents/specs/spec-parallele.md`** : index puis entrées du périmètre — jamais le fichier entier.
 
 ## Checklist obligatoire
 
-Pour chaque point : ✅ ou ❌ avec explication.
+Pour chaque point : ✅ ou ❌ avec explication. Points 1, 2, 3 et 9 : un ✅ ou ❌ par critère de la section citée de `workflow-kit/core/qualite-code.md`.
 
 ### 1. Code mort
-- [ ] Méthodes, propriétés, imports ou variables jamais utilisés ?
-- [ ] Fichiers créés non référencés (route, provider, autoload) ?
-- [ ] Branches conditionnelles inatteignables ?
+- [ ] Critères de `workflow-kit/core/qualite-code.md` § « Code mort » ?
 
 ### 2. Duplication
-- [ ] Méthode nouvelle qui duplique une existante (signature ou logique) ?
-- [ ] Bloc copié-collé depuis un autre fichier ?
-- [ ] Duplication partielle (même intention, implémentation voisine) ?
-
-Factoriser seulement des copies qui changeraient pour la **même raison** (même règle métier, même intégration), et le dire dans la justification. Deux codes voisins qui obéissent à des règles différentes restent séparés : ✅ avec la raison.
+- [ ] Critères de `workflow-kit/core/qualite-code.md` § « Duplication » ? Une factorisation proposée dit la raison de changement commune ; deux codes voisins qui obéissent à des règles différentes : ✅ avec la raison.
 
 ### 3. Réutilisation
-- [ ] Une méthode existante aurait-elle pu servir ?
+- [ ] Critère de `workflow-kit/core/qualite-code.md` § « Réutilisation » : une méthode existante aurait-elle pu servir ?
 - [ ] Chaque nouvel utilitaire réutilisable figure-t-il dans `### Nouveaux utilitaires à référencer` ?
 
 ### 4. Conventions
@@ -77,13 +72,7 @@ Chaque edge case de `## Edge cases identifiés` confronté au code. Résultat da
 
 ### 9. Simplicité et responsabilités
 Hors choix structurant validé (`## Plan (étape 3)`, ADR) :
-- [ ] Interface, classe abstraite ou trait nouveau avec un seul utilisateur ?
-- [ ] Paramètre, option ou branche que rien n'exerce avec deux valeurs différentes (ni appelant, ni scénario) ?
-- [ ] Garde, `try`/`catch` ou valeur de repli pour un cas qui n'est ni un scénario, ni un edge case, ni une entrée extérieure (saisie, requête, fichier, réponse d'un tiers) ?
-- [ ] Classe ou méthode générique pour un seul usage ?
-- [ ] Classe existante qui reçoit une nouvelle raison de changer (une autre règle métier, une autre intégration) ?
-- [ ] Sous-classe ou implémentation nouvelle qui refuse une entrée acceptée par son parent, ou rend autre chose que ce qu'il promet ?
-- [ ] Trait nouveau qui utilise une propriété ou une méthode de la classe hôte sans la déclarer (méthode abstraite) ?
+- [ ] Critères de `workflow-kit/core/qualite-code.md` § « Surenchère » et § « Responsabilités » ?
 
 ## Format du livrable
 

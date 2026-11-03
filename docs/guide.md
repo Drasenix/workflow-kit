@@ -235,7 +235,7 @@ Une **nouvelle** session sur l'agent par défaut (le Build) : opencode, l'agent 
 
 Ils ne s'invoquent **pas** entre eux : seul l'agent principal de la session (raffineur ou Build) orchestre. L'utilisateur peut aussi les appeler manuellement avec `@nom`.
 
-### 4.4 Les 8 skills (`core/skills/*/SKILL.md`)
+### 4.4 Les 9 skills (`core/skills/*/SKILL.md`)
 
 Chargées **à la demande** (via leur `description`), jamais systématiquement. Chaque skill est **invocable directement par l'utilisateur** : en la nommant en langage naturel, ou via sa **slash-commande** `/nom` (voir § 4.5).
 
@@ -247,8 +247,9 @@ Chargées **à la demande** (via leur `description`), jamais systématiquement. 
 - `doc` — questions métier, réponse sourcée en 2 blocs. → `/doc`
 - `compacter-feature` — compaction d'un fichier de feature clos après son commit de livraison. → `/compacter-feature`
 - `controle-livraison` — contrôle mécanique d'un fichier de feature (Progression, Definition of Ready, traces non tranchées, fichiers meta). → `/controle-livraison`
+- `retouche` — petite modification hors workflow, menée par l'agent principal seul ; sur demande explicite uniquement (§ 5.6). → `/retouche`
 
-### 4.5 Les 8 slash-commandes (`core/commands/*.md`)
+### 4.5 Les 9 slash-commandes (`core/commands/*.md`)
 
 Chaque skill du kit dispose d'une **slash-commande** `/nom` : c'est le raccourci avec lequel l'utilisateur l'invoque directement. La commande charge la skill correspondante :
 
@@ -262,6 +263,7 @@ Chaque skill du kit dispose d'une **slash-commande** `/nom` : c'est le raccourci
 | `/doc` | `doc` |
 | `/compacter-feature` | `compacter-feature` |
 | `/controle-livraison` | `controle-livraison` |
+| `/retouche` | `retouche` |
 
 Elles prennent `$ARGUMENTS` et demandent la précision manquante si besoin.
 
@@ -389,6 +391,23 @@ SOCLE (consult-workflow)            index.md · agent-workflow.md · agent-build
 **Pourquoi c'est fiable** : ce qui se garde a un **emplacement fixe dans le gabarit de feature**, rempli pendant la réalisation (`## Registre des décisions` tenu par l'agent principal à chaque pause, `## Clé de lecture des scénarios` par le raffineur, `### Arbre de flux` par `@dev` dans le plan) ; un arbre écrit ailleurs est repéré par son contenu ; ce que le gabarit ne prévoit pas doit être tranché explicitement.
 
 **Exemple** : « compacte DONE-paiement-par-lot ». Le script produit le squelette, l'agent rédige dette, vigilances et traçabilité à partir du résiduel, le contrôle passe, puis le diff est présenté.
+
+### 5.6 `retouche` — petite modification hors workflow
+
+**But** : traiter une petite modification sans rouvrir le workflow (ni fichier de feature, ni GWT, ni sous-agents, ni pauses), sans retaper à chaque fois les mêmes consignes. C'est **l'utilisateur** qui décide qu'il s'agit d'une retouche, en tapant `/retouche` : la skill ne se choisit jamais d'elle-même.
+
+**Les cinq règles, par ordre d'importance** :
+1. **Les usages d'abord** : avant de modifier une méthode, un composant, une vue ou un libellé existant, chercher ses usages. C'est là que casse une retouche, plus que dans le code ajouté.
+2. **Un test qui sait échouer** : comportement observable → test d'abord, vu en échec sur une assertion ; bug → test qui le reproduit ; rien d'observable (libellé, mise en forme) → pas de test, le rapport dit où regarder.
+3. **Tests existants : rien en silence** : jamais modifiés pour le seul retour au vert ; toute assertion existante modifiée est recopiée, avant et après, dans le rapport.
+4. **Le périmètre** : critères de `core/qualite-code.md` sur le seul code touché ; ce qui est vu en passant va dans le rapport, pas dans le diff.
+5. **Arrêts** : une migration, ou un choix de comportement que la demande n'a pas fait → arrêt et proposition de `/raffiner`.
+
+**Fin** : tests ciblés puis global, formatage, relecture du diff complet, rapport de trois lignes (preuves, usages vérifiés, à signaler), puis commit des seuls fichiers de la retouche, avec le pourquoi dans le corps du message (seule trace, faute de fichier de feature).
+
+**Ce qu'elle ne garantit pas** : l'agent écrit le test et le code, sans revue indépendante ; la recherche des usages ne voit pas les appels résolus dynamiquement ; un choix de comportement que l'agent ne remarque pas ne déclenche aucun arrêt. La relecture du diff par l'utilisateur reste la revue.
+
+**Exemple** : `/retouche le bouton « Résilier » devient « Mettre fin au contrat »`. L'agent trouve le libellé sur trois écrans et dans le glossaire ; il le change sur les trois écrans sans écrire de test (rien d'observable), adapte une assertion existante qui vérifiait l'ancien libellé et la recopie dans le rapport, signale l'occurrence du glossaire sans l'écrire, puis propose le commit.
 
 ---
 

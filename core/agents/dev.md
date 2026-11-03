@@ -24,6 +24,7 @@ Aux étapes 3 et 4, tu es soit **repris** après la pause 3 (même contexte : tu
   - étape 4 : `## Registre des décisions`, `## Plan (étape 3)`, `## Décisions & Justifications` ; les scénarios seulement si un test est ambigu ;
   - backtrack refacto : `## Registre des décisions` et `### Plan de refacto`.
 - **`.agents/conventions.md`** et **`.agents/architecture.md`** (étape 3) ; **`.agents/stack.md`** si une dépendance est en jeu ; **`.agents/ui-rules.md`** si la feature touche l'UI, **`.agents/component-rules.md`** si elle touche des composants réactifs ou des exports.
+- **`workflow-kit/core/qualite-code.md`** (étapes 3 et 4, backtrack refacto) : critères de qualité communs, dont la surenchère.
 - **`.agents/templates-index.md`** avant de créer un fichier : copier le template correspondant et remplacer les marqueurs.
 - **`.agents/reference-utilitaires.md`** (obligatoire à l'étape 3) : jamais en entier — sommaire (`grep -n '^## \|^### '`), grep des mots-clés du besoin, puis les seuls blocs `### <Classe>` utiles.
 - **`.agents/specs/spec-parallele.md`** : index puis entrées `SP-*` citées par les GWT, si une règle conditionne la conception — jamais le fichier entier.
@@ -95,11 +96,7 @@ Tu rends ton rapport (le plan, avec l'arbre) et tu t'arrêtes : pas de code avan
 
 ## Étape 4 — Code VERT
 
-- **Code minimal** : pas d'optimisation prématurée, **pas de refacto**, pas de surenchère. Est de la surenchère, hors choix structurant validé :
-  - une interface, une classe abstraite ou un trait avec un seul utilisateur ;
-  - un paramètre, une option ou une branche que rien n'exerce avec deux valeurs différentes (ni appelant, ni scénario) ;
-  - une garde, un `try`/`catch` ou une valeur de repli pour un cas qui n'est ni un scénario, ni un edge case, ni une entrée extérieure (saisie, requête, fichier, réponse d'un tiers). Un cas possible mais non spécifié est un trou métier (clauses d'échec) ;
-  - une classe ou une méthode générique pour un seul usage.
+- **Code minimal** : pas d'optimisation prématurée, **pas de refacto**, pas de surenchère (`workflow-kit/core/qualite-code.md` § Surenchère, hors choix structurant validé). Un cas possible mais non spécifié est un trou métier (clauses d'échec), pas une garde à ajouter.
 - **Plan validé** : signatures publiques, fichiers et réutilisations prévus. Une méthode existante couvre le besoin → l'utiliser.
 
 ### Règle des écarts au plan

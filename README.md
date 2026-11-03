@@ -41,9 +41,10 @@ workflow-kit/
 ├─ core/**                       le cœur, cité à workflow-kit/core/ (AGNOSTIQUE, live)
 │  ├─ index.md  agent-workflow.md  agent-build.md   (règles communes)
 │  ├─ phase-raffinement.md  phase-realisation.md    (règles par phase, chargées à la demande)
+│  ├─ qualite-code.md                               (critères de qualité : @dev, @review, retouche)
 │  ├─ agents/{raffineur,explorateur,challenger,doc,test,dev,review}.md  (format neutre)
-│  ├─ skills/{consult-workflow,raffiner,realiser,analyse-flashback,cadrage-po,doc,compacter-feature,controle-livraison}/
-│  ├─ commands/{consult-workflow,raffiner,realiser,cadrage-po,analyse-flashback,doc,compacter-feature,controle-livraison}.md
+│  ├─ skills/{consult-workflow,raffiner,realiser,analyse-flashback,cadrage-po,doc,compacter-feature,controle-livraison,retouche}/
+│  ├─ commands/{consult-workflow,raffiner,realiser,cadrage-po,analyse-flashback,doc,compacter-feature,controle-livraison,retouche}.md
 │  └─ templates/{feature,feature-cloturee}.md
 ├─ packs/<stack>/agents/**       -> .agents/     (SEEDS TECHNO)
 │  └─ laravel-livewire/  _blank/
@@ -124,9 +125,9 @@ Voir `packs/_schema.md`.
 
 ## Capacités incluses (core/)
 
-- **Workflow feature** : `agent-workflow.md` (étapes 0→7, règles communes), `agent-build.md` (règles communes du Build), `phase-raffinement.md` (étapes 0-1), `phase-realisation.md` (étapes 2-7), `agents/*.md` (raffineur + 6 subagents).
-- **Skills génériques** : `consult-workflow`, `raffiner`, `realiser`, `analyse-flashback`, `cadrage-po`, `doc`, `compacter-feature`, `controle-livraison` (+ 3 templates).
-- **Commandes** : `consult-workflow`, `raffiner`, `realiser`, `cadrage-po`, `analyse-flashback`, `doc`, `compacter-feature`, `controle-livraison`. Sous opencode, ce sont des commandes ; sous Claude Code, ce sont les skills du même nom (`/doc`, …), donc aucune commande n'est dupliquée dans `.claude/commands/`.
+- **Workflow feature** : `agent-workflow.md` (étapes 0→7, règles communes), `agent-build.md` (règles communes du Build), `phase-raffinement.md` (étapes 0-1), `phase-realisation.md` (étapes 2-7), `qualite-code.md` (critères de qualité communs), `agents/*.md` (raffineur + 6 subagents).
+- **Skills génériques** : `consult-workflow`, `raffiner`, `realiser`, `analyse-flashback`, `cadrage-po`, `doc`, `compacter-feature`, `controle-livraison`, `retouche` (+ 3 templates).
+- **Commandes** : `consult-workflow`, `raffiner`, `realiser`, `cadrage-po`, `analyse-flashback`, `doc`, `compacter-feature`, `controle-livraison`, `retouche`. Sous opencode, ce sont des commandes ; sous Claude Code, ce sont les skills du même nom (`/doc`, …), donc aucune commande n'est dupliquée dans `.claude/commands/`.
 
 ## Auditer
 
