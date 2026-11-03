@@ -18,7 +18,7 @@ Points communs à toutes les transitions : `workflow-kit/core/agent-workflow.md`
 ### Jalon 2→3 (tests → plan), auto-gate
 
 - [ ] Tests baseline verts et tests évolution rouges (run ciblé, résultat inclus dans le rapport de `@test`)
-- [ ] Baseline et évolution dans un **fichier unique** `<Feature>Test.*` nommé d'après la **feature** — sans identifiant de lot
+- [ ] Baseline et évolution dans un **fichier unique** `<Feature>Test.*` au nom **métier** — sans identifiant de lot ni nom de chantier (un fichier par comportement métier seulement sur décision au Registre)
 - [ ] Aucun nom de méthode de test ne contient d'identifiant de scénario (`B1`, `E1`…)
 - [ ] Aucun edge case `couvert` sans test correspondant
 

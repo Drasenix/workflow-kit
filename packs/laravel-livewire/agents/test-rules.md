@@ -24,7 +24,7 @@ Un fichier `tests/Feature/` qui ne contient **ni** `assertDatabaseHas` / `assert
 
 ## Nommage
 
-- **Fichier / classe** : `<Feature>Test` — le nom décrit la **feature**, **sans** identifiant de lot (`F0`, `F1`, `lot1`…) en préfixe ni dans le nom.
+- **Fichier / classe** : `<Feature>Test` — le nom décrit le **comportement métier** de la feature, **sans** identifiant de lot (`F0`, `F1`, `lot1`…) ni nom de chantier (retours de démo, réunion…), en préfixe ni dans le nom.
 - **Méthodes** : `test_<comportement>` en français, d'après le comportement décrit par le scénario. **Aucun** identifiant de scénario (`B1`, `E1`…) dans le nom — ce sont des repères internes au feature file.
 - La traçabilité test ↔ scénario se fait par le **libellé du scénario**, jamais par un identifiant recopié dans le nom du test.
 

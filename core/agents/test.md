@@ -21,7 +21,7 @@ Tu interviens à l'étape 2 du workflow : écrire les tests qui échouent (rouge
 
 ## Étape 2 : test ROUGE
 
-> **Un seul fichier de test par feature** `<Feature>Test.*`, nommé d'après la **feature** — jamais d'identifiant de lot (`F0`, `lot1`…). Baseline et évolution vivent dans la même classe.
+> **Un seul fichier de test par feature** `<Feature>Test.*`, nommé d'après le **comportement métier** de la feature — jamais d'identifiant de lot (`F0`, `lot1`…) ni de nom de chantier (retours de démo, réunion…) : si le slug de la feature nomme un chantier, choisir un nom métier. Baseline et évolution vivent dans la même classe. Une feature qui regroupe des comportements métier sans lien peut avoir **un fichier par comportement**, sur décision de l'utilisateur au Registre.
 
 ### A. Tests baseline (comportement actuel)
 - Traduire les scénarios B1, B2… ; ils assertent l'existant (même buggé) et doivent **passer au vert immédiatement**.

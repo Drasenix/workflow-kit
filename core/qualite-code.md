@@ -36,3 +36,7 @@ Ce qu'aucun besoin présent ne justifie :
 - Classe existante qui reçoit une nouvelle raison de changer (une autre règle métier, une autre intégration).
 - Sous-classe ou implémentation nouvelle qui refuse une entrée acceptée par son parent, ou rend autre chose que ce qu'il promet.
 - Trait nouveau qui utilise une propriété ou une méthode de la classe hôte sans la déclarer (méthode abstraite).
+
+## Nommage
+
+- Un nom du code (fichier, de test compris ; classe ; méthode ; variable ; commentaire) décrit le **comportement**, jamais le **chantier** qui l'a produit (retours de démo, réunion, lot, ticket) : le code survit au chantier, son nom n'y apprend rien. Un slug de feature qui nomme un chantier ne se recopie pas dans le code.

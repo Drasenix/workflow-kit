@@ -13,7 +13,7 @@ Ce fichier porte les règles **communes** aux deux phases. Les règles propres �
 |---|---|---|---|---|---|
 | 0 | **Compréhension** | raffineur (+ `@doc`, `@explorateur`) | Synthèse spec / spec parallèle / code actuel + questions sourcées (`## Questions specs`), références (`## Specs consultées`) et faits du code (`## Contexte technique`) dans `.agents/feature/<slug>.md` | **OUI** (arrêt 1) | Raffinement |
 | 1 | **Given/When/Then + challenge** | raffineur (+ `@challenger`) | Scénarios baseline + évolution (+ `## Clé de lecture des scénarios` si besoin) + edge cases sourcés (`## Edge cases identifiés`) + écarts arbitrés (`## Arbitrages du challenge`) dans `.agents/feature/<slug>.md` | **OUI** (arrêt 2) | Raffinement |
-| 2 | **Test ROUGE** | `@test` | Tests qui échouent (baseline + évolution), **fichier unique** `<Feature>Test.*` (sans identifiant de lot) | **Auto (jalon 2→3)** | Réalisation |
+| 2 | **Test ROUGE** | `@test` | Tests qui échouent (baseline + évolution), **fichier unique** `<Feature>Test.*` au nom métier (sans identifiant de lot ni nom de chantier) | **Auto (jalon 2→3)** | Réalisation |
 | 3 | **Plan** | `@dev` | `## Plan (étape 3)` : arbre de flux (prompt, et dans le fichier sous `### Arbre de flux`), fichiers, code réutilisé, choix structurants, signatures publiques | **OUI** | Réalisation |
 | 4 | **Développement VERT** | `@dev` (repris ou réinvoqué) | Code minimal qui fait passer les tests, écarts au plan déclarés | **Auto (jalon 4→5)** | Réalisation |
 | 5 | **Revue qualité** | `@review` | Checklist code mort/duplication/réutilisation/simplicité + plan de refacto optionnel | **OUI** | Réalisation |

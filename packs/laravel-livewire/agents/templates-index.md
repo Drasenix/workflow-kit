@@ -3,7 +3,7 @@
 > **Statut : DÉFAUT PACK** — scaffolds **techno** uniquement (structure de code, tests). Les **vues / composants UI** ne sont **pas** fournis par le pack : ils relèvent du **design system du projet** (`DÉCISION PROJET`) — voir `.agents/ui-rules.md`.
 >
 > Consulté par l'agent Build en début de feature. Chaque agent copie le template correspondant et remplace les marqueurs (`<Domaine>`, `<Nom>`, etc.) avant d'écrire du code.
-> **Un seul fichier de test par feature** : scénarios baseline et évolution dans la même classe (`<Feature>Test.php`) — jamais deux fichiers séparés.
+> **Un seul fichier de test par feature** : scénarios baseline et évolution dans la même classe (`<Feature>Test.php`, nom métier, jamais un nom de chantier) — jamais deux fichiers séparés, sauf décision au Registre pour des comportements métier sans lien.
 > **Nommage** : la classe/le fichier porte le nom de la **feature** (sans identifiant de lot `F0`/`F1`…) ; les méthodes sont préfixées `test_` et décrivent le **comportement** (sans identifiant de scénario `B1`/`E1`).
 
 ## Livewire — classe (`templates/frontend/`)
