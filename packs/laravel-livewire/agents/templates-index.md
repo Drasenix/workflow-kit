@@ -4,7 +4,7 @@
 >
 > Consulté par l'agent Build en début de feature. Chaque agent copie le template correspondant et remplace les marqueurs (`<Domaine>`, `<Nom>`, etc.) avant d'écrire du code.
 > **Un seul fichier de test par feature** : scénarios baseline et évolution dans la même classe (`<Feature>Test.php`, nom métier, jamais un nom de chantier) — jamais deux fichiers séparés, sauf décision au Registre pour des comportements métier sans lien.
-> **Nommage** : la classe/le fichier porte le nom de la **feature** (sans identifiant de lot `F0`/`F1`…) ; les méthodes sont préfixées `test_` et décrivent le **comportement** (sans identifiant de scénario `B1`/`E1`).
+> **Nommage** : la classe/le fichier porte le nom du **comportement métier** de la feature (sans identifiant de lot `F0`/`F1`… ni nom de chantier) ; les méthodes sont préfixées `test_` et décrivent le **comportement** (sans identifiant de scénario `B1`/`E1`).
 
 ## Livewire — classe (`templates/frontend/`)
 
