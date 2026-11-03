@@ -27,7 +27,7 @@ Ce fichier porte les règles **communes** aux deux phases. Les règles propres �
 
 Les étapes 0-1 sont menées par le **raffineur**, agent principal d'une session dédiée, qui délègue la lecture à `@doc`, `@explorateur` et `@challenger` (`workflow-kit/core/phase-raffinement.md`) ; dans cette session, les règles ci-dessous qui désignent le Build s'appliquent au raffineur. Les étapes 2 à 7 sont orchestrées par le **Build** de la session de réalisation : chaque étape est déléguée au subagent de la table « Étapes » (rôles et lectures : `workflow-kit/core/index.md`). Le Build :
 1. Consulte `.agents/templates-index.md` pour choisir les templates adaptés
-2. Crée `.agents/feature/<slug>.md` au début de la feature à partir de `workflow-kit/core/templates/feature.md`
+2. Crée `.agents/feature/<dossier>/<slug>.md` au début de la feature, dans le dossier validé par l'utilisateur (`workflow-kit/core/phase-raffinement.md` § « Création d'une feature »), à partir de `workflow-kit/core/templates/feature.md`
 3. **Met à jour le tableau `## Progression`** avant et après chaque étape (`🔄 en cours`, puis `OK YYYY-MM-DD` ou `sauté` justifié)
 4. Invoque chaque subagent via l'outil de délégation, en lui indiquant les **sections de `.agents/feature/<slug>.md`** à lire (cf. `workflow-kit/core/index.md`, colonne « Sections ») — jamais « lis le fichier »
 5. **Fait une pause après les étapes à décision sémantique (0, 1, 3, 5, 6)** ; auto-gates 2/4 selon le jalon : § « Pauses & anti-chaînage »

@@ -24,7 +24,7 @@ Les deux arrêts sont les pauses des étapes 0 et 1 : entre eux, l'échange est 
 
 ## Création d'une feature
 
-- **Nouvelle feature** : quand l'utilisateur annonce "je commence [nom]", créer `.agents/feature/<slug>.md` à partir du template `workflow-kit/core/templates/feature.md`, remplacer les marqueurs (`<Nom>`, date), et considérer qu'on travaille sur cette feature
+- **Nouvelle feature** : quand l'utilisateur annonce "je commence [nom]", **demander d'abord où créer le fichier** : proposer un dossier de `.agents/feature/` (thème existant ou nouveau, selon la convention de chemin du projet) avec un pourquoi d'une ligne, et attendre la réponse. Créer ensuite `.agents/feature/<dossier>/<slug>.md` à partir du template `workflow-kit/core/templates/feature.md`, remplacer les marqueurs (`<Nom>`, date), et considérer qu'on travaille sur cette feature
 - **Feature issue d'un lot de chantier** : si la feature découle d'un lot d'un chantier PO (dossier contenant `.agents/feature/**/SPECS.md` / `BACKLOG.md` / `FICHE-REUNION.md`), lire le `BACKLOG` du chantier (ligne du lot) et le `SPECS` aux sections citées, reporter le lot dans l'en-tête de la feature (ligne `> Lot : …`), et transmettre ce **périmètre** (lot + sections + entrées `SP-*`) à `@doc` et `@explorateur`. Le fichier de feature suit la convention de chemin du projet (racine `.agents/feature/` **ou** sous-dossier du chantier)
 
 ## Étape 0 — Compréhension
