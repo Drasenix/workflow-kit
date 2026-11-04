@@ -38,7 +38,7 @@ L'agent principal (raffineur ou Build) lit **toujours** `workflow-kit/core/index
 
 | Étape | Phase | Agent principal lit | Subagent lit (hors `.agents/feature/<slug>.md`) | Sections de `.agents/feature/<slug>.md` transmises au subagent |
 |---|---|---|---|---|
-| 0 (compréhension) | Raffinement | raffineur : Progression, Registre ; pour un lot : ligne du `BACKLOG`, sections citées du `SPECS` ; web ciblé (sources externes) | `@doc` : protocole de `workflow-kit/core/skills/doc/SKILL.md` (index de `.agents/specs/spec-parallele.md` + entrées, `.agents/specs/README.md` → `.agents/specs/spec.txt` ciblé, `.agents/domain-glossary.md` ciblé) ; `@explorateur` : code et tests ciblés, `.agents/architecture.md`, `.agents/test-rules.md` | aucune : périmètre et questions transmis par le raffineur |
+| 0 (compréhension) | Raffinement | raffineur : Progression, Registre ; pour un lot de chantier : `## Périmètre du lot` ; web ciblé (sources externes) | `@doc` : protocole de `workflow-kit/core/skills/doc/SKILL.md` (index de `.agents/specs/spec-parallele.md` + entrées, `.agents/specs/README.md` → `.agents/specs/spec.txt` ciblé, `.agents/domain-glossary.md` ciblé) ; `@explorateur` : code et tests ciblés, `.agents/architecture.md`, `.agents/test-rules.md` | aucune : périmètre et questions transmis par le raffineur |
 | 1 (GWT + challenge) | Raffinement | raffineur : Progression, Registre, sections qu'il rédige | `@challenger` : code et tests ciblés, `SP-*` du périmètre dans `.agents/specs/spec-parallele.md`, `.agents/test-rules.md` | `@challenger` : Registre, Contexte technique, Clé, scénarios, Edge cases, Ambiguïtés |
 | 2 (test rouge) | Réalisation | Progression, Registre, `.agents/templates-index.md` | `@test` : `.agents/test-rules.md`, `.agents/skills/tests/SKILL.md`, `.agents/templates-index.md` (templates de test) | Registre, Contexte technique, Clé, scénarios, Edge cases |
 | 3 (plan) | Réalisation | Progression, Registre, Plan (présenté à la pause 3) | `@dev` : `workflow-kit/core/qualite-code.md`, `.agents/conventions.md`, `.agents/architecture.md`, (`.agents/stack.md`), `.agents/reference-utilitaires.md` ciblé, `SP-*` cités dans `.agents/specs/spec-parallele.md`, (`.agents/ui-rules.md` / `.agents/component-rules.md` selon périmètre), code ciblé | Registre, Contexte technique, Clé, scénarios, Edge cases |
@@ -52,7 +52,7 @@ L'agent principal (raffineur ou Build) lit **toujours** `workflow-kit/core/index
 
 ## Hors workflow (opt-in / grep uniquement)
 
-`DONE-*.md`, `ABANDON-*.md`, `IRREPRODUCTIBLE-*.md`, `PLAN-*.md`, `REFACTO-*.md`, `doc/*.md` (living docs), docs de chantier PO (`.agents/feature/**/SPECS.md`, `BACKLOG.md`, `FICHE-REUNION.md`), images `.agents/feature/**/maquettes/**` : jamais auto, sur demande explicite ou grep ciblé. Compaction : `workflow-kit/core/templates/feature-cloturee.md` (skill `compacter-feature`).
+`DONE-*.md`, `ABANDON-*.md`, `IRREPRODUCTIBLE-*.md`, `PLAN-*.md`, `REFACTO-*.md`, `doc/*.md` (living docs), docs de chantier PO (`.agents/feature/**/SPECS.md`, `BACKLOG.md`, `FICHE-REUNION.md`, supprimés à la clôture), lots à venir (`LOT-*.md`, lus au démarrage de leur raffinement), images `.agents/feature/**/maquettes/**` : jamais auto, sur demande explicite ou grep ciblé. Compaction : `workflow-kit/core/templates/feature-cloturee.md` (skill `compacter-feature`).
 
 ## Skills (chargement à la demande)
 
@@ -61,7 +61,7 @@ L'agent principal (raffineur ou Build) lit **toujours** `workflow-kit/core/index
 | `consult-workflow` | socle commun, appelé par `raffiner` et `realiser` ; seul (« consulte le workflow ») : dit où en est la feature et quelle commande lancer, sans charger de phase |
 | `raffiner` | `/raffiner [feature]` : point d'entrée du raffinement — socle + `phase-raffinement.md` ; dans une session non lancée sur l'agent raffineur, l'agent principal en endosse le rôle |
 | `realiser` | `/realiser [feature]` : point d'entrée de la réalisation — garde-fous (session neuve, raffinement gelé, Definition of Ready), socle + `phase-realisation.md` |
-| `cadrage-po` | « je commence [sujet] » en mode cadrage PO / mise en place du chantier (SPECS/BACKLOG/FICHE-REUNION) |
+| `cadrage-po` | « je commence [sujet] » en mode cadrage PO / mise en place du chantier (SPECS/BACKLOG/FICHE-REUNION) ; clôture du chantier (`/cloturer-chantier`, session Build) : décisions vers la spec parallèle, un `LOT-*` par lot, suppression des trois fichiers |
 | `doc` | question métier / cliente / audit rapide (« comment ça marche X ? ») — lecture seule, réponse en deux blocs |
 | `.agents/skills/tests/SKILL.md` | avant tout run de test (ciblé ou global) : commandes, calibrage, fallback |
 | `.agents/skills/recette/SKILL.md` | après une US passée en `DONE-*` : recette manuelle (scénarios + seeder jetable) |

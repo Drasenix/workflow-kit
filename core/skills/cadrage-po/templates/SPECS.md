@@ -1,6 +1,7 @@
 # <Sujet> — référentiel de specs
 
 > **Dossier de consolidation métier.** Ce n'est PAS une feature exécutable (pas de Progression / TDD).
+> **Temporaire** : ne fait pas foi face à la spec officielle et à la spec parallèle. Supprimé à la clôture du chantier (`/cloturer-chantier`), après report des décisions.
 > La roadmap de dev vit dans `BACKLOG.md` (même dossier) — voir § 7.
 >
 > Date : <date>
@@ -102,7 +103,7 @@
 ## 8. `SP-*` à ajouter (registre)
 
 > Les règles validées qui **amendent / précisent** la spec officielle seront reportées dans
-> `.agents/specs/spec-parallele.md` **en une seule passe**, **après la réunion cliente**.
+> `.agents/specs/spec-parallele.md` **en une seule passe**, à la **clôture du chantier** (après la réunion cliente, sur « go »).
 >
 > **À remplir après validation cliente** : les Q `[HYPOTHESE]` et `[INCONNU]` doivent d'abord être tranchées.
 

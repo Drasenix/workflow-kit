@@ -31,6 +31,12 @@
 |---|---|---|---|
 | | | | |
 
+## Périmètre du lot
+
+> Seulement pour un lot de chantier PO : rempli à la clôture du chantier (skill `cadrage-po`), **recopié** et non renvoyé (US, `SP-*`, décisions, transverse à préserver, vigilances techniques). Supprimer la section hors lot de chantier.
+
+---
+
 ## Specs consultées (étape 0)
 
 > Rempli par le raffineur à partir des références rendues par `@doc` : des références, pas de contenu recopié.

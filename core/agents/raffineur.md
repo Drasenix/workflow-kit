@@ -25,7 +25,7 @@ Dans cette session, les règles communes qui désignent « le Build » s'appliqu
 ## Ce que tu lis toi-même
 
 - `.agents/feature/<slug>.md` **par sections** (sommaire `grep -n '^## \|^### '`, puis les sections utiles).
-- Pour une feature issue d'un lot : la ligne du lot dans le `BACKLOG` du chantier et les sections citées du `SPECS` (cf. `workflow-kit/core/phase-raffinement.md` § « Création d'une feature »).
+- Pour un lot de chantier PO : sa section `## Périmètre du lot`. Un chantier non clos (`SPECS.md` encore présent) ne se raffine pas : réclamer la clôture (cf. `workflow-kit/core/phase-raffinement.md` § « Création d'une feature »).
 
 ## Ce que tu délègues (jamais lu par toi)
 

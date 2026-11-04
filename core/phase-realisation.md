@@ -65,7 +65,7 @@ node workflow-kit/bin/workflow-kit.mjs check .agents/feature/<chemin>/<slug>.md
 Ce qu'il vérifie et la procédure en cas de `[KO]` : dans la skill — dont, pour un fichier au gabarit à deux phases, le plan (arbre de flux, fichiers), les écarts au plan et les décisions techniques remplis.
 
 Le Build vérifie en plus (jugement, non mécanisable) :
-- [ ] Les entrées et reports d'un **lot antérieur** que cette feature rend **faux** (backlog, fichiers-rôles, `.agents/reference-utilitaires.md`) sont corrigés, ou signalés à l'utilisateur
+- [ ] Les entrées et reports d'un **lot antérieur** que cette feature rend **faux** (lots à venir `LOT-*`, fichiers-rôles, `.agents/reference-utilitaires.md`) sont corrigés, ou signalés à l'utilisateur
 - [ ] Le Registre porte une ligne par décision, colonne « Consigné dans » complétée
 
 **Issue :** contrôle `[ok]` et points cochés → passage DONE (renommage). Sinon → **pause utilisateur** et procédure de la skill. Le Build relance le contrôle **avant de proposer le commit** de livraison (le fichier a pu bouger depuis le jalon).
@@ -179,7 +179,7 @@ Route GET /<ressource>/<id>/<action>
 
 Une fois le fichier clos (`DONE-*`, `ABANDON-*`, `IRREPRODUCTIBLE-*`) committé, **proposer** sa compaction (skill `compacter-feature`, squelette `workflow-kit/core/templates/feature-cloturee.md`). Garde-fous :
 - **jamais avant le commit de livraison** : le fichier doit être dans git en version complète et sans modification locale (sinon la version de travail est perdue) ;
-- tout **identifiant interne cité ailleurs** (spec parallèle, backlog, autres features) reste présent dans le fichier compacté ;
+- tout **identifiant interne cité ailleurs** (spec parallèle, lots à venir, autres features) reste présent dans le fichier compacté ;
 - **rien de transversal** n'est supprimé sans être consigné ailleurs (sinon proposition de remontée, avec accord) ;
 - pas de compaction si une **feature en cours** cite des sections destinées à être supprimées ;
 - **nom du fichier inchangé** ;

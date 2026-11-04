@@ -25,7 +25,12 @@ Les deux arrêts sont les pauses des étapes 0 et 1 : entre eux, l'échange est 
 ## Création d'une feature
 
 - **Nouvelle feature** : quand l'utilisateur annonce "je commence [nom]", **demander d'abord où créer le fichier** : proposer un dossier de `.agents/feature/` (thème existant ou nouveau, selon la convention de chemin du projet) avec un pourquoi d'une ligne, et attendre la réponse. Créer ensuite `.agents/feature/<dossier>/<slug>.md` à partir du template `workflow-kit/core/templates/feature.md`, remplacer les marqueurs (`<Nom>`, date), et considérer qu'on travaille sur cette feature
-- **Feature issue d'un lot de chantier** : si la feature découle d'un lot d'un chantier PO (dossier contenant `.agents/feature/**/SPECS.md` / `BACKLOG.md` / `FICHE-REUNION.md`), lire le `BACKLOG` du chantier (ligne du lot) et le `SPECS` aux sections citées, reporter le lot dans l'en-tête de la feature (ligne `> Lot : …`), et transmettre ce **périmètre** (lot + sections + entrées `SP-*`) à `@doc` et `@explorateur`. Le fichier de feature suit la convention de chemin du projet (racine `.agents/feature/` **ou** sous-dossier du chantier)
+- **Lot d'un chantier PO non clos** : la demande nomme un lot (`F<n>` ou intitulé) d'un `BACKLOG.md` de `.agents/feature/**/` (repéré par `grep`), et le dossier de ce `BACKLOG.md` contient encore `SPECS.md`. Ne créer **aucun** fichier, n'écrire nulle part, ne lire ni `SPECS.md` ni `BACKLOG.md` au-delà de ce repérage, et répondre :
+
+  > Chantier `<dossier>` non clos : `SPECS.md` est encore présent. Clôture d'abord le chantier dans une session Build (`/cloturer-chantier <dossier>`), puis relance `/raffiner <lot>`.
+
+  Puis s'arrêter.
+- **Lot d'un chantier clos** : un fichier `LOT-<nn>-<slug>.md` de `.agents/feature/**/` correspond au lot demandé (numéro ou intitulé ; plusieurs ou aucun → demander). Le renommer sans le préfixe (`git mv` → `<nn>-<slug>.md`, dans le même dossier) : c'est la feature active. Sa section `## Périmètre du lot` (US, `SP-*`, décisions, transverse à préserver) est le **périmètre** transmis à `@doc` et `@explorateur` ; ses `## Questions specs (étape 0)` pré-remplies sont reprises à l'étape 0, complétées par les trous que remontent les sous-agents
 
 ## Étape 0 — Compréhension
 

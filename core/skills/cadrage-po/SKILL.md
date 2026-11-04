@@ -1,6 +1,6 @@
 ---
 name: "cadrage-po"
-description: "Use when starting a new PO cadrage/chantier (consolidating specs for a subject, building a backlog, preparing a client meeting) or when the user asks to set up the SPECS/BACKLOG/FICHE-REUNION pattern."
+description: "Use when starting a new PO cadrage/chantier (consolidating specs for a subject, building a backlog, preparing a client meeting) or when the user asks to set up the SPECS/BACKLOG/FICHE-REUNION pattern. Also use to close a chantier (« /cloturer-chantier », « clôture le chantier [sujet] ») : decisions to the parallel spec, one LOT-* file per lot, then the three chantier files are deleted."
 ---
 
 # cadrage-po
@@ -13,6 +13,7 @@ Patron **réutilisable** pour cadrer un sujet métier de bout en bout (travail d
 - « mets en place le chantier PO », « consolide les specs de [sujet] ».
 - « nouvelle US/spec à cadrer », « prépare une réunion cliente sur [sujet] ».
 - Demande d'initialiser le trio `SPECS` / `BACKLOG` / `FICHE-REUNION`.
+- **Clôture** : `/cloturer-chantier <dossier>`, « clôture le chantier [sujet] », ou le raffineur qui la réclame au démarrage d'un lot (§ « Clôture du chantier »).
 
 ## Le patron
 
@@ -24,7 +25,7 @@ Un **dossier de chantier** : `<domaine>/<sujet>/`, contenant **3 fichiers** aux 
 | `BACKLOG.md` | Roadmap des lots de dev | Dev |
 | `FICHE-REUNION.md` | Support de réunion (brut) | Cliente (réunion) |
 
-Le patron s'articule **en amont** du workflow (étapes 0→7 par feature).
+Le patron s'articule **en amont** du workflow (étapes 0→7 par feature). Les trois fichiers sont **temporaires** : ils servent à construire les décisions, puis la clôture répartit leur contenu à sa place définitive et les supprime. Tant qu'ils existent, ils ne font jamais foi face à la spec officielle et à la spec parallèle.
 
 ## Structures
 
@@ -124,15 +125,36 @@ La liste est « Done » quand **toutes les lentilles ont été appliquées** :
 
 ```
 1. Cadrage PO            → SPECS (§3 règles, §4 US, §5 existant, §6 Q)
-2. Réunion cliente       → FICHE-REUNION (décisions)
-3. Consignation          → SPECS §6 (tags + décisions)
-                         → SPECS §8 (registre SP-*)
-4. Report spec parallèle → .agents/specs/spec-parallele.md (une passe, sur « go »)
-5. Choix du lot          → BACKLOG (releases)
-6. Exécution             → .agents/feature/<slug>.md + workflow 0→7
+2. Réunion cliente       → FICHE-REUNION (réponses notées pendant la réunion)
+3. Consignation          → SPECS §6 (tags + décisions) + §8 (SP-* préparés)
+4. Clôture du chantier   → /cloturer-chantier, session Build, sur « go » :
+                           Q [VALIDE] → spec parallèle (SP-*) · termes → glossaire
+                           lots → .agents/feature/<domaine>/<sujet>/LOT-<nn>-<slug>.md
+                           suppression de SPECS, BACKLOG, FICHE-REUNION
+5. Exécution             → /raffiner <lot> : LOT-<nn>-<slug>.md renommé <nn>-<slug>.md, workflow 0→7
 ```
 
-Lien avec le workflow : `SPECS` + `BACKLOG` = phase PO **amont** ; `.agents/feature/<slug>.md` = unité exécutable (étapes 0→7) ; le raffineur (étapes 0-1) consomme spec officielle + parallèle + glossaire (via `@doc`), le code (via `@explorateur`) et le feature file ; l'**étape 6** est le moment d'écriture/affinage des `SP-*`.
+Lien avec le workflow : `SPECS` + `BACKLOG` = phase PO **amont**, qui se termine par la clôture ; `.agents/feature/<slug>.md` = unité exécutable (étapes 0→7) ; le raffineur (étapes 0-1) consomme spec officielle + parallèle + glossaire (via `@doc`), le code (via `@explorateur`) et le fichier du lot ; l'**étape 6** de chaque lot affine les `SP-*`. Le raffineur ne démarre aucun lot d'un chantier non clos (`workflow-kit/core/phase-raffinement.md` § « Création d'une feature »).
+
+## Clôture du chantier
+
+**Quand** : après la consignation des réponses de la réunion, avant le raffinement du premier lot. Des Q peuvent rester `[HYPOTHESE]` ou `[INCONNU]` : elles partent dans le lot qui en a besoin. Le raffineur réclame la clôture s'il est lancé sur un lot d'un chantier non clos ; l'utilisateur peut aussi la lancer quand il veut.
+
+**Où** : session **Build** (écritures dans `.agents/specs/spec-parallele.md` et `.agents/domain-glossary.md`), par `/cloturer-chantier <dossier>`. Aucun contexte de la session de cadrage n'est nécessaire : `SPECS.md` porte l'état de chaque Q (tag).
+
+**Chantier non clos** = son dossier contient encore `SPECS.md`. C'est le seul critère.
+
+1. **Inventaire** — lire la section 6 de `SPECS.md` et `BACKLOG.md`. Présenter : les Q par tag ; pour chaque Q `[HYPOTHESE]` / `[INCONNU]`, le lot qui la reçoit (le premier lot de la table « Q → lots » qui en a besoin, un seul) ; la liste des fichiers `LOT-*` à créer. Vérifier avec l'utilisateur que les réponses de la fiche de réunion sont bien consignées en § 6. **Attendre le « go »**.
+2. **Spec parallèle** — chaque Q `[VALIDE]` qui fixe une règle de comportement devient une entrée `SP-*` (à partir du registre, section 8 de `SPECS.md`, s'il est rempli) au format du fichier, statut `en vigueur (validé <date>)`, **Source** : `cadrage PO <sujet>, décision du <date>` (jamais un chemin vers les docs de chantier), **Gardé par** : à compléter à l'étape 6 du lot qui l'implémente. Une Q `[VALIDE]` « hors périmètre » ou purement technique ne crée pas d'entrée : elle part dans le lot concerné. Puis `node workflow-kit/bin/workflow-kit.mjs check-meta --spec`.
+3. **Glossaire** — les nouveaux termes du domaine vont dans `.agents/domain-glossary.md`.
+4. **Fichiers de lot** — pour chaque ligne du BACKLOG, créer `LOT-<nn>-<slug>.md` dans le dossier du chantier, depuis `workflow-kit/core/templates/feature.md` (Progression intacte). `<nn>` = ordre d'exécution sur deux chiffres. En tête, sous `> Date`, la ligne `> Lot : <nn> — <intitulé> · dépend de : <nn>, <nn> (ou —)`. Sa section `## Périmètre du lot` **recopie** (texte, pas de renvoi) :
+   - les US du lot ;
+   - les décisions qui le concernent : identifiants `SP-*` créés en 2, et les décisions `[VALIDE]` sans `SP-*` (hors périmètre, choix techniques) en une phrase ;
+   - le transverse à préserver du BACKLOG et les vigilances techniques utiles au lot (section 5 de `SPECS.md`) (`fichier:ligne`, à revérifier par `@explorateur`).
+
+   Les Q ouvertes reçues par le lot vont dans `## Questions specs (étape 0)`, en cases `- [ ]` au format du gabarit (source dans la spec officielle + trou), **sans leur numéro Q** : il disparaît avec le chantier.
+5. **Vérification** — aucune mention de `SPECS.md`, `BACKLOG.md`, `FICHE-REUNION.md`, ni d'un numéro Q du chantier, hors du dossier du chantier et hors des trois fichiers eux-mêmes (`grep -rn` sur `.agents/`). Toute mention trouvée est réécrite (texte recopié ou `SP-*`) avant de continuer. Puis `node workflow-kit/bin/workflow-kit.mjs check-meta --refs`.
+6. **Suppression** — supprimer `SPECS.md`, `BACKLOG.md`, `FICHE-REUNION.md`, et proposer **un seul commit** (fichiers `LOT-*`, spec parallèle, glossaire, suppressions). L'historique git garde le chantier.
 
 ## Instanciation
 
@@ -142,11 +164,12 @@ Lien avec le workflow : `SPECS` + `BACKLOG` = phase PO **amont** ; `.agents/feat
    - `<Sujet>`, `<domaine>`, `<sujet>` ;
    - le **cycle de vie** (liste d'étapes métier) ;
    - les **US** (`US-1…`), les **Q** (`Q1…`), les **lots** (`F1…`).
-4. Dérouler le flux (cadrage → réunion → consignation → report → backlog → features).
+4. Dérouler le flux (cadrage → réunion → consignation → clôture → lots).
 
 ## Garde-fous
 
-- **Pas de `SP-*` sans « go » explicite** : le report dans la spec parallèle est une écriture, déclenchée manuellement (même garde-fou que `.agents/reference-utilitaires.md`).
+- **Pas de `SP-*` sans « go » explicite** : le report dans la spec parallèle se fait à la clôture, sur « go » (même garde-fou que `.agents/reference-utilitaires.md`).
+- **Rien ne cite le chantier** : aucun fichier hors du dossier du chantier ne renvoie à `SPECS.md`, `BACKLOG.md`, `FICHE-REUNION.md` ou à un numéro Q. Ce qui doit survivre est recopié ou porté par un `SP-*` (vérifié à l'étape 5 de la clôture).
 - **Pas d'invention de règle métier** : en cas d'ambiguïté, `[INCONNU]` + question à la cliente — jamais de supposition.
 - **`FICHE-REUNION.md` = document brut** : on ne le met pas à jour après la réunion ; la consignation se fait dans `SPECS §6`.
 - **Pas de référence à un chantier vivant** : le patron est auto-portant (templates) ; ne pas lier un chantier particulier comme « exemple » (il dériverait).

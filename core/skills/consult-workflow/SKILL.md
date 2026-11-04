@@ -30,7 +30,8 @@ Lire la Progression de la feature active : l'étape en cours est la **première 
 
 - étape 0 ou 1 (y compris après un retour au raffinement), ou nouvelle feature → `/raffiner [feature]` ;
 - étape 2 à 7 → `/realiser [feature]` ;
-- aucune feature active → demander laquelle démarrer (`/raffiner [feature]`).
+- aucune feature active → lister les lots à venir (`.agents/feature/**/LOT-*.md`, dans l'ordre de leur numéro) et demander lequel démarrer (`/raffiner [lot ou feature]`) ;
+- un dossier de `.agents/feature/` contient encore `SPECS.md` → le signaler : chantier PO non clos, ses lots se démarrent après `/cloturer-chantier <dossier>` (session Build).
 
 Si la session a déjà mené une phase, la commande de l'autre phase se lance dans une **nouvelle** session.
 
@@ -47,7 +48,8 @@ Si la session a déjà mené une phase, la commande de l'autre phase se lance da
 - `.agents/ui-rules.md` / `.agents/component-rules.md` : réservés aux subagents, selon le périmètre
 - Templates du pack : copiés par `@test` / `@dev`
 - Fichiers clos ou hors feature : `DONE-*.md`, `ABANDON-*.md`, `IRREPRODUCTIBLE-*.md`, `PLAN-*.md`, `REFACTO-*.md` (version de travail d'un fichier compacté via `git show`)
-- Docs de chantier PO : `.agents/feature/**/SPECS.md`, `BACKLOG.md`, `FICHE-REUNION.md` (skill `cadrage-po`, lus seulement si l'utilisateur les nomme)
+- Docs de chantier PO : `.agents/feature/**/SPECS.md`, `BACKLOG.md`, `FICHE-REUNION.md` (skill `cadrage-po`, lus seulement si l'utilisateur les nomme ou à la clôture du chantier)
+- Lots à venir `LOT-*.md` : listés par l'aiguillage, lus seulement au démarrage de leur raffinement
 - Images `.agents/feature/**/maquettes/**`, living docs `doc/*.md` (opt-in)
 
 ## Profondeur à la demande

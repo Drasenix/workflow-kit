@@ -6,7 +6,7 @@
 >
 > **Périmètre** : règles de **comportement / flux / calculs**. Définitions d'entités → `.agents/domain-glossary.md`. Méthodes de code → `.agents/reference-utilitaires.md`.
 >
-> **Écriture** : **Build uniquement**, après validation explicite de l'utilisateur, à la **recette nuances de l'étape 6**. Le raffineur et `@review` détectent et proposent, ils n'écrivent jamais.
+> **Écriture** : **Build uniquement**, après validation explicite de l'utilisateur, à la **recette nuances de l'étape 6**, ou à la **clôture d'un chantier PO** (`/cloturer-chantier`, skill `cadrage-po`). Le raffineur et `@review` détectent et proposent, ils n'écrivent jamais.
 >
 > **Lecture** : jamais le fichier entier. Index puis entrées ciblées (grep).
 >
@@ -49,7 +49,7 @@ Liste fermée : extension sur validation utilisateur.
 >
 > > **Statut** : en vigueur (validé YYYY-MM-DD) · **Type** : AMENDE / PRECISE / ETEND
 > > **Ancre officielle** : <Partie.Section> (p. X)
-> > **Source** : feature `<chemin DONE>`
+> > **Source** : feature `<chemin DONE>` *(ou, à la clôture d'un chantier PO : cadrage PO <sujet>, décision du <date>)*
 > > **Remplace** : SP-… *(si applicable)*
 > > **Mots-clés** : <mot1>, <mot2>
 > > **Gardé par** : `<Test>::<methode>`

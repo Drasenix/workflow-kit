@@ -75,7 +75,7 @@ Couverts : EC-… (voir scénarios).
 
 ## Traçabilité
 
-- **Spec et US** : <sections de spec consultées, US du backlog>
+- **Spec et US** : <sections de spec consultées, US du lot>
 - **Spec parallèle** : `SP-…` (<type>), … *(texte : `.agents/specs/spec-parallele.md`)*
 - **Conventions établies** : <fichier-rôle> (<règle>), …
 - **Utilitaires référencés** : <noms> *(détail : `.agents/reference-utilitaires.md`)*

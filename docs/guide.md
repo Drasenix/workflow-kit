@@ -183,7 +183,7 @@ Le fichier `.agents/feature/<slug>.md` fait le lien entre les deux sessions : ch
 | Terminal Claude Code | ou `claude --agent raffineur`, puis « je commence [feature] » |
 | opencode | ou l'agent `raffineur` choisi avec **Tab**, puis « je commence [feature] » |
 
-Pour une feature issue d'un cadrage PO : « le lot X du chantier Y » à la place du nom. Le raffineur crée le fichier et charge la phase raffinement.
+Pour un lot issu d'un cadrage PO : « le lot X du chantier Y » à la place du nom. Si le chantier n'est pas clos (`SPECS.md` encore présent), le raffineur s'arrête et demande `/cloturer-chantier` dans une session Build. Sinon il renomme `LOT-<nn>-<slug>.md` en `<nn>-<slug>.md` et charge la phase raffinement.
 
 Lancée sur l'agent `raffineur`, la session a ses outils restreints par l'outil (pas de code, pas de test) ; par `/raffiner`, l'agent garde ses outils et ces limites tiennent par la règle.
 
@@ -242,16 +242,16 @@ Chargées **à la demande** (via leur `description`), jamais systématiquement. 
 - `consult-workflow` — socle commun du lazy-loading ; seul, dit où en est une feature et quelle commande lancer. → `/consult-workflow`
 - `raffiner` — fait endosser le rôle du raffineur à l'agent principal (session non lancée sur l'agent raffineur). → `/raffiner`
 - `realiser` — point d'entrée de la réalisation : garde-fous, socle et phase réalisation. → `/realiser`
-- `cadrage-po` — patron PO amont (SPECS / BACKLOG / FICHE-REUNION). → `/cadrage-po`
+- `cadrage-po` — patron PO amont (SPECS / BACKLOG / FICHE-REUNION), et sa clôture. → `/cadrage-po`, `/cloturer-chantier`
 - `analyse-flashback` — analyse du code à une date passée via tags prod. → `/analyse-flashback`
 - `doc` — questions métier, réponse sourcée en 2 blocs. → `/doc`
 - `compacter-feature` — compaction d'un fichier de feature clos après son commit de livraison. → `/compacter-feature`
 - `controle-livraison` — contrôle mécanique d'un fichier de feature (Progression, Definition of Ready, traces non tranchées, fichiers meta). → `/controle-livraison`
 - `retouche` — petite modification hors workflow, menée par l'agent principal seul ; sur demande explicite uniquement (§ 5.6). → `/retouche`
 
-### 4.5 Les 9 slash-commandes (`core/commands/*.md`)
+### 4.5 Les 10 slash-commandes (`core/commands/*.md`)
 
-Chaque skill du kit dispose d'une **slash-commande** `/nom` : c'est le raccourci avec lequel l'utilisateur l'invoque directement. La commande charge la skill correspondante :
+Chaque skill du kit dispose d'une **slash-commande** `/nom` : c'est le raccourci avec lequel l'utilisateur l'invoque directement. La commande charge la skill correspondante (`/cloturer-chantier` charge `cadrage-po` pour sa clôture) :
 
 | Commande | Skill chargée |
 |---|---|
@@ -259,6 +259,7 @@ Chaque skill du kit dispose d'une **slash-commande** `/nom` : c'est le raccourci
 | `/raffiner` | `raffiner` |
 | `/realiser` | `realiser` |
 | `/cadrage-po` | `cadrage-po` |
+| `/cloturer-chantier` | `cadrage-po` (§ « Clôture du chantier ») |
 | `/analyse-flashback` | `analyse-flashback` |
 | `/doc` | `doc` |
 | `/compacter-feature` | `compacter-feature` |
@@ -321,15 +322,16 @@ SOCLE (consult-workflow)            index.md · agent-workflow.md · agent-build
 ```
 1. Cadrage PO            → SPECS (§3 règles, §4 US, §5 existant, §6 Q)
 2. Réunion cliente       → FICHE-REUNION (décisions)
-3. Consignation          → SPECS §6 (tags + décisions) + §8 (registre SP-*)
-4. Report spec parallèle → .agents/specs/spec-parallele.md (sur « go »)
-5. Choix du lot          → BACKLOG (releases)
-6. Exécution             → .agents/feature/<slug>.md + workflow 0→7
+3. Consignation          → SPECS §6 (tags + décisions) + §8 (SP-* préparés)
+4. Clôture du chantier   → /cloturer-chantier (session Build, sur « go ») :
+                           SP-* dans la spec parallèle, un LOT-<nn>-<slug>.md par lot,
+                           suppression de SPECS, BACKLOG, FICHE-REUNION
+5. Exécution             → /raffiner <lot> (LOT- retiré) + workflow 0→7
 ```
 
-**Exemple** : « je commence le cadrage du module abonnements ». La skill instancie les 3 templates, pose les questions par lentilles (ex. « que se passe-t-il si on supprime un abonné ? » → Q `[INCONNU]`), les tranche en réunion, puis les reporte en `SP-*` dans la spec parallèle.
+**Exemple** : « je commence le cadrage du module abonnements ». La skill instancie les 3 templates, pose les questions par lentilles (ex. « que se passe-t-il si on supprime un abonné ? » → Q `[INCONNU]`), les tranche en réunion, puis la clôture les reporte en `SP-*` dans la spec parallèle, crée un fichier `LOT-*` par lot et supprime les trois fichiers du chantier.
 
-**Garde-fous** : pas d'invention de règle (ambigu → `[INCONNU]` + question) ; pas de `SP-*` sans « go » ; `FICHE-REUNION.md` reste brut (la consignation se fait dans `SPECS §6`) ; les docs de chantier ne sont **jamais** préchargés.
+**Garde-fous** : pas d'invention de règle (ambigu → `[INCONNU]` + question) ; pas de `SP-*` sans « go » ; `FICHE-REUNION.md` reste brut (la consignation se fait dans `SPECS §6`) ; les docs de chantier ne sont **jamais** préchargés, sont temporaires (supprimés à la clôture) et ne sont jamais cités hors de leur dossier ; le raffineur ne démarre aucun lot d'un chantier non clos.
 
 ### 5.3 `analyse-flashback` — diagnostiquer un ticket antidaté
 
@@ -424,6 +426,7 @@ SOCLE (consult-workflow)            index.md · agent-workflow.md · agent-build
 | Reprendre une feature | `/raffiner` ou `/realiser` selon sa phase ; « consulte le workflow » pour savoir laquelle |
 | Contrôler une feature | `/controle-livraison` (ou `workflow-kit check <fichier>`) |
 | Cadrer un sujet métier (PO) | `/cadrage-po [sujet]` |
+| Clôturer un chantier PO (avant le premier lot) | `/cloturer-chantier [dossier]`, session Build |
 | Diagnostiquer un ticket antidaté | `/analyse-flashback [date/domaine]` |
 | Poser une question métier | `/doc [question]` |
 | Dépolluer un fichier de feature clos | `/compacter-feature [fichier]` |

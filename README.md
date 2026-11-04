@@ -44,7 +44,7 @@ workflow-kit/
 │  ├─ qualite-code.md                               (critères de qualité : @dev, @review, retouche)
 │  ├─ agents/{raffineur,explorateur,challenger,doc,test,dev,review}.md  (format neutre)
 │  ├─ skills/{consult-workflow,raffiner,realiser,analyse-flashback,cadrage-po,doc,compacter-feature,controle-livraison,retouche}/
-│  ├─ commands/{consult-workflow,raffiner,realiser,cadrage-po,analyse-flashback,doc,compacter-feature,controle-livraison,retouche}.md
+│  ├─ commands/{consult-workflow,raffiner,realiser,cadrage-po,cloturer-chantier,analyse-flashback,doc,compacter-feature,controle-livraison,retouche}.md
 │  └─ templates/{feature,feature-cloturee}.md
 ├─ packs/<stack>/agents/**       -> .agents/     (SEEDS TECHNO)
 │  └─ laravel-livewire/  _blank/
@@ -127,7 +127,7 @@ Voir `packs/_schema.md`.
 
 - **Workflow feature** : `agent-workflow.md` (étapes 0→7, règles communes), `agent-build.md` (règles communes du Build), `phase-raffinement.md` (étapes 0-1), `phase-realisation.md` (étapes 2-7), `qualite-code.md` (critères de qualité communs), `agents/*.md` (raffineur + 6 subagents).
 - **Skills génériques** : `consult-workflow`, `raffiner`, `realiser`, `analyse-flashback`, `cadrage-po`, `doc`, `compacter-feature`, `controle-livraison`, `retouche` (+ 3 templates).
-- **Commandes** : `consult-workflow`, `raffiner`, `realiser`, `cadrage-po`, `analyse-flashback`, `doc`, `compacter-feature`, `controle-livraison`, `retouche`. Sous opencode, ce sont des commandes ; sous Claude Code, ce sont les skills du même nom (`/doc`, …), donc aucune commande n'est dupliquée dans `.claude/commands/`.
+- **Commandes** : `consult-workflow`, `raffiner`, `realiser`, `cadrage-po`, `cloturer-chantier`, `analyse-flashback`, `doc`, `compacter-feature`, `controle-livraison`, `retouche`. Sous opencode, ce sont des commandes ; sous Claude Code, une commande qui a une skill du même nom est cette skill (`/doc`, …) et n'est pas dupliquée dans `.claude/commands/` ; `cloturer-chantier` (qui charge la skill `cadrage-po`) y est générée.
 
 ## Auditer
 
