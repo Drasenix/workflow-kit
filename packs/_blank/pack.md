@@ -14,4 +14,6 @@
 7. `agents/templates-index.md` : index des templates de code.
 8. `agents/skills/tests/SKILL.md` / `agents/skills/recette/SKILL.md` / `agents/skills/recette-navigateur/SKILL.md` : commandes et procédures.
 
+Commandes fournies (`commands/`, générées à chaque `sync`) : `/recette` et `/recette-navigateur`, raccourcis vers les skills du même nom.
+
 Voir `packs/_schema.md`. Une fois stable, renommer le pack (ex. `django-python`).
