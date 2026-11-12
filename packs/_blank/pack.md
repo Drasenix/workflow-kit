@@ -12,6 +12,6 @@
 5. `agents/test-rules.md` : dossiers, helpers, config de test.
 6. `agents/ui-rules.md` / `agents/component-rules.md` : conventions UI / composants (optionnel).
 7. `agents/templates-index.md` : index des templates de code.
-8. `agents/skills/tests/SKILL.md` / `agents/skills/recette/SKILL.md` : commandes et procédures.
+8. `agents/skills/tests/SKILL.md` / `agents/skills/recette/SKILL.md` / `agents/skills/recette-navigateur/SKILL.md` : commandes et procédures.
 
 Voir `packs/_schema.md`. Une fois stable, renommer le pack (ex. `django-python`).

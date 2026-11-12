@@ -21,8 +21,10 @@
 | `templates-index.md` + `templates/**` | Templates de code (DTO, Action, Event, Listener, Livewire, tests…) |
 | `skills/tests/SKILL.md` | Skill d'exécution des tests |
 | `skills/recette/SKILL.md` | Skill de recette manuelle |
+| `skills/recette-navigateur/SKILL.md` + `assets/` | Skill de recette jouée par l'agent dans le navigateur (captures, constats, PDF) ; gabarit HTML du PDF et script de rognage des captures |
 | `skills/migrate-fresh/SKILL.md` | Skill de reset DB dev |
 
 | Commande (`commands/`) | Rôle |
 |---|---|
 | `recette.md` | `/recette` : charge la skill `recette` (générée dans `.opencode/command/` et `.claude/commands/`) |
+| `recette-navigateur.md` | `/recette-navigateur` : charge la skill `recette-navigateur` (même génération) |

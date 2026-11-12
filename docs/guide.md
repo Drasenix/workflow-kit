@@ -268,7 +268,7 @@ Chaque skill du kit dispose d'une **slash-commande** `/nom` : c'est le raccourci
 
 Elles prennent `$ARGUMENTS` et demandent la précision manquante si besoin.
 
-Un pack peut ajouter des commandes pour ses skills techno (`packs/<stack>/commands/*.md`, générées au même endroit) : le pack `laravel-livewire` fournit `/recette` (skill `recette`, `.agents/skills/recette/SKILL.md`).
+Un pack peut ajouter des commandes pour ses skills techno (`packs/<stack>/commands/*.md`, générées au même endroit) : le pack `laravel-livewire` fournit `/recette` (skill `recette`, `.agents/skills/recette/SKILL.md`) et `/recette-navigateur` (skill `recette-navigateur` : la recette jouée par l'agent dans le navigateur, avec captures, constats et PDF).
 
 ### 4.6 Fichiers du projet (`.agents/`) et leur rôle
 
@@ -278,7 +278,7 @@ Fichiers-rôles **fixes** que le `core/` référence en dur :
 
 Fichiers-mémoire :
 
-`domain-glossary.md`, `specs/{spec.txt, spec-parallele.md, README.md}`, `reference-utilitaires.md`, `workflow-commands.md`, `feature/`, et les skills techno `skills/{tests,recette,migrate-fresh}/SKILL.md`.
+`domain-glossary.md`, `specs/{spec.txt, spec-parallele.md, README.md}`, `reference-utilitaires.md`, `workflow-commands.md`, `feature/`, et les skills techno `skills/{tests,recette,recette-navigateur,migrate-fresh}/SKILL.md`.
 
 ---
 
