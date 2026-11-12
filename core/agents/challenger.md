@@ -23,7 +23,7 @@ Tu es l'agent Challenge. Le raffineur t'invoque à l'étape 1, une fois les GWT 
 
 1. **Edge case technique manquant** : comportement que le code rend possible et qu'aucun GWT ne fixe — moteurs de base différents (tri, valeurs nulles), donnée modifiable côté client, atomicité d'un traitement en boucle, état intermédiaire d'une édition, valeur limite.
 2. **Conflit avec un test existant** : test que le contrat va casser, ou dont l'assertion est incompatible avec un GWT.
-3. **Couverture réelle** : edge case `✅ couvert` qui ne l'est qu'en partie, variante qu'aucun THEN n'asserte, assertion insatisfiable.
+3. **Couverture réelle** : edge case `✅ couvert` qui ne l'est qu'en partie, variante qu'aucun THEN n'asserte, assertion insatisfiable, scénario d'évolution dont **tous** les THEN sont déjà satisfaits par le code actuel (à reclasser en baseline, sinon il sera vert avant l'implémentation).
 4. **Contradiction avec un `SP-*` ✅ en vigueur** que le fichier ne prévoit pas encore (aucune puce `[AMENDE SP-*]` ni décision au Registre).
 5. **Scénario retiré encore porteur** (gel limité) : un `SP-*` en vigueur, un edge case ou un autre scénario qui s'appuie encore sur un scénario marqué `⏭️ obsolète`.
 

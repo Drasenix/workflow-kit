@@ -89,6 +89,7 @@ THEN  <effet secondaire attendu>
 
 - **Baseline** (B1, B2…) : figent le comportement **actuel** (même buggé) — contrat avant modification. Ils se rédigent à partir du comportement observé par `@explorateur`, jamais de mémoire.
 - **Évolution** (E1, E2…) : décrivent le comportement **futur** attendu.
+- **Évolution déjà vraie = baseline** : un scénario dont **tous** les THEN sont déjà vrais sur le code actuel (typiquement des absences : action non proposée, rien envoyé, rien écrit) est une **baseline**, même s'il garde un comportement que la feature introduit : il protégera le nouveau code une fois écrit. Un scénario qui mêle une absence et une présence (« propose X et ne propose pas Y ») reste en évolution : sa partie positive le rend rouge.
 - Les libellés `B1`/`E1` sont des **repères du feature file uniquement** : ils ne se recopient pas dans les noms de tests.
 - Un scénario = **un seul WHEN** ; plusieurs THEN possibles.
 - Descriptions en français.
