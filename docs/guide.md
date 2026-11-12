@@ -421,7 +421,7 @@ SOCLE (consult-workflow)            index.md · agent-workflow.md · agent-build
 
 **But** : remettre à la cliente une note de synthèse en PDF qui explique ce que fait le produit à l'issue d'une feature livrée, en langage métier, sans rien de l'histoire du chantier. Ce n'est pas la démo papier d'une recette (`recette-navigateur`, mode client) : la note explique les règles, la démo montre les écrans.
 
-**Sources** : les `DONE-*` du dossier de la feature (besoin, comportements garantis, libellés exacts), les règles **✅ en vigueur** du référentiel qu'ils citent (une règle **⛔ caduque** est remplacée par celle qu'elle désigne et n'apparaît jamais), le glossaire. Jamais les lots à venir ni les documents de chantier.
+**Sources** : les `DONE-*` du dossier de la feature (besoin, comportements garantis, libellés exacts), les règles **✅ en vigueur** du référentiel qu'ils citent (une règle **⛔ caduque** est remplacée par celle qu'elle désigne et n'apparaît jamais ; une règle amendée vaut telle que ses amendements la modifient), le glossaire. Jamais les lots à venir ni les documents de chantier.
 
 **Règles d'écriture** :
 1. **L'état final seulement** : on décrit Y, jamais « on a retiré X pour faire Y » ; ni option écartée, ni décision revenue, ni numéro de lot. Un « avant » n'est permis que par rapport à ce que la cliente avait en production.

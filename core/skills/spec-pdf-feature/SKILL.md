@@ -22,6 +22,7 @@ Lecture ciblée, jamais un fichier entier.
 1. **Les `DONE-*` du dossier** : le besoin (`## Résumé métier`), les comportements garantis (scénarios), les libellés exacts des écrans et des messages. Protocole de lecture : `workflow-kit/core/skills/doc/SKILL.md` § « Protocole de lecture (obligatoire) ». Les sections de pilotage, de dette, de leçons et de vigilances ne nourrissent jamais la note.
 2. **Les règles** : `.agents/specs/spec-parallele.md`, index puis entrées ciblées. Périmètre : les entrées que citent les `DONE-*` (section de traçabilité) et celles dont la ligne `Gardé par` cite ces `DONE-*`.
    - **✅ en vigueur seulement.** Une entrée **⛔ caduc (→ SP-…)** est remplacée par celle qu'elle désigne ; son contenu n'apparaît jamais dans la note.
+   - **Version amendée.** Une entrée en vigueur peut porter `Amendé par` ou `Précisé par` : elle vaut telle que les entrées citées la modifient. La note décrit l'état qui résulte de l'ensemble, jamais une phrase qu'une entrée plus récente a changée (« le produit ne crée jamais de code », amendée par « il en attribue un quand le client n'en a pas » : seule la seconde existe pour la note).
    - Écart entre un `DONE-*` et une règle en vigueur : la règle prime.
 3. **Le glossaire** (`.agents/domain-glossary.md`) : les mots de la cliente. La spec officielle (`.agents/specs/spec.txt`) seulement pour situer une règle.
 4. **Jamais** : les lots à venir (`LOT-*`), les documents de chantier (`SPECS.md`, `BACKLOG.md`, `FICHE-REUNION.md`), les `PLAN-*` et `REFACTO-*`. Le code, seulement pour vérifier un libellé d'écran.
@@ -44,7 +45,7 @@ Lecture ciblée, jamais un fichier entier.
 
    Aucun nom de classe, de méthode, de fichier, de champ, de table, de route, de branche ni de commit.
 4. **Rien d'inventé.** Chaque phrase s'appuie sur une règle en vigueur ou sur un `DONE-*`. Sinon : question à l'utilisateur, jamais de supposition.
-5. **Court.** Une puce par notion, ouverte par sa notion en gras. Visée : deux à quatre pages.
+5. **Court.** Une puce par notion, ouverte par sa notion en gras ; un seul exemple par règle datée ou chiffrée. Visée : deux à quatre pages ; cinq pour une feature de plus de trente règles, le tableau des règles occupant alors plus d'une page.
 
 ## Structure
 
