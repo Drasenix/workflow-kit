@@ -87,8 +87,15 @@ export function render(ctx) {
     }
   }
   copyDir(path.join(coreDir, 'commands'), path.join(dir, 'command'));
+  // Commandes du pack : à côté de celles du core, qui priment en cas de même nom.
+  const coreCommands = walk(path.join(coreDir, 'commands')).map((f) => rel(path.join(coreDir, 'commands'), f));
+  for (const f of walk(ctx.packCommandsDir)) {
+    const r = rel(ctx.packCommandsDir, f);
+    if (coreCommands.includes(r)) log.warn(`[opencode] commande du pack ${r} ignoree : le core a la meme`);
+    else writeUtf8(path.join(dir, 'command', r), readUtf8(f));
+  }
   copyDir(path.join(coreDir, 'skills'), path.join(dir, 'skills'));
-  log.info('[opencode] agents/, command/, skills/ -> .opencode/ [genere]');
+  log.info('[opencode] agents/, command/ (core + pack), skills/ -> .opencode/ [genere]');
 
   mergeOpencodeJson(ctx);
   return { ignore: ['.opencode'] };

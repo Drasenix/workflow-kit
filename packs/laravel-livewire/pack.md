@@ -22,3 +22,7 @@
 | `skills/tests/SKILL.md` | Skill d'exécution des tests |
 | `skills/recette/SKILL.md` | Skill de recette manuelle |
 | `skills/migrate-fresh/SKILL.md` | Skill de reset DB dev |
+
+| Commande (`commands/`) | Rôle |
+|---|---|
+| `recette.md` | `/recette` : charge la skill `recette` (générée dans `.opencode/command/` et `.claude/commands/`) |

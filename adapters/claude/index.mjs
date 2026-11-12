@@ -163,18 +163,23 @@ export function render(ctx) {
   }
 
   // Sous Claude Code une skill est déjà invocable en /<nom> : une commande du même nom la masquerait.
+  // Vaut pour les skills du core comme pour une skill propre au projet dans .claude/skills/.
+  // Les skills d'un pack vivent dans .agents/skills/, que Claude Code ne lit pas : leur commande y renvoie.
+  const isSkill = (name) => skillNames.includes(name) || exists(path.join(claudeDir, 'skills', name, 'SKILL.md'));
   const skipped = [];
   const commandFiles = [];
-  const commandsDir = path.join(coreDir, 'commands');
-  for (const f of walk(commandsDir)) {
-    const name = path.basename(f, '.md');
-    if (skillNames.includes(name)) {
-      skipped.push(name);
-      continue;
+  for (const commandsDir of [path.join(coreDir, 'commands'), ctx.packCommandsDir]) {
+    for (const f of walk(commandsDir)) {
+      const name = path.basename(f, '.md');
+      const r = rel(commandsDir, f);
+      if (commandFiles.includes(r)) continue; // le core prime sur le pack
+      if (isSkill(name)) {
+        skipped.push(name);
+        continue;
+      }
+      writeUtf8(path.join(claudeDir, 'commands', r), readUtf8(f));
+      commandFiles.push(r);
     }
-    const r = rel(commandsDir, f);
-    writeUtf8(path.join(claudeDir, 'commands', r), readUtf8(f));
-    commandFiles.push(r);
   }
   log.info(`[claude] agents/, skills/${skipped.length ? '' : ', commands/'} -> .claude/ [genere]${skipped.length ? ` (commandes ${skipped.join(', ')} = skills du meme nom, non dupliquees)` : ''}`);
 

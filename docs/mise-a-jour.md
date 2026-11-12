@@ -22,7 +22,8 @@ Ce que l'outil IA charge lui-même (agents, skills, commandes) est **généré**
 |---|---|---|
 | `core/**` hors agents, skills, commandes (index, règles du Build, workflow, templates) | lu en direct | aucune, mais nouvelle session de l'outil |
 | `core/agents/**`, `core/skills/**`, `core/commands/**` | `.opencode/` et `.claude/` sont des copies générées | `sync`, puis nouvelle session |
-| `packs/<stack>/**` | seeds copiés vers `.agents/**` | `sync` |
+| `packs/<stack>/agents/**` | seeds copiés vers `.agents/**` | `sync` |
+| `packs/<stack>/commands/**` | copies générées dans `.opencode/command/` et `.claude/commands/` | `sync`, puis nouvelle session |
 | `project/**` (`AGENTS.md`, glossaire, specs, `reference-utilitaires`) | seeds projet | `sync` |
 | `adapters/**` | `opencode.json`, `.opencode/`, `.claude/`, `CLAUDE.md` | `sync` |
 | `bin/**`, `lib/**` | outillage du kit | aucune |

@@ -102,7 +102,7 @@ Si le kit n'est pas encore dans le projet, lancer la commande depuis une copie d
 1. **Place le kit** dans `<projet>/workflow-kit/` (clone, sinon copie locale sans `.git`) et enregistre la stack et les runtimes dans `workflow.config.json`.
 2. **Matérialise les seeds** : `packs/<stack>/agents/**` + `project/agents/**` → `.agents/`, et `project/AGENTS.md` → `AGENTS.md`.
 3. **Génère les adaptateurs** demandés :
-   - `opencode` : `.opencode/{agents,command,skills}` et fusion de `opencode.json` (permissions `agent.<agent principal>.permission.task` des subagents du Build et du raffineur, `instructions: [".agents/workflow-commands.md"]`). Le reste (`plugin`, `mcp`) est préservé.
+   - `opencode` : `.opencode/{agents,command,skills}` (commandes du core et du pack) et fusion de `opencode.json` (permissions `agent.<agent principal>.permission.task` des subagents du Build et du raffineur, `instructions: [".agents/workflow-commands.md"]`). Le reste (`plugin`, `mcp`) est préservé.
    - `claude` : `.claude/{agents,skills}`, un bloc géré dans `CLAUDE.md` (imports `@AGENTS.md` et `@.agents/workflow-commands.md`) et un dans `.worktreeinclude`, et dans `.claude/settings.json` les seules clés `attribution.commit` et `worktree.symlinkDirectories` (voir § 3.6). Le reste de ces fichiers n'est jamais touché.
 4. **Complète le `.gitignore`** : `workflow-kit` (sans `/` final, pour couvrir aussi le lien d'un worktree), `.opencode`, et pour Claude `.claude/agents/*` et `.claude/skills/*` (le reste de `.claude/`, par ex. `settings.json`, n'est pas ignoré ; pour versionner un agent ou une skill à toi, ajoute une exception `!.claude/skills/ma-skill/`).
 5. **Réécrit les anciens chemins** `.opencode/…` et `.workflow/…` cités dans `.agents/**.md` et `AGENTS.md` (voir `docs/mise-a-jour.md`, « Migration »).
@@ -267,6 +267,8 @@ Chaque skill du kit dispose d'une **slash-commande** `/nom` : c'est le raccourci
 | `/retouche` | `retouche` |
 
 Elles prennent `$ARGUMENTS` et demandent la précision manquante si besoin.
+
+Un pack peut ajouter des commandes pour ses skills techno (`packs/<stack>/commands/*.md`, générées au même endroit) : le pack `laravel-livewire` fournit `/recette` (skill `recette`, `.agents/skills/recette/SKILL.md`).
 
 ### 4.6 Fichiers du projet (`.agents/`) et leur rôle
 

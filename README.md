@@ -47,6 +47,7 @@ workflow-kit/
 │  ├─ commands/{consult-workflow,raffiner,realiser,cadrage-po,cloturer-chantier,analyse-flashback,doc,compacter-feature,controle-livraison,retouche}.md
 │  └─ templates/{feature,feature-cloturee}.md
 ├─ packs/<stack>/agents/**       -> .agents/     (SEEDS TECHNO)
+├─ packs/<stack>/commands/*.md   -> .opencode/command/, .claude/commands/  (commandes des skills techno, générées)
 │  └─ laravel-livewire/  _blank/
 └─ project/
    ├─ AGENTS.md                  -> AGENTS.md    (GÉNÉRIQUE)
@@ -127,14 +128,14 @@ Voir `packs/_schema.md`.
 
 - **Workflow feature** : `agent-workflow.md` (étapes 0→7, règles communes), `agent-build.md` (règles communes du Build), `phase-raffinement.md` (étapes 0-1), `phase-realisation.md` (étapes 2-7), `qualite-code.md` (critères de qualité communs), `agents/*.md` (raffineur + 6 subagents).
 - **Skills génériques** : `consult-workflow`, `raffiner`, `realiser`, `analyse-flashback`, `cadrage-po`, `doc`, `compacter-feature`, `controle-livraison`, `retouche` (+ 3 templates).
-- **Commandes** : `consult-workflow`, `raffiner`, `realiser`, `cadrage-po`, `cloturer-chantier`, `analyse-flashback`, `doc`, `compacter-feature`, `controle-livraison`, `retouche`. Sous opencode, ce sont des commandes ; sous Claude Code, une commande qui a une skill du même nom est cette skill (`/doc`, …) et n'est pas dupliquée dans `.claude/commands/` ; `cloturer-chantier` (qui charge la skill `cadrage-po`) y est générée.
+- **Commandes** : `consult-workflow`, `raffiner`, `realiser`, `cadrage-po`, `cloturer-chantier`, `analyse-flashback`, `doc`, `compacter-feature`, `controle-livraison`, `retouche`. Sous opencode, ce sont des commandes ; sous Claude Code, une commande qui a une skill du même nom est cette skill (`/doc`, …) et n'est pas dupliquée dans `.claude/commands/` ; `cloturer-chantier` (qui charge la skill `cadrage-po`) y est générée. Un pack peut ajouter les siennes (`packs/<stack>/commands/`, ex. `/recette` du pack `laravel-livewire`).
 
 ## Auditer
 
 `node bin/workflow-kit.mjs verify` : audit **auto-portant** (aucune référence à un projet de référence), code de sortie 1 en cas d'écart :
 
 1. **Core agnostique** : aucun terme projet ni techno dans `core/`, aucun chemin `.opencode` ni `.workflow` (le core se cite à `workflow-kit/core/`).
-2. **Neutralité des packs** : aucun terme projet/métier dans `packs/<stack>/agents/**`.
+2. **Neutralité des packs** : aucun terme projet/métier dans `packs/<stack>/agents/**` ni `packs/<stack>/commands/**`.
 3. **Références mortes** : anciens noms (`agent-frontend.md`, `agent-livewire.md`, `agent-opencode.md`…) interdits dans `packs/`.
 4. **Fichiers requis** présents (core + packs).
 5. **Round-trip** : matérialisation générique pour `opencode`, `claude` et `opencode+claude` (jetons résolus, agents valides, bloc `CLAUDE.md`, `.gitignore`, aucun artefact d'un runtime non demandé).

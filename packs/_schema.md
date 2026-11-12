@@ -2,6 +2,7 @@
 
 Un pack fournit les **fichiers propres à une stack** qui vont dans le dossier projet `.agents/`.
 L'arborescence du pack **est** la destination : `packs/<stack>/agents/**` → `.agents/**`.
+Il peut aussi fournir des **commandes** (`packs/<stack>/commands/*.md`), raccourcis vers ses skills techno, générées comme celles du core.
 
 ## Modèle
 
@@ -9,6 +10,7 @@ L'arborescence du pack **est** la destination : `packs/<stack>/agents/**` → `.
 workflow-kit/
 ├─ core/**                    -> lu en direct à workflow-kit/core/   (agnostique ; agents/skills générés dans .opencode/ et .claude/)
 ├─ packs/<stack>/agents/**    -> .agents/**     (projet : quarantaine si existe)
+├─ packs/<stack>/commands/*.md -> .opencode/command/, .claude/commands/  (généré, comme core/commands/)
 ├─ project/agents/**          -> .agents/**     (projet, générique)
 └─ project/AGENTS.md          -> AGENTS.md      (projet)
 ```
@@ -29,6 +31,13 @@ workflow-kit/
 | `component-rules.md` | Conventions composants / exports |
 | `templates-index.md` + `templates/**` | Templates de code |
 | `skills/<nom>/SKILL.md` | Skills techno (ex. `tests`, `recette`) |
+
+## Commandes d'un pack (`commands/`, optionnel)
+
+`commands/<nom>.md` donne la slash-commande `/<nom>` d'une skill techno du pack, au même format que `core/commands/` (frontmatter `description`, corps avec `$ARGUMENTS`). Elle est **générée** (jamais un seed) : `sync` la régénère à chaque fois.
+
+- Le corps cite la skill par son chemin (`.agents/skills/<nom>/SKILL.md`) : Claude Code ne lit pas `.agents/skills/`, la commande y renvoie.
+- Une commande du core de même nom prime. Sous Claude Code, une commande qui porte le nom d'une skill de `.claude/skills/` (core ou projet) n'est pas générée : la skill est déjà invocable en `/<nom>`.
 
 > Les fichiers **génériques** (glossaire, specs, reference-utilitaires, procédures) vivent dans `project/agents/`, pas dans le pack.
 
