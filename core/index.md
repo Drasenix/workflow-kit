@@ -67,6 +67,7 @@ L'agent principal (raffineur ou Build) lit **toujours** `workflow-kit/core/index
 | `.agents/skills/recette/SKILL.md` | après une US passée en `DONE-*` : recette manuelle (scénarios + seeder jetable) |
 | `controle-livraison` | **lancée par l'agent principal** (raffineur à la fin de l'étape 1 et au jalon 1→2, Build au jalon 6→7), avant de proposer tout commit contenant un fichier de feature, et après chaque backtrack ; ou à la demande (`/controle-livraison`) : traces meta non tranchées, Progression incohérente |
 | `compacter-feature` | après le commit de livraison d'un fichier clos (`DONE-*`, `ABANDON-*`, `IRREPRODUCTIBLE-*`) : compaction (garde l'apprentissage, retire le pilotage) |
+| `spec-pdf-feature` | `/spec-pdf-feature [feature]` : note de synthèse client (PDF) d'une feature livrée — règles en vigueur du référentiel, langage métier, état final seulement (jamais l'histoire du chantier) ; dossier de livraison et impression demandés à chaque usage, rien n'est commité |
 | `retouche` | `/retouche [demande]`, **sur demande explicite seulement** : petite modification hors workflow menée par l'agent principal seul (usages d'abord, test qui sait échouer, tests existants jamais modifiés en silence, périmètre strict, rapport de trois lignes) ; arrêt et proposition de `/raffiner` si une migration est nécessaire ou si un choix de comportement reste à trancher |
 
 > Une skill n'est **pas** toujours chargée : déclenchement par sa `description` + pointeur depuis une règle toujours chargée. **Ne jamais y déplacer un garde-fou.**

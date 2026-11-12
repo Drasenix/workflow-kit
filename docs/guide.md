@@ -235,7 +235,7 @@ Une **nouvelle** session sur l'agent par défaut (le Build) : opencode, l'agent 
 
 Ils ne s'invoquent **pas** entre eux : seul l'agent principal de la session (raffineur ou Build) orchestre. L'utilisateur peut aussi les appeler manuellement avec `@nom`.
 
-### 4.4 Les 9 skills (`core/skills/*/SKILL.md`)
+### 4.4 Les 10 skills (`core/skills/*/SKILL.md`)
 
 Chargées **à la demande** (via leur `description`), jamais systématiquement. Chaque skill est **invocable directement par l'utilisateur** : en la nommant en langage naturel, ou via sa **slash-commande** `/nom` (voir § 4.5).
 
@@ -248,8 +248,9 @@ Chargées **à la demande** (via leur `description`), jamais systématiquement. 
 - `compacter-feature` — compaction d'un fichier de feature clos après son commit de livraison. → `/compacter-feature`
 - `controle-livraison` — contrôle mécanique d'un fichier de feature (Progression, Definition of Ready, traces non tranchées, fichiers meta). → `/controle-livraison`
 - `retouche` — petite modification hors workflow, menée par l'agent principal seul ; sur demande explicite uniquement (§ 5.6). → `/retouche`
+- `spec-pdf-feature` — note de synthèse client (PDF) d'une feature livrée : règles en vigueur, langage métier, état final seulement (§ 5.7). → `/spec-pdf-feature`
 
-### 4.5 Les 10 slash-commandes (`core/commands/*.md`)
+### 4.5 Les 11 slash-commandes (`core/commands/*.md`)
 
 Chaque skill du kit dispose d'une **slash-commande** `/nom` : c'est le raccourci avec lequel l'utilisateur l'invoque directement. La commande charge la skill correspondante (`/cloturer-chantier` charge `cadrage-po` pour sa clôture) :
 
@@ -265,10 +266,11 @@ Chaque skill du kit dispose d'une **slash-commande** `/nom` : c'est le raccourci
 | `/compacter-feature` | `compacter-feature` |
 | `/controle-livraison` | `controle-livraison` |
 | `/retouche` | `retouche` |
+| `/spec-pdf-feature` | `spec-pdf-feature` |
 
 Elles prennent `$ARGUMENTS` et demandent la précision manquante si besoin.
 
-Un pack peut ajouter des commandes pour ses skills techno (`packs/<stack>/commands/*.md`, générées au même endroit) : le pack `laravel-livewire` fournit `/recette` (skill `recette`, `.agents/skills/recette/SKILL.md`) et `/recette-navigateur` (skill `recette-navigateur` : la recette jouée par l'agent dans le navigateur, avec captures, constats et PDF).
+Un pack peut ajouter des commandes pour ses skills techno (`packs/<stack>/commands/*.md`, générées au même endroit) : les packs `laravel-livewire` et `_blank` fournissent `/recette` (skill `recette`, `.agents/skills/recette/SKILL.md`) et `/recette-navigateur` (skill `recette-navigateur` : la recette jouée par l'agent dans le navigateur, avec captures, constats et PDF).
 
 ### 4.6 Fichiers du projet (`.agents/`) et leur rôle
 
@@ -415,6 +417,24 @@ SOCLE (consult-workflow)            index.md · agent-workflow.md · agent-build
 
 ---
 
+### 5.7 `spec-pdf-feature` — la note de synthèse client d'une feature livrée
+
+**But** : remettre à la cliente une note de synthèse en PDF qui explique ce que fait le produit à l'issue d'une feature livrée, en langage métier, sans rien de l'histoire du chantier. Ce n'est pas la démo papier d'une recette (`recette-navigateur`, mode client) : la note explique les règles, la démo montre les écrans.
+
+**Sources** : les `DONE-*` du dossier de la feature (besoin, comportements garantis, libellés exacts), les règles **✅ en vigueur** du référentiel qu'ils citent (une règle **⛔ caduque** est remplacée par celle qu'elle désigne et n'apparaît jamais), le glossaire. Jamais les lots à venir ni les documents de chantier.
+
+**Règles d'écriture** :
+1. **L'état final seulement** : on décrit Y, jamais « on a retiré X pour faire Y » ; ni option écartée, ni décision revenue, ni numéro de lot. Un « avant » n'est permis que par rapport à ce que la cliente avait en production.
+2. **Explicite** : qui fait quoi, quand, ce qu'on voit (libellés exacts entre « »), un exemple daté ou chiffré dès qu'une règle porte sur une date, un montant ou une durée.
+3. **Les mots de la cliente** : « règles de gestion » du « référentiel de règles du produit », « vérifications automatiques », « évolutions livrées » ; aucun nom technique.
+4. **Rien d'inventé** : sans source, une question à l'utilisateur.
+
+**Déroulé** : une question de départ à chaque usage (dossier de livraison, moyen d'impression : rien n'est noté dans le projet) ; lecture ciblée des sources ; test global relancé pour le chiffre des vérifications (un échec arrête tout) ; rédaction dans le gabarit de la skill (`assets/gabarit-note.html` : surtitre, trois chiffres clés, sections par thème métier, tableau des règles, « Ce qui n'est pas touché ») ; contrôle mécanique des termes techniques et de chantier dans le texte du PDF ; livraison de `Spec-<feature>.pdf` et de sa source HTML hors dépôt ; rapport de traçabilité (section → règles) dans la conversation.
+
+**Exemple** : `/spec-pdf-feature facturation/prepaiement`. L'agent demande où livrer et comment imprimer, lit les deux `DONE-*` et les treize règles en vigueur qu'ils citent, relance le test global, rédige une note de deux pages (la facture, l'écran, le contrôle des factures de plusieurs mois, les achats ponctuels, les treize règles, ce qui n'est pas touché), retire du texte un « initialement » repéré par le contrôle, puis livre le PDF et rend son rapport.
+
+---
+
 ## 6. Aide-mémoire
 
 | Je veux… | Faire |
@@ -432,5 +452,6 @@ SOCLE (consult-workflow)            index.md · agent-workflow.md · agent-build
 | Diagnostiquer un ticket antidaté | `/analyse-flashback [date/domaine]` |
 | Poser une question métier | `/doc [question]` |
 | Dépolluer un fichier de feature clos | `/compacter-feature [fichier]` |
+| Expliquer une feature livrée à la cliente (note PDF) | `/spec-pdf-feature [feature]` |
 | Auditer le kit (agnostisme, neutralité) | `workflow-kit verify` |
 | Créer un nouveau pack techno | copier `packs/_blank/`, remplir, voir `packs/_schema.md` |
