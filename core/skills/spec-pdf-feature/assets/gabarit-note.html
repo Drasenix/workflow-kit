@@ -1,0 +1,93 @@
+<!doctype html>
+<!--
+  Gabarit de la note de synthèse client (skill spec-pdf-feature).
+  - Copier ce fichier dans le dossier de travail, remplacer les [[…]], dupliquer les blocs marqués « répéter ».
+  - Texte seul : aucune image, aucune capture.
+  - Sections par thème métier, jamais par lot ; une puce = une notion, ouverte par sa notion en gras.
+  - Une section numérotée ne commence jamais en bas de page (break-after: avoid sur les titres).
+  - Impression : <chrome> --headless --no-pdf-header-footer --print-to-pdf=<Spec-feature.pdf> <ce fichier>
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>[[DOMAINE]] — [[FEATURE]]</title>
+<style>
+  @page { size: A4; margin: 16mm 17mm 16mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Liberation Sans", "Helvetica Neue", Arial, sans-serif; font-size: 9.6pt; line-height: 1.5; color: #1f2937; }
+  b, strong { color: #111827; }
+
+  .surtitre { font-size: 7.8pt; letter-spacing: 0.08em; text-transform: uppercase; color: #6b7280; margin: 0 0 1.5mm; }
+  h1 { font-size: 17pt; line-height: 1.2; margin: 0 0 2mm; color: #111827; }
+  .meta { font-size: 8.4pt; color: #4b5563; padding-bottom: 3.5mm; border-bottom: 2px solid #111827; margin-bottom: 5mm; }
+  .meta b { color: #111827; }
+  .intro { margin: 0 0 5mm; }
+
+  .chiffres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; margin: 0 0 6mm; }
+  .chiffre { border: 1px solid #d1d5db; border-radius: 2.5mm; padding: 2.5mm 3.5mm; }
+  .chiffre .valeur { font-size: 13pt; font-weight: 700; color: #111827; line-height: 1.2; }
+  .chiffre .libelle { font-size: 7.6pt; color: #6b7280; }
+
+  h2 { font-size: 10.6pt; margin: 6mm 0 2.5mm; padding-bottom: 1.2mm; border-bottom: 1px solid #e5e7eb; color: #111827; break-after: avoid; page-break-after: avoid; }
+  h2 .num { color: #9ca3af; margin-right: 2mm; }
+  ul { margin: 0 0 2mm; padding-left: 5mm; }
+  li { margin: 0 0 1.6mm; break-inside: avoid; page-break-inside: avoid; }
+
+  table.regles { width: 100%; border-collapse: collapse; font-size: 8.2pt; margin: 0 0 3mm; }
+  table.regles thead { display: table-header-group; }
+  table.regles th { text-align: left; font-size: 7pt; letter-spacing: 0.08em; text-transform: uppercase; color: #6b7280; padding: 0 2mm 1.5mm 0; border-bottom: 2px solid #111827; }
+  table.regles td { padding: 1.6mm 2mm 1.6mm 0; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+  table.regles td.ref { width: 11mm; font-weight: 700; color: #111827; }
+  table.regles tr { break-inside: avoid; page-break-inside: avoid; }
+  table.regles tr.groupe td { font-weight: 700; color: #374151; padding-top: 3mm; border-bottom: 1px solid #d1d5db; }
+
+  footer { margin-top: 6mm; padding-top: 2mm; border-top: 1px solid #d1d5db; font-size: 7.6pt; color: #6b7280; break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<p class="surtitre">Note de synthèse — [[DOMAINE EN CLAIR]]</p>
+<h1>[[Domaine]] : [[la feature]]</h1>
+<div class="meta"><b>Date</b> [[12 novembre 2026]] &nbsp;·&nbsp; <b>Périmètre</b> [[périmètre métier en une ligne]]</div>
+
+<p class="intro">[[Deux ou trois phrases : ce que la feature permet, pour qui, et le nombre de règles de gestion qui l'encadrent.]]</p>
+
+<div class="chiffres">
+  <div class="chiffre"><div class="valeur">[[N]]</div><div class="libelle">règles de gestion</div></div>
+  <div class="chiffre"><div class="valeur">[[N]]</div><div class="libelle">évolutions livrées</div></div>
+  <div class="chiffre"><div class="valeur">[[N]]</div><div class="libelle">vérifications automatiques au vert</div></div>
+</div>
+
+<!-- répéter : une section par thème métier -->
+<h2><span class="num">1</span>[[Thème métier]]</h2>
+<ul>
+  <!-- répéter : une puce par notion -->
+  <li><b>[[Notion.]]</b> [[Qui fait quoi, quand, ce qu'on voit : libellés exacts entre « », exemple daté ou chiffré si la règle porte sur une date, un montant ou une durée.]]</li>
+</ul>
+
+<!-- si la feature demande une mise en route -->
+<h2><span class="num">[[n]]</span>Ce qui est à préparer</h2>
+<ul>
+  <li><b>[[Étape.]]</b> [[Qui la fait, où, avec quoi.]]</li>
+</ul>
+
+<h2><span class="num">[[n]]</span>Les [[N]] règles de gestion</h2>
+<table class="regles">
+  <thead><tr><th>Réf.</th><th>Ce que la règle garantit</th></tr></thead>
+  <tbody>
+    <!-- au-delà d'une quinzaine de règles : une ligne de groupe par thème -->
+    <tr class="groupe"><td colspan="2">[[Thème]]</td></tr>
+    <!-- répéter : une ligne par règle en vigueur -->
+    <tr><td class="ref">[[NN]]</td><td>[[Ce que la règle garantit, en une ou deux lignes.]]</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num">[[n]]</span>Ce qui n'est pas touché</h2>
+<ul>
+  <li>[[Ce que la feature laisse inchangé]] : comportement inchangé, vérifié par la suite complète de vérifications automatiques.</li>
+</ul>
+
+<footer>Ces [[N]] règles complètent le référentiel de règles du produit (références [[NN]] à [[NN]]) ; chacune est couverte par des vérifications automatiques.</footer>
+
+</body>
+</html>
