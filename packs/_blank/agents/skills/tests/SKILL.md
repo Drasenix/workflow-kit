@@ -23,6 +23,6 @@ description: "Execution des tests : run cible, run global, calibrage, fallback. 
 
 Si l'outil n'est pas accessible localement : `<fallback shell>`.
 
-## Tests cites par la spec parallele
+## Tests qui gardent les regles de la spec parallele
 
-- A completer : un controle qui verifie que chaque test cite par la ligne « Garde par » des entrees `SP-*` existe encore (version Laravel : `assets/tests-cites.py` du pack `laravel-livewire`).
+- A completer : un controle qui verifie que chaque test cite par la ligne « Garde par » des entrees `SP-*` existe encore (version Laravel : `assets/verifier-tests-gardes.py` du pack `laravel-livewire`).

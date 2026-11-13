@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Vérifie que les tests cités par la spec parallèle existent encore.
+"""Vérifie que les tests qui gardent les règles de la spec parallèle (ligne « Gardé par ») existent encore.
 
 Usage (depuis la racine du projet) :
-    python3 -I .agents/skills/tests/assets/tests-cites.py [--spec .agents/specs/spec-parallele.md] [--tests tests]
+    python3 -I .agents/skills/tests/assets/verifier-tests-gardes.py [--spec .agents/specs/spec-parallele.md] [--tests tests]
 
 Pour chaque entrée en vigueur, lit la ligne `> **Gardé par**` et résout chaque référence entre backticks :
 - `Classe::test_methode` : la méthode existe dans la classe de test (fichier `<Classe>.php` sous le dossier des tests) ;
@@ -11,6 +11,7 @@ Pour chaque entrée en vigueur, lit la ligne `> **Gardé par**` et résout chaqu
 - `ClasseTest` seule : la classe de test existe.
 Une référence `Classe::methode` dont la classe n'est pas un test est signalée (« Gardé par » ne cite que des tests).
 Les parenthèses qui citent un test supprimé (« … supprimé `…` ») sont ignorées.
+Projet à convention `feature` (« Gardé par » cite la feature, pas des tests) : contrôle sans objet.
 Code de sortie 1 s'il y a un écart.
 """
 import argparse
@@ -29,14 +30,28 @@ def index_tests(dossier: pathlib.Path) -> dict:
     return methodes
 
 
+def convention(spec: str) -> str:
+    """Convention déclarée dans « Statuts & types » ; à défaut, déduite des entrées."""
+    declaree = re.search(r"\*\*Gardé par\*\*\s*\(convention du projet\)\s*:\s*`(\w+)`", spec)
+    if declaree:
+        return declaree.group(1)
+    lignes = re.findall(r"(?m)^>\s*\*\*Gardé par\*\*\s*:\s*(.*)$", spec)
+    tests = sum("::" in l for l in lignes)
+    features = sum("DONE-" in l for l in lignes)
+    return "feature" if features > tests else "tests"
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--spec", type=pathlib.Path, default=pathlib.Path(".agents/specs/spec-parallele.md"))
     parser.add_argument("--tests", type=pathlib.Path, default=pathlib.Path("tests"))
     args = parser.parse_args()
 
-    methodes = index_tests(args.tests)
     spec = args.spec.read_text(encoding="utf-8")
+    if convention(spec) == "feature":
+        print(f"[--] {args.spec} : convention « feature » (« Gardé par » cite la feature, pas des tests) — contrôle sans objet")
+        return 0
+    methodes = index_tests(args.tests)
     ecarts = []
     for entree in re.split(r"(?m)^(?=### SP-)", spec)[1:]:
         ident = re.match(r"### (SP-[A-Z0-9]+-\d+)", entree)
@@ -78,7 +93,7 @@ def main() -> int:
 
     for ident, jeton, raison in ecarts:
         print(f"{ident} : `{jeton}` — {raison}")
-    print(f"[{'KO' if ecarts else 'ok'}] tests cités par {args.spec} : {len(ecarts)} écart(s)")
+    print(f"[{'KO' if ecarts else 'ok'}] tests qui gardent les règles de {args.spec} : {len(ecarts)} écart(s)")
     return 1 if ecarts else 0
 
 
