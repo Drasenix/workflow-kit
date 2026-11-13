@@ -1,24 +1,23 @@
 #!/usr/bin/env python3
-"""Assemble le HTML du PDF de recette (mode interne ou client) à partir de scenarios.json.
+"""Assemble le HTML du PDF de recette, écrit pour le client, à partir de scenarios.json.
 
 Usage :
-    python3 generer-pdf.py <scenarios.json> <dossier images> <sortie.html> [--mode interne|client] [--ko en-cours]
+    python3 generer-pdf.py <scenarios.json> <dossier images> <sortie.html> [--ko en-cours]
 
-scenarios.json :
+scenarios.json (textes rédigés pour le client, sans terme technique) :
     {
       "titre": "Recette — <feature>",
       "sous_titre": "Passage du <date> · <environnement> · données fictives",
-      "synthese": {"interne": "<html>", "client": "<html>"},
+      "synthese": "<html, à la première personne>",
       "parcours": {"A": "<nom du parcours>", ...},
       "scenarios": [
-        {"id": "A1", "titre": "...", "titre_client": "... (facultatif)", "resultat": "OK|KO|Non joué",
-         "captures": ["01", "02"], "legende": "<constat interne>", "legende_client": "<constat en clair>"}
+        {"id": "A1", "titre": "...", "resultat": "OK|KO|Non joué", "captures": ["01", "02"], "legende": "<constat en clair>"}
       ]
     }
 
 Les images (préparées par preparer-captures.py) sont retrouvées par leur numéro : « 07-a5-....jpg » pour « 07 ».
-Mode client : scénarios joués seulement, étiquette « Conforme », légendes client, marques internes retirées ;
-un KO arrête le script, sauf --ko en-cours (scénario montré « En cours de correction », sur accord de l'utilisateur).
+Les scénarios non joués n'apparaissent pas (la synthèse les compte) ; les autres portent l'étiquette « Conforme ».
+Un KO arrête le script, sauf --ko en-cours (scénario montré « En cours de correction », sur accord de l'utilisateur).
 Impression : <chrome> --headless --no-pdf-header-footer --print-to-pdf=<sortie.pdf> <sortie.html>
 """
 import argparse
@@ -29,13 +28,11 @@ import pathlib
 import sys
 
 GABARIT = pathlib.Path(__file__).with_name("gabarit-pdf.html")
-MARQUES = ("★",)
 
 
-def nettoyer(texte: str, mode: str) -> str:
-    for m in MARQUES:
-        texte = texte.replace(f" {m}", "").replace(m, "") if mode == "client" else texte.replace(m, "*")
-    return texte
+def nettoyer(texte: str) -> str:
+    """Retire les marques internes (★), que les polices de Chrome sans interface n'ont souvent pas."""
+    return texte.replace(" ★", "").replace("★", "")
 
 
 def main() -> int:
@@ -43,39 +40,36 @@ def main() -> int:
     parser.add_argument("scenarios", type=pathlib.Path)
     parser.add_argument("images", type=pathlib.Path)
     parser.add_argument("sortie", type=pathlib.Path)
-    parser.add_argument("--mode", choices=["interne", "client"], default="interne")
     parser.add_argument("--ko", choices=["arret", "en-cours"], default="arret")
     args = parser.parse_args()
 
     donnees = json.loads(args.scenarios.read_text(encoding="utf-8"))
-    client = args.mode == "client"
-    scenarios = donnees["scenarios"]
+    scenarios = [s for s in donnees["scenarios"] if s["resultat"] != "Non joué"]
 
-    if client:
-        ko = [s["id"] for s in scenarios if s["resultat"] == "KO"]
-        if ko and args.ko == "arret":
-            print(f"KO présents ({', '.join(ko)}) : demander à l'utilisateur d'attendre la correction ou de les montrer (--ko en-cours).", file=sys.stderr)
-            return 2
-        manquantes = [s["id"] for s in scenarios if s["resultat"] != "Non joué" and not s.get("legende_client")]
-        if manquantes:
-            print(f"Légende client manquante : {', '.join(manquantes)}", file=sys.stderr)
-            return 2
-        scenarios = [s for s in scenarios if s["resultat"] != "Non joué"]
+    ko = [s["id"] for s in scenarios if s["resultat"] == "KO"]
+    if ko and args.ko == "arret":
+        print(f"KO présents ({', '.join(ko)}) : demander à l'utilisateur d'attendre la correction ou de les montrer (--ko en-cours).", file=sys.stderr)
+        return 2
+    sans_legende = [s["id"] for s in scenarios if not s.get("legende")]
+    if sans_legende:
+        print(f"Légende manquante : {', '.join(sans_legende)}", file=sys.stderr)
+        return 2
+
+    images = sorted(p.name for p in args.images.glob("*.jpg"))
+    absentes = [f"{s['id']}:{n}" for s in scenarios for n in s.get("captures", []) if not any(i.split("-")[0] == n for i in images)]
+    if absentes:
+        print(f"Captures introuvables : {', '.join(absentes)}", file=sys.stderr)
+        return 2
 
     gabarit = GABARIT.read_text(encoding="utf-8")
     style = gabarit[gabarit.index("<style>"):gabarit.index("</style>") + len("</style>")]
-    images = sorted(p.name for p in args.images.glob("*.jpg"))
     chemin_images = pathlib.Path(os.path.relpath(args.images, args.sortie.parent)).as_posix()
-    e = lambda t: html.escape(nettoyer(t, args.mode))
+    e = lambda t: html.escape(nettoyer(t))
 
     def etiquette(resultat: str) -> str:
-        if client:
-            return "<span class='etiquette en-cours'>En cours de correction</span>" if resultat == "KO" else "<span class='etiquette ok'>Conforme</span>"
-        classe = {"OK": "ok", "KO": "ko"}.get(resultat, "non-joue")
-        return f"<span class='etiquette {classe}'>{html.escape(resultat)}</span>"
-
-    def titre(s: dict) -> str:
-        return e(s.get("titre_client") or s["titre"]) if client else e(s["titre"])
+        if resultat == "KO":
+            return "<span class='etiquette en-cours'>En cours de correction</span>"
+        return "<span class='etiquette ok'>Conforme</span>"
 
     def images_de(s: dict) -> list:
         trouvees = []
@@ -83,17 +77,12 @@ def main() -> int:
             trouvees += [i for i in images if i.split("-")[0] == numero]
         return trouvees
 
-    absentes = [f"{s['id']}:{n}" for s in scenarios for n in s.get("captures", []) if not any(i.split("-")[0] == n for i in images)]
-    if absentes:
-        print(f"Captures introuvables : {', '.join(absentes)}", file=sys.stderr)
-        return 2
-
     h = [f"<!doctype html><html lang='fr'><head><meta charset='utf-8'><title>{e(donnees['titre'])}</title>{style}</head><body>",
          f"<header class='titre'><h1>{e(donnees['titre'])}</h1><div class='sous-titre'>{e(donnees['sous_titre'])}</div></header>",
-         f"<section><h2>Synthèse</h2><div class='encadre'>{nettoyer(donnees['synthese'][args.mode], args.mode)}</div>",
+         f"<section><h2>Synthèse</h2><div class='encadre'>{nettoyer(donnees['synthese'])}</div>",
          "<table><thead><tr><th>Scénario</th><th>Résultat</th><th>Captures</th></tr></thead><tbody>"]
     for s in scenarios:
-        h.append(f"<tr><td>{e(s['id'])} — {titre(s)}</td><td>{etiquette(s['resultat'])}</td><td>{', '.join(s.get('captures', [])) or '—'}</td></tr>")
+        h.append(f"<tr><td>{e(s['id'])} — {e(s['titre'])}</td><td>{etiquette(s['resultat'])}</td><td>{', '.join(s.get('captures', [])) or '—'}</td></tr>")
     h.append("</tbody></table></section>")
 
     courant = None
@@ -104,21 +93,21 @@ def main() -> int:
                 h.append("</section>")
             h.append(f"<section class='parcours'><h2>{e(donnees['parcours'].get(lettre, lettre))}</h2>")
             courant = lettre
-        legende = e(s["legende_client"] if client else s.get("legende", ""))
+        titre = f"{e(s['id'])} — {e(s['titre'])} {etiquette(s['resultat'])}"
         trouvees = images_de(s)
         if not trouvees:
-            h.append(f"<div class='encadre'><b>{e(s['id'])} — {titre(s)}</b> {etiquette(s['resultat'])}<br>{legende}</div>")
+            h.append(f"<div class='encadre'><b>{titre}</b><br>{e(s['legende'])}</div>")
             continue
         for k, image in enumerate(trouvees):
-            entete = f"{e(s['id'])} — {titre(s)} {etiquette(s['resultat'])}" if k == 0 else f"{e(s['id'])} (suite)"
+            entete = titre if k == 0 else f"{e(s['id'])} (suite)"
             h.append(f"<figure class='resultat'><h3>{entete}</h3><img src='{chemin_images}/{image}' alt=''>"
-                     f"<figcaption>{legende if k == len(trouvees) - 1 else ''}</figcaption></figure>")
+                     f"<figcaption>{e(s['legende']) if k == len(trouvees) - 1 else ''}</figcaption></figure>")
     if courant:
         h.append("</section>")
     h.append("</body></html>")
 
     args.sortie.write_text("\n".join(h), encoding="utf-8")
-    print(f"{args.sortie} : {len(scenarios)} scénario(s), mode {args.mode}")
+    print(f"{args.sortie} : {len(scenarios)} scénario(s)")
     return 0
 
 

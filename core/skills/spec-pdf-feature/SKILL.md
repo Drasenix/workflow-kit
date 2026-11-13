@@ -1,6 +1,6 @@
 ---
 name: "spec-pdf-feature"
-description: "Note de synthèse client (PDF) d'une feature livrée : ce que fait le produit, en langage métier, d'après les règles en vigueur du référentiel (spec parallèle SP-*) et les fichiers DONE-* ; état final seulement, jamais l'histoire du chantier ; gabarit fourni, contrôle mécanique des termes, rapport de traçabilité dans la conversation. Use when the user asks for the client spec PDF or synthesis note of a delivered feature (« /spec-pdf-feature », « spec PDF de … », « note de synthèse », « spec pour la cliente »). Not for the client version of a recette (« recette client » : skill recette-navigateur, mode client)."
+description: "Note de synthèse client (PDF) d'une feature livrée : ce que fait le produit, en langage métier, d'après les règles en vigueur du référentiel (spec parallèle SP-*) et les fichiers DONE-* ; état final seulement, jamais l'histoire du chantier ; gabarit fourni, contrôle mécanique des termes, rapport de traçabilité dans la conversation. Use when the user asks for the client spec PDF or synthesis note of a delivered feature (« /spec-pdf-feature », « spec PDF de … », « note de synthèse », « spec pour la cliente »). Not for the recette PDF (« PDF de recette », « recette client » : skill recette-navigateur)."
 ---
 
 # spec-pdf-feature
