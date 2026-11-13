@@ -25,4 +25,4 @@ Si l'outil n'est pas accessible localement : `<fallback shell>`.
 
 ## Tests qui gardent les regles de la spec parallele
 
-- A completer : un controle qui verifie que chaque test cite par la ligne « Garde par » des entrees `SP-*` existe encore (version Laravel : `assets/verifier-tests-gardes.py` du pack `laravel-livewire`).
+- Un test renomme ou supprime rend fausse la ligne « Garde par » qui le cite : `node .agents/specs/verifier-spec.mjs` le controle (6e verification, toute techno). A lancer a l'etape 6 et apres tout renommage ou suppression de test.
