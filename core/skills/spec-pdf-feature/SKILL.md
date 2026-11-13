@@ -1,17 +1,19 @@
 ---
 name: "spec-pdf-feature"
-description: "Note de synthèse client (PDF) d'une feature livrée : ce que fait le produit, en langage métier, d'après les règles en vigueur du référentiel (spec parallèle SP-*) et les fichiers DONE-* ; état final seulement, jamais l'histoire du chantier ; gabarit fourni, contrôle mécanique des termes, rapport de traçabilité dans la conversation. Use when the user asks for the client spec PDF or synthesis note of a delivered feature (« /spec-pdf-feature », « spec PDF de … », « note de synthèse », « spec pour la cliente »). Not for the recette PDF (« PDF de recette », « recette client » : skill recette-navigateur)."
+description: "Dossier client d'une feature livrée : note de synthèse (PDF) et page « À lire d'abord » qui ouvre l'envoi. La note dit ce que fait le produit, en langage métier, d'après les règles en vigueur du référentiel (spec parallèle SP-*) et les fichiers DONE-* ; état final seulement, jamais l'histoire du chantier ; gabarit fourni, contrôle mécanique des termes, rapport de traçabilité dans la conversation. Use when the user asks for the client spec PDF, synthesis note or client package cover page of a delivered feature (« /spec-pdf-feature », « spec PDF de … », « note de synthèse », « spec pour la cliente », « dossier client », « page à lire d'abord »). Not for the recette PDF (« PDF de recette », « recette client » : skill recette-navigateur)."
 ---
 
 # spec-pdf-feature
 
-Note de synthèse destinée à la cliente : ce que fait le produit à l'issue d'une feature livrée, en langage métier, explicite, sans rien de l'histoire du chantier. Le dépôt n'est pas modifié : la note et sa source HTML vont dans un dossier de livraison hors dépôt ; rien n'est commité, rien n'est noté dans le projet.
+Le dossier client d'une feature livrée : une **note de synthèse** (ce que fait le produit, en langage métier, explicite, sans rien de l'histoire du chantier) et une **page « À lire d'abord »** qui ouvre l'envoi (contexte, état d'avancement, documents, attentes, lexique). Le dépôt n'est pas modifié : les PDF et leurs sources HTML vont dans un dossier de livraison hors dépôt ; rien n'est commité, rien n'est noté dans le projet.
 
 ## Entrée
 
 - `/spec-pdf-feature <feature>` : dossier de la feature sous `.agents/feature/`, son slug, ou le chemin d'un de ses `DONE-*`. Absente : la demander.
 - **Une question de départ, à chaque usage**, avant toute rédaction, en une seule fois :
   - **dossier de livraison**, hors dépôt : proposer un dossier existant pour cette feature s'il y en a un (celui de sa recette, à côté du dépôt), sinon demander ;
+  - **état** : la feature est-elle en production ? Sinon, la suite à annoncer (date, ou « planifiée avec vous une fois vos retours intégrés ») ;
+  - **destinataires** (direction, gestionnaires…) et **documents joints** : ceux du dossier de livraison (PDF de recette de la skill `recette-navigateur`…) et ceux que l'utilisateur nomme (guide, pistes…) ;
   - **impression** : Chrome ou Chromium sans interface. Proposer celui du poste (`command -v chromium google-chrome chromium-browser`), sinon celui que donne la commande `fallback` de `.agents/workflow-commands.md` (`<fallback> chromium --version`).
 - Les réponses ne sont notées nulle part : la question revient au prochain usage.
 
@@ -55,7 +57,7 @@ Gabarit : `workflow-kit/core/skills/spec-pdf-feature/assets/gabarit-note.html` (
 2. Introduction : deux ou trois phrases, ce que la feature permet et le nombre de règles qui l'encadrent.
 3. Trois chiffres clés :
    - **règles de gestion** : les entrées en vigueur du périmètre ;
-   - **évolutions livrées** : les `DONE-*` du dossier ;
+   - **évolutions livrées** (feature en production) ou **évolutions réalisées** (pas encore en production ; l'introduction dit alors l'état d'avancement en une phrase) : les `DONE-*` du dossier ;
    - **vérifications automatiques au vert** : le total du `test global` de `.agents/workflow-commands.md` (avant de le lancer : `.agents/skills/tests/SKILL.md`), relancé sur la branche où la feature est livrée. Un échec arrête la skill : aucune note n'annonce des vérifications en échec.
 4. Sections numérotées **par thème métier** (ce que voit et fait l'utilisateur), jamais par lot ni par ordre de livraison.
 5. « Ce qui est à préparer », si la feature demande une mise en route (paramétrage, données à charger, rôle à attribuer).
@@ -70,10 +72,22 @@ Gabarit : `workflow-kit/core/skills/spec-pdf-feature/assets/gabarit-note.html` (
 3. **Chiffres** : relus contre leurs sources.
 4. **Mise en page** : au moins une page regardée en image (`pdftoppm -png -r 60 -f <n> -l <n> <pdf> <préfixe>`) ; aucun titre seul en bas de page, aucune page blanche à la fin.
 
+## Page « À lire d'abord »
+
+Une page, en tête de l'envoi, pour un lecteur qui découvre le sujet. Gabarit : `workflow-kit/core/skills/spec-pdf-feature/assets/gabarit-accueil.html`. Écrite à la première personne (« je », jamais « on »), avec les mêmes règles d'écriture et les mêmes contrôles que la note.
+
+1. **De quoi il s'agit** : trois phrases, ce que la feature change pour l'exploitant.
+2. **Où en est le travail** : l'état donné à la question de départ (en production depuis…, ou réalisée et vérifiée, pas encore en production), et la suite annoncée. Cohérent avec la note : jamais « livrée » d'un côté et « en cours » de l'autre.
+3. **Les documents** : un tableau dans l'ordre de lecture — document, ce qu'il contient, pour qui, durée de lecture. La note de synthèse d'abord ; un document long (PDF de recette) « à consulter ».
+4. **Ce que j'attends de vous** : les réponses attendues (questions ouvertes des documents joints, avis demandés) ; « Rien : pour information » s'il n'y en a pas.
+5. **Lexique** : les termes du domaine que les documents emploient sans les définir (glossaire `.agents/domain-glossary.md`, vocabulaire d'un service externe), une ligne chacun, avec les mots de la cliente.
+
+Une seule page : la resserrer (marges, espacements) plutôt que de déborder.
+
 ## Livraison
 
 1. Copier le gabarit dans un dossier de travail, le remplir, imprimer : `<chrome> --headless --no-pdf-header-footer --print-to-pdf=<sortie.pdf> <html>`. Impression par la commande `fallback` : dossier de travail dans le projet, ignoré par git (`git check-ignore <dossier>`) et visible depuis cette commande.
-2. Dans le dossier de livraison : `Spec-<feature>.pdf` et sa source `spec-<feature>.html`, gardée pour les retouches. Dossier de travail supprimé ; `git status` identique à celui du départ.
+2. Dans le dossier de livraison : `Spec-<feature>.pdf`, `00-A-lire-d-abord-<feature>.pdf` et leurs sources `spec-<feature>.html`, `a-lire-d-abord-<feature>.html`, gardées pour les retouches. Dossier de travail supprimé ; `git status` identique à celui du départ.
 3. **Rapport**, dans la conversation (jamais dans la note) :
    - chemin du PDF, nombre de pages, chiffres clés ;
    - traçabilité : chaque section et les références des règles qui la fondent ;

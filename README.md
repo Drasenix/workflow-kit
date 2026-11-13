@@ -127,7 +127,7 @@ Voir `packs/_schema.md`.
 ## Capacités incluses (core/)
 
 - **Workflow feature** : `agent-workflow.md` (étapes 0→7, règles communes), `agent-build.md` (règles communes du Build), `phase-raffinement.md` (étapes 0-1), `phase-realisation.md` (étapes 2-7), `qualite-code.md` (critères de qualité communs), `agents/*.md` (raffineur + 6 subagents).
-- **Skills génériques** : `consult-workflow`, `raffiner`, `realiser`, `analyse-flashback`, `cadrage-po`, `doc`, `compacter-feature`, `controle-livraison`, `retouche`, `spec-pdf-feature` (+ 3 templates ; `spec-pdf-feature` porte son gabarit de note dans `assets/`).
+- **Skills génériques** : `consult-workflow`, `raffiner`, `realiser`, `analyse-flashback`, `cadrage-po`, `doc`, `compacter-feature`, `controle-livraison`, `retouche`, `spec-pdf-feature` (+ 3 templates ; `spec-pdf-feature` porte ses gabarits (note, page d'accueil) dans `assets/`).
 - **Commandes** : `consult-workflow`, `raffiner`, `realiser`, `cadrage-po`, `cloturer-chantier`, `analyse-flashback`, `doc`, `compacter-feature`, `controle-livraison`, `retouche`, `spec-pdf-feature`. Sous opencode, ce sont des commandes ; sous Claude Code, une commande qui a une skill du même nom est cette skill (`/doc`, …) et n'est pas dupliquée dans `.claude/commands/` ; `cloturer-chantier` (qui charge la skill `cadrage-po`) y est générée. Un pack peut ajouter les siennes (`packs/<stack>/commands/`, ex. `/recette` et `/recette-navigateur` des packs `laravel-livewire` et `_blank`).
 
 ## Auditer
