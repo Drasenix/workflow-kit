@@ -1,6 +1,6 @@
 # Écrire une règle dans la spec parallèle
 
-> Tenu par workflow-kit (`core/specs/ecrire-une-regle.md`). Dans un projet, ce fichier est une **copie** que la synchronisation du kit écrase : ne pas le modifier là. Il décrit le **format** d'une entrée de `.agents/specs/spec-parallele.md`. Le **moment** et la **validation** dépendent de qui écrit : dans le workflow, le Build à l'étape 6 (ou à la clôture d'un chantier), après validation de l'utilisateur ; hors du workflow, dans le commit du changement, en demandant à l'utilisateur au moindre doute métier.
+> Tenu par workflow-kit (`core/specs/ecrire-une-regle.md`). Dans un projet, ce fichier est une **copie** que la synchronisation du kit écrase : ne pas le modifier là. C'est le seul endroit qui définit le format d'une entrée de `.agents/specs/spec-parallele.md` : statuts, types, modèle, contrôles. **Qui écrit, et quand** : dans le workflow, le Build, après validation de l'utilisateur ; hors du workflow, dans le commit du changement, en demandant à l'utilisateur au moindre doute métier.
 
 ## Quand écrire une entrée
 
@@ -18,6 +18,11 @@ Une règle existante que le changement contredit se met **toujours** à jour, m�
 - Méthode de code réutilisable → `.agents/reference-utilitaires.md`.
 - Détail d'implémentation, choix technique → le fichier de feature, ou le message de commit.
 
+## Statuts et types
+
+- **Statuts** : `✅ en vigueur (validé AAAA-MM-JJ)` · `⛔ caduc (→ SP-…)`.
+- **Types** : `AMENDE` (remplace une règle de la spec officielle) · `PRECISE` (la complète) · `ETEND` (cas qu'elle ne couvre pas).
+
 ## Ajouter, remplacer, amender
 
 - **Nouvelle règle** : prochain numéro libre de son domaine, `SP-<DOM>-<n>` (domaines listés en tête de la spec ; un nouveau domaine se demande). Une ligne dans l'index, une entrée dans « Entrées ».
@@ -32,7 +37,7 @@ Ligne d'index : `| SP-<DOM>-<n> | ✅ en vigueur (AAAA-MM-JJ) | AMENDE, PRECISE 
 ```markdown
 ### SP-<DOM>-<n> — <titre>
 
-> **Statut** : ✅ en vigueur (validé AAAA-MM-JJ) · **Type** : AMENDE (remplace une règle officielle), PRECISE (la complète) ou ETEND (cas non couvert)
+> **Statut** : ✅ en vigueur (validé AAAA-MM-JJ) · **Type** : AMENDE, PRECISE ou ETEND
 > **Amende** : SP-… (<ce qui change>)   ← ou Remplace / Précise / Étend ; ligne absente s'il n'y en a pas
 > **Ancre officielle** : <section> (p. X) de la spec officielle, ou « — (spec muette) »
 > **Source** : d'où vient la règle — fichier de feature, cadrage PO <sujet>, ticket, décision de l'utilisateur du AAAA-MM-JJ
@@ -50,4 +55,9 @@ Champs de renvoi, toujours au masculin : `Amende` / `Amendé par`, `Précise` / 
 
 ## Vérifier
 
-`node .agents/specs/verifier-spec.mjs`, et le contrôle des tests cités s'il existe (`.agents/skills/tests/assets/`).
+`node .agents/specs/verifier-spec.mjs` (Node seul, sans le kit), et le contrôle des tests cités s'il existe (`.agents/skills/tests/assets/`). Le premier vérifie :
+1. l'index et les entrées portent les mêmes identifiants, sans doublon ;
+2. le statut de l'index est celui de l'entrée (même date, même remplaçante) ;
+3. toute règle citée (`SP-…`) existe ;
+4. chaque entrée porte ses `Mots-clés` ;
+5. une règle en vigueur citée dans la ligne `Amende` d'une autre porte `Amendé par` en retour (vers la remplaçante, si celle qui amende est devenue caduque).

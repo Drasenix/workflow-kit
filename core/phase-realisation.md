@@ -132,13 +132,13 @@ Sans jargon (ni pattern, job, transaction, lock, webhook, DTO, listener…), san
 
 ### Recette nuances (dans la même pause que le résumé)
 
-Le Build relit `## Registre des décisions`, les ADR et les puces `[À CONSIGNER]` / `[AMENDE SP-*]`, et identifie les **règles métier validées, durables et hors spec officiel** (critères : `.agents/specs/ecrire-une-regle.md`). Il propose les entrées `SP-*` (ID, type `AMENDE`/`PRECISE`/`ETEND`, ancre officielle, règle, supersession éventuelle) dans `## Nuances consignées`, et les présente **en même temps** que le résumé.
+Le Build relit `## Registre des décisions`, les ADR et les puces `[À CONSIGNER]` / `[AMENDE SP-*]`, et identifie les **règles à consigner** (critères : `.agents/specs/ecrire-une-regle.md`). Il propose les entrées `SP-*` (ID, type `AMENDE`/`PRECISE`/`ETEND`, ancre officielle, règle, supersession éventuelle) dans `## Nuances consignées`, et les présente **en même temps** que le résumé.
 
 - Aucune règle introduite ni amendée : `## Nuances consignées` porte `Aucune`.
 - **Pause fusionnée :** l'utilisateur valide, ajuste ou refuse. Le « go » vaut droit d'écriture du spec parallèle.
 - **Revue de péremption (obligatoire)** : les `SP-*` du périmètre sont-ils toujours vrais au regard du code livré ? Sinon, proposer une **supersession** dans la même recette.
 - **Gardé par** : pour chaque `SP-*` de `## Périmètre du lot` et de `## Nuances consignées`, le marqueur d'attente de la ligne `> **Gardé par**` est remplacé selon la convention déclarée dans la section « Statuts & types » de `.agents/specs/spec-parallele.md` ; une partie gardée par un lot suivant s'écrit `<partie> : lot <nn> à venir`. Contrôlé par `workflow-kit check` à la livraison ; les tests cités, par le contrôle de la skill `.agents/skills/tests/SKILL.md` s'il y en a un.
-- Après validation : le Build écrit les `SP-*` (index + entrées + marquage des entrées remplacées), lance `node workflow-kit/bin/workflow-kit.mjs check-meta --spec` (« Contrôle d'intégrité » de `.agents/specs/spec-parallele.md`, mécanique) jusqu'à `[ok]`, résout chaque puce `[À CONSIGNER]` / `[AMENDE SP-*]` (`→ ✅ SP-XXX` ou `→ ⛔ <raison>`), puis passe la ligne 6 à OK.
+- Après validation : le Build écrit les `SP-*` (index + entrées + marquage des entrées remplacées), lance `node workflow-kit/bin/workflow-kit.mjs check-meta --spec` (vérifications décrites dans `.agents/specs/ecrire-une-regle.md`, mécanique) jusqu'à `[ok]`, résout chaque puce `[À CONSIGNER]` / `[AMENDE SP-*]` (`→ ✅ SP-XXX` ou `→ ⛔ <raison>`), puis passe la ligne 6 à OK.
 
 ## ADR (Architecture Decision Records)
 
