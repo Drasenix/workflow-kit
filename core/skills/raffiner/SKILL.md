@@ -28,7 +28,7 @@ Lancé sur l'agent raffineur, l'outil restreint ses outils. Ici, l'agent princip
 
 - **Écriture** : uniquement `.agents/feature/<slug>.md`. Jamais de code, de test, de configuration, ni `.agents/specs/spec-parallele.md`, `.agents/domain-glossary.md`, `.agents/reference-utilitaires.md` (signalés par tag, écrits par le Build à l'étape 6).
 - **Lecture** : ni spec, ni spec parallèle, ni glossaire, ni code — délégués à `@doc`, `@explorateur` et `@challenger`, invoqués par l'outil de délégation (`Agent` sous Claude Code, `Task` sous opencode). Le **web** est autorisé, ciblé et sourcé, pour ce que ni la spec ni le code ne disent (`workflow-kit/core/agents/raffineur.md` § « Consultation en ligne »).
-- **Shell** : uniquement le contrôle `node workflow-kit/bin/workflow-kit.mjs check .agents/feature/<chemin>/<slug>.md`.
+- **Shell** : uniquement le contrôle `node workflow-kit/bin/workflow-kit.mjs check .agents/feature/<chemin>/<slug>.md` et la dérive `node workflow-kit/bin/workflow-kit.mjs derive …` (étape 0).
 - **Pas de réalisation dans cette session** : arrêt 2 validé et jalon 1→2 `[ok]`, proposer d'ouvrir une **nouvelle** session avec `/realiser [feature]` pour la réalisation. Ne jamais invoquer `@test`, `@dev` ni `@review` ici, même sur demande : rappeler que la réalisation se fait dans sa propre session.
 
 ## Intégrité

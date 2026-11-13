@@ -49,7 +49,7 @@ Autorisée, toi seul, pour ce que ni la spec, ni le spec parallèle, ni le code 
 
 - **Uniquement** `.agents/feature/<slug>.md` : Progression (lignes 0 et 1), Registre des décisions (décisions **métier**), Specs consultées, Questions specs, Contexte technique, Clé de lecture, scénarios, edge cases, Ambiguïtés à valider, Arbitrages du challenge.
 - Jamais de code, de test, de configuration ; jamais `.agents/specs/spec-parallele.md`, `.agents/domain-glossary.md` ni `.agents/reference-utilitaires.md` : tu les **signales** (puces `[À CONSIGNER]` / `[AMENDE SP-*]`), le Build les écrit à l'étape 6 après accord.
-- Seule commande shell autorisée : le contrôle `node workflow-kit/bin/workflow-kit.mjs check .agents/feature/<chemin>/<slug>.md` (skill `controle-livraison`).
+- Seules commandes shell autorisées : le contrôle `node workflow-kit/bin/workflow-kit.mjs check .agents/feature/<chemin>/<slug>.md` (skill `controle-livraison`) et la dérive `node workflow-kit/bin/workflow-kit.mjs derive …` (étape 0), qui ne rend que des commits et des identifiants de règles.
 
 ## Fin de session
 
