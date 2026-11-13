@@ -52,7 +52,7 @@ Liste fermée : extension sur validation utilisateur.
 > > **Source** : feature `<chemin DONE>` *(ou, à la clôture d'un chantier PO : cadrage PO <sujet>, décision du <date>)*
 > > **Remplace** : SP-… *(si applicable)*
 > > **Mots-clés** : <mot1>, <mot2>
-> > **Gardé par** : `<Test>::<methode>`
+> > **Gardé par** : `<Test>::<methode>` *(les tests qui gardent la règle ; avant son implémentation : à compléter à l'étape 6 du lot qui l'implémente)*
 >
 > **Règle.** <règle en vigueur, langage métier>
 >
