@@ -10,7 +10,7 @@
 >
 > **Lecture** : jamais le fichier entier. Index puis entrées ciblées (grep).
 >
-> **Cycle de vie** : une règle qui change = nouvelle entrée + ancienne marquée caduque. Jamais de réécriture de l'histoire.
+> **Cycle de vie** : une règle qui change = nouvelle entrée + ancienne marquée caduque. Jamais de réécriture de l'histoire. Une règle modifiée en partie reste en vigueur et reçoit `Amendé par : <nouvelle> (date) — <ce qui change>` (vérifié par le contrôle d'intégrité).
 >
 > Dernière mise à jour : YYYY-MM-DD
 

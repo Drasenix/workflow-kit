@@ -56,7 +56,7 @@ En cas d'ambiguïté, **demander à l'utilisateur** plutôt que supposer.
 - Protéger les modèles (assignation de masse).
 - Envelopper les écritures multiples dans une transaction.
 - Charger les relations pour éviter les N+1.
-- **Changement de comportement, de libellé ou de couleur visible**, avec ou sans le workflow : s'il contredit une règle `SP-*` de `.agents/specs/spec-parallele.md`, ou s'il s'écarte volontairement de la spec officielle, le consigner **dans le même commit** : nouvelle entrée `SP-*` qui amende ou remplace (format et cycle de vie en tête du fichier), `Gardé par` selon la convention déclarée dans le fichier, et `Amendé par` ou `⛔ caduc` sur l'ancienne. Repère : avant de modifier ou de renommer un test, chercher son nom dans la spec parallèle ; s'il garde une règle, vérifier qu'elle dit encore vrai. Vérifier ensuite, sans dépendance : `node .agents/specs/verifier-spec.mjs`. Décision métier incertaine : demander, ne pas trancher.
+- **Hors du workflow** (session qui ne mène pas une étape de feature) : un changement de comportement, de libellé ou de couleur qui contredit une règle `SP-*` de `.agents/specs/spec-parallele.md`, ou qui s'écarte de la spec officielle, se consigne dans le même commit, selon l'en-tête de ce fichier. Repère : avant de modifier ou de renommer un test, chercher son nom dans la spec. Vérifier : `node .agents/specs/verifier-spec.mjs`. Doute métier : demander.
 - En fin de conversation, proposer de commit, ou de commit et push.
 
 ## Rapport d'avancement client
