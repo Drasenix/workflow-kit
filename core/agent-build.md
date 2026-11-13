@@ -62,9 +62,7 @@ Les fichiers meta du projet sont la mémoire des agents d'une feature à l'autre
 Les **règles métier validées** qui amendent, précisent ou étendent le spec officiel (source immuable) sont consignées dans `.agents/specs/spec-parallele.md` sous des entrées `SP-*`, et **priment** sur la page officielle correspondante.
 
 - **Écriture** : **Build uniquement**, à la **recette nuances de l'étape 6**, après validation explicite de l'utilisateur.
-- **Déclencheurs d'une entrée** (tous requis) : (1) règle de **comportement / flux / calcul** ; (2) **validée explicitement** par l'utilisateur ; (3) **durable et réutilisable** (pas un one-shot) ; (4) hors spec officiel ou l'amendant.
-- **Ce qui n'y va pas** : définition d'entité → `.agents/domain-glossary.md` ; méthode de code → `.agents/reference-utilitaires.md` ; implémentation / ADR technique → `.agents/feature/<slug>.md`.
-- **Cycle de vie** : une règle qui change = **nouvelle entrée** + ancienne marquée `⛔ caduc (→ SP-…)`. Jamais de réécriture de l'histoire.
+- **Format** (quand une entrée se justifie, ce qui n'y va pas, remplacer ou amender, modèle) : `.agents/specs/ecrire-une-regle.md`, copie tenue par le kit, la même pour qui écrit hors du workflow.
 - **Lecture** : index puis entrées ciblées (grep) — jamais le fichier entier.
 
 ## Gestion des features
