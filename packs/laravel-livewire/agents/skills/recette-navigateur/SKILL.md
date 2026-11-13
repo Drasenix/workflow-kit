@@ -1,6 +1,6 @@
 ---
 name: "recette-navigateur"
-description: "Recette jouée par l'agent lui-même dans le navigateur, à partir d'une fiche de recette (skill `recette`) et de son seeder jetable : parcours réel de chaque scénario, capture de chaque résultat visible, vérifications hors écran (emails de développement, API externes en lecture), constats OK / KO, puis dossier de recette hors dépôt (captures, README, PDF interne ou démo client). À charger quand l'utilisateur demande à l'agent de faire la recette lui-même, de passer la recette au navigateur, de (re)faire les captures ou de produire une démo papier (« fais la recette toi-même », « recette navigateur », « refais les captures », « démo papier », « PDF de recette »)."
+description: "Recette jouée par l'agent lui-même dans le navigateur, à partir d'une fiche de recette (skill `recette`) et de son seeder jetable : parcours réel de chaque scénario, capture de chaque résultat visible, vérifications hors écran (emails de développement, API externes en lecture), constats OK / KO, puis dossier de recette hors dépôt (captures, README, PDF interne ou version client). À charger quand l'utilisateur demande à l'agent de faire la recette lui-même, de passer la recette au navigateur, de (re)faire les captures ou de produire la version client de la recette (« fais la recette toi-même », « recette navigateur », « refais les captures », « recette client », « version client de la recette », « PDF de recette »)."
 ---
 
 # recette-navigateur
@@ -10,12 +10,12 @@ L'agent **joue lui-même** une recette manuelle déjà écrite : il la déroule 
 ## Déclenchement
 
 - `/recette-navigateur <feature> [interne|client]`.
-- « fais la recette toi-même », « passe la recette au navigateur », « refais les captures », « démo papier », « PDF de recette ».
+- « fais la recette toi-même », « passe la recette au navigateur », « refais les captures », « recette client », « version client de la recette », « PDF de recette ».
 
 ## Entrées
 
 - **Fiche de recette** : section `## Recette manuelle` d'un `DONE-*.md`, ou `RECETTE.md` du dossier de la feature, avec son **seeder jetable** (skill `recette`). Pas de fiche → s'arrêter et proposer `/recette` : les scénarios ne s'improvisent pas.
-- **Mode** : `interne` (défaut) — tout est montré, KO compris, légendes techniques admises ; `client` — démo papier en langage métier (§ Mode client).
+- **Mode** : `interne` (défaut) — tout est montré, KO compris, légendes techniques admises ; `client` — la recette en version client : mêmes scénarios, constats en langage métier, vérifications hors écran dites en clair (§ Mode client).
 - **Périmètre** : les scénarios essentiels de la fiche ; options et scénarios à longue attente (plus de 15 min) seulement sur demande.
 - **Dossier de livraison**, hors dépôt : celui du § Contexte local (`<dossier de recettes>/<projet>/<feature>/`). Absent → le demander une fois, puis le noter dans le contexte local.
 
@@ -63,7 +63,7 @@ Traitement en file : recharger après quelques secondes ; ne conclure KO qu'une 
 - **Netteté** : ne pas sur-échantillonner (aucun gain, fichiers lourds). Rogner la barre latérale et le bas vide : c'est ce qui rend la capture lisible sur papier.
 - **Données vivantes d'un service externe** : un passage précédent y laisse des traces. Relancer le seeder et revérifier les collisions d'identifiants avant de rejouer.
 - **Heures** : un service externe peut afficher l'UTC ; convertir avant de conclure.
-- **Symboles dans le PDF** : Chrome sans interface n'a que les polices de sa machine ; un symbole absent (★…) s'imprime en caractère parasite. Relire `pdftotext` et remplacer ces symboles (ex. `*`).
+- **Symboles dans le PDF** : Chrome sans interface n'a que les polices de sa machine ; un symbole absent (★…) s'imprime en caractère parasite. Relire `pdftotext` et remplacer ces symboles (ex. `*`) ; `generer-pdf.py` le fait pour ★.
 
 ## Étape 3 — Livrer
 
@@ -71,20 +71,27 @@ Dans le dossier de livraison :
 
 1. `captures/` : les captures brutes (1440 × 900).
 2. `captures/README.md` : en-tête (date, URL, branche, seeder, comptes) ; données de départ ; tableau `# | Scénario | Ce que la capture montre | Résultat` ; tableaux des vérifications hors écran ; état laissé par la recette ; limites du passage ; « Rejouer » (commande du seeder).
-3. **PDF**, à partir de `assets/gabarit-pdf.html` (même dossier que cette skill) :
-   - préparer les images : `python3 .agents/skills/recette-navigateur/assets/preparer-captures.py <captures> <images> --gauche <largeur de la barre latérale>` (rognage, JPEG qualité 92 : la capture est déjà compressée, sources intactes) ;
-   - une **figure atomique** par résultat (titre, capture et légende solidaires) : aucun titre orphelin, aucune dernière page blanche ;
+3. **PDF**, avec les outils de `assets/` (même dossier que cette skill) :
+   - préparer les images : `python3 .agents/skills/recette-navigateur/assets/preparer-captures.py <captures> <images> --gauche <largeur de la barre latérale>` (rognage, JPEG qualité 92 : la capture est déjà compressée, sources intactes) ; un groupe par largeur à rogner ;
+   - écrire `sources/scenarios.json` dans le dossier de livraison (format en tête de `generer-pdf.py`) : un scénario par entrée, avec son résultat, ses captures, sa légende interne et, en mode client, sa légende client ;
+   - produire le HTML : `python3 .agents/skills/recette-navigateur/assets/generer-pdf.py sources/scenarios.json <images> <html> --mode interne|client` ; une **figure atomique** par résultat (titre, capture et légende solidaires) : aucun titre orphelin, aucune dernière page blanche ;
    - imprimer avec Chrome sans interface (`--headless --no-pdf-header-footer --print-to-pdf=<fichier> <html>`), là où il est installé (poste, ou conteneur de l'application : y copier le HTML et les images) ;
-   - `recette-<feature>.pdf` (mode interne) ou `demo-<feature>.pdf` (mode client).
+   - `recette-<feature>.pdf` (mode interne) ou `recette-<feature>-client.pdf` (mode client) ; `sources/scenarios.json` reste dans le dossier de livraison : il régénère les deux PDF.
 4. **Fiche** : remplir son tableau des constats (OK / KO + numéro de capture) sur la branche de recette. C'est le seul fichier du dépôt touché.
 5. **Rapport** : synthèse OK / KO / non joués ; chaque KO en contexte → problème → capture ; restaurations faites et `git status` ; chemin du dossier de livraison.
 
 ## Mode client
 
-- Langage métier : écrans, boutons, statuts, documents, messages. Aucun nom de classe, de fichier, de méthode, de branche, de commit ni de colonne.
-- Termes interdits dans le PDF : « spec », « SP- », « DONE- », « test », « seeder », « migration », « branche », « commit », « dette », et les noms techniques du projet. **Contrôle mécanique** : `pdftotext <pdf> - | grep -n -i -E '<termes>'` doit être vide ; résultat dans le rapport.
-- Pas de message d'erreur rouge, sauf si la démo doit le montrer (demande explicite). Noms des données annoncés comme fictifs.
-- Les limites et les KO ne vont pas dans la démo : ils restent dans le rapport interne.
+La recette en version client : mêmes scénarios, mêmes captures, et pour chacun ce qui se voit à l'écran **et** ce qui a été vérifié hors écran, dit en clair. C'est la preuve du passage, pas une démonstration.
+
+- **Légende client** de chaque scénario (`legende_client` de `scenarios.json`) : le résultat visible (écran, message, tâche, email), puis les vérifications hors écran traduites en effet métier (« statut confirmé chez le partenaire », « accès coupé à 23h59 le jour même »), jamais sous leur forme brute.
+- **Termes interdits** dans le PDF : « spec », « SP- », « DONE- », « test », « seeder », « migration », « branche », « commit », « dette » ; les noms techniques du projet (classes, champs, routes) ; les statuts bruts et identifiants d'un service externe (codes de statut, UUID, identifiants internes) ; les noms d'environnement technique ; le jargon d'interface (« toast »). **Contrôle mécanique** : `pdftotext <pdf> - | grep -n -i -E '<termes>'`. Une occurrence n'est gardée que si c'est un texte exact affiché à l'écran, entre « » ; elle est alors citée dans le rapport.
+- **Reste interne** : limites du passage, constats hors périmètre, défauts découverts en chemin, détails de préparation, marques internes (★, retirées par le script). Une simulation se dit simplement (« service rendu volontairement injoignable »).
+- **Messages d'erreur** : gardés quand ils sont le résultat attendu d'un scénario (une protection, un refus prévu).
+- **KO** : avant de produire la version client, demander à l'utilisateur d'attendre la correction ou de montrer le scénario « En cours de correction » (`--ko en-cours`). Jamais caché, jamais montré sans son accord.
+- **Synthèse** (`synthese.client`) : à la première personne (« j'ai joué… », jamais « on ») ; nombre de scénarios joués et conformes, ce qui a été vérifié hors écran, nombre de cas non joués ; données annoncées comme fictives.
+- **Titres** sans terme technique (`titre_client` si besoin) ; numéros de scénario gardés.
+- **Captures d'outils de développement** (boîte mail de développement…) : rognées pour ne garder que le contenu utile, l'email lui-même (`--gauche`).
 
 ## Contexte local (à compléter dans la copie du projet)
 

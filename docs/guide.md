@@ -270,7 +270,7 @@ Chaque skill du kit dispose d'une **slash-commande** `/nom` : c'est le raccourci
 
 Elles prennent `$ARGUMENTS` et demandent la précision manquante si besoin.
 
-Un pack peut ajouter des commandes pour ses skills techno (`packs/<stack>/commands/*.md`, générées au même endroit) : les packs `laravel-livewire` et `_blank` fournissent `/recette` (skill `recette`, `.agents/skills/recette/SKILL.md`) et `/recette-navigateur` (skill `recette-navigateur` : la recette jouée par l'agent dans le navigateur, avec captures, constats et PDF).
+Un pack peut ajouter des commandes pour ses skills techno (`packs/<stack>/commands/*.md`, générées au même endroit) : les packs `laravel-livewire` et `_blank` fournissent `/recette` (skill `recette`, `.agents/skills/recette/SKILL.md`) et `/recette-navigateur` (skill `recette-navigateur` : la recette jouée par l'agent dans le navigateur, avec captures, constats et PDF, interne ou en version client pour la cliente).
 
 ### 4.6 Fichiers du projet (`.agents/`) et leur rôle
 
@@ -419,7 +419,7 @@ SOCLE (consult-workflow)            index.md · agent-workflow.md · agent-build
 
 ### 5.7 `spec-pdf-feature` — la note de synthèse client d'une feature livrée
 
-**But** : remettre à la cliente une note de synthèse en PDF qui explique ce que fait le produit à l'issue d'une feature livrée, en langage métier, sans rien de l'histoire du chantier. Ce n'est pas la démo papier d'une recette (`recette-navigateur`, mode client) : la note explique les règles, la démo montre les écrans.
+**But** : remettre à la cliente une note de synthèse en PDF qui explique ce que fait le produit à l'issue d'une feature livrée, en langage métier, sans rien de l'histoire du chantier. Ce n'est pas la recette en version client (`recette-navigateur`, mode client) : la note explique les règles, la recette prouve, scénario par scénario, que le produit les applique.
 
 **Sources** : les `DONE-*` du dossier de la feature (besoin, comportements garantis, libellés exacts), les règles **✅ en vigueur** du référentiel qu'ils citent (une règle **⛔ caduque** est remplacée par celle qu'elle désigne et n'apparaît jamais ; une règle amendée vaut telle que ses amendements la modifient), le glossaire. Jamais les lots à venir ni les documents de chantier.
 

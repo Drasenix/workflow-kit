@@ -1,7 +1,8 @@
 <!doctype html>
 <!--
   Gabarit du PDF de recette (skill recette-navigateur).
-  - Copier ce fichier à côté du dossier d'images, remplacer les [[…]] et dupliquer les blocs.
+  - generer-pdf.py (même dossier) en tire le style et produit le HTML à partir de scenarios.json, en mode interne ou client.
+  - À la main : copier ce fichier à côté du dossier d'images, remplacer les [[…]] et dupliquer les blocs.
   - Une figure = un résultat visible : titre, capture et légende restent sur la même page.
   - Les vérifications hors écran vont dans des tableaux, jamais en capture de terminal.
   - Impression : chromium --headless --no-pdf-header-footer --print-to-pdf=<sortie.pdf> <ce fichier>
@@ -28,6 +29,7 @@
   .ok { background: #dcfce7; color: #166534; }
   .ko { background: #fee2e2; color: #991b1b; }
   .non-joue { background: #e5e7eb; color: #374151; }
+  .en-cours { background: #fef3c7; color: #92400e; }
   table { width: calc(100% - 1px); border-collapse: collapse; font-size: 8.3pt; margin: 1mm 0 5mm; }
   thead { display: table-header-group; }
   tr { break-inside: avoid; page-break-inside: avoid; }
