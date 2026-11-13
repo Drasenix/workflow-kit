@@ -1,0 +1,91 @@
+<!doctype html>
+<!--
+  Gabarit de la page « À lire d'abord » du dossier client (skill spec-pdf-feature).
+  - Une page, placée en tête de l'envoi ; écrite à la première personne (« je », jamais « on »).
+  - Remplacer les [[…]], dupliquer les lignes marquées « répéter ».
+  - Lexique : les termes du domaine employés dans les documents joints, dits avec les mots de la cliente.
+  - Impression : <chrome> --headless --no-pdf-header-footer --print-to-pdf=<00-A-lire-d-abord-feature.pdf> <ce fichier>
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>[[Feature]] — à lire d'abord</title>
+<style>
+  @page { size: A4; margin: 16mm 17mm 16mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Liberation Sans", "Helvetica Neue", Arial, sans-serif; font-size: 9.6pt; line-height: 1.5; color: #1f2937; }
+  b, strong { color: #111827; }
+
+  .surtitre { font-size: 7.8pt; letter-spacing: 0.08em; text-transform: uppercase; color: #6b7280; margin: 0 0 1.5mm; }
+  h1 { font-size: 17pt; line-height: 1.2; margin: 0 0 2mm; color: #111827; }
+  .meta { font-size: 8.4pt; color: #4b5563; padding-bottom: 3.5mm; border-bottom: 2px solid #111827; margin-bottom: 5mm; }
+  .meta b { color: #111827; }
+  .intro { margin: 0 0 5mm; }
+
+  .chiffres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; margin: 0 0 6mm; }
+  .chiffre { border: 1px solid #d1d5db; border-radius: 2.5mm; padding: 2.5mm 3.5mm; }
+  .chiffre .valeur { font-size: 13pt; font-weight: 700; color: #111827; line-height: 1.2; }
+  .chiffre .libelle { font-size: 7.6pt; color: #6b7280; }
+
+  h2 { font-size: 10.6pt; margin: 6mm 0 2.5mm; padding-bottom: 1.2mm; border-bottom: 1px solid #e5e7eb; color: #111827; break-after: avoid; page-break-after: avoid; }
+  h2 .num { color: #9ca3af; margin-right: 2mm; }
+  ul { margin: 0 0 2mm; padding-left: 5mm; }
+  li { margin: 0 0 1.6mm; break-inside: avoid; page-break-inside: avoid; }
+
+  table.regles { width: 100%; border-collapse: collapse; font-size: 8.2pt; margin: 0 0 3mm; }
+  table.regles thead { display: table-header-group; }
+  table.regles th { text-align: left; font-size: 7pt; letter-spacing: 0.08em; text-transform: uppercase; color: #6b7280; padding: 0 2mm 1.5mm 0; border-bottom: 2px solid #111827; }
+  table.regles td { padding: 0.9mm 2mm 0.9mm 0; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+  table.regles td.ref { width: 11mm; font-weight: 700; color: #111827; }
+  table.regles tr { break-inside: avoid; page-break-inside: avoid; }
+  table.regles tr.groupe td { font-weight: 700; color: #374151; padding-top: 2.2mm; border-bottom: 1px solid #d1d5db; }
+
+  footer { margin-top: 6mm; padding-top: 2mm; border-top: 1px solid #d1d5db; font-size: 7.6pt; color: #6b7280; break-inside: avoid; }
+  p { margin: 0 0 2mm; }
+  table.docs, table.lexique { width: 100%; border-collapse: collapse; font-size: 8.6pt; margin: 0 0 2mm; }
+  table.docs th { text-align: left; font-size: 7pt; letter-spacing: 0.08em; text-transform: uppercase; color: #6b7280; padding: 0 2mm 1.2mm 0; border-bottom: 2px solid #111827; }
+  table.docs td, table.lexique td { padding: 1mm 2.5mm 1mm 0; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+  table.docs td:first-child, table.lexique td:first-child { font-weight: 700; color: #111827; white-space: nowrap; }
+  table.docs td:nth-child(3), table.docs td:nth-child(4) { white-space: nowrap; }
+  @page { margin: 13mm 16mm 12mm; }
+  h2 { margin: 4.5mm 0 2mm; }
+  .meta { margin-bottom: 4mm; }
+</style>
+</head>
+<body>
+
+<p class="surtitre">[[Feature]] — à lire d'abord</p>
+<h1>[[Domaine]] : [[la feature]]</h1>
+<div class="meta"><b>Date</b> [[13 novembre 2026]] &nbsp;·&nbsp; <b>Envoi</b> [[N]] documents, à lire dans l'ordre ci-dessous</div>
+
+<h2><span class="num">1</span>De quoi il s'agit</h2>
+<p>[[Trois phrases : ce que la feature change pour l'exploitant, dans ses mots.]]</p>
+
+<h2><span class="num">2</span>Où en est le travail</h2>
+<p>[[En production depuis le … ; ou : réalisée et vérifiée sur un environnement de recette, pas encore en production, vos retours peuvent encore y être intégrés.]] [[La suite annoncée.]]</p>
+
+<h2><span class="num">3</span>Les documents</h2>
+<table class="docs">
+  <thead><tr><th>Document</th><th>Ce qu'il contient</th><th>Pour qui</th><th>Lecture</th></tr></thead>
+  <tbody>
+    <!-- répéter : un document joint par ligne, dans l'ordre de lecture -->
+    <tr><td>[[Note de synthèse]]</td><td>[[Ce que fait le produit, et les règles de gestion qui l'encadrent.]]</td><td>[[Direction]]</td><td>[[15 min]]</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num">4</span>Ce que j'attends de vous</h2>
+<ul>
+  <!-- répéter : une attente par puce (avis, réponse à une question ouverte) ; « Rien : pour information » sinon -->
+  <li><b>[[Attente.]]</b> [[Où la trouver dans les documents.]]</li>
+</ul>
+
+<h2><span class="num">5</span>Lexique</h2>
+<table class="lexique">
+  <tbody>
+    <!-- répéter : un terme par ligne -->
+    <tr><td>[[Terme]]</td><td>[[Définition en une ligne, avec les mots de la cliente.]]</td></tr>
+  </tbody>
+</table>
+
+</body>
+</html>

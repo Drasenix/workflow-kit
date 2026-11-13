@@ -249,7 +249,7 @@ Chargées **à la demande** (via leur `description`), jamais systématiquement. 
 - `compacter-feature` — compaction d'un fichier de feature clos après son commit de livraison. → `/compacter-feature`
 - `controle-livraison` — contrôle mécanique d'un fichier de feature (Progression, Definition of Ready, traces non tranchées, fichiers meta). → `/controle-livraison`
 - `retouche` — petite modification hors workflow, menée par l'agent principal seul ; sur demande explicite uniquement (§ 5.6). → `/retouche`
-- `spec-pdf-feature` — note de synthèse client (PDF) d'une feature livrée : règles en vigueur, langage métier, état final seulement (§ 5.7). → `/spec-pdf-feature`
+- `spec-pdf-feature` — dossier client d'une feature livrée : note de synthèse (PDF) et page « À lire d'abord » : règles en vigueur, langage métier, état final seulement (§ 5.7). → `/spec-pdf-feature`
 
 ### 4.5 Les 11 slash-commandes (`core/commands/*.md`)
 
@@ -420,7 +420,7 @@ SOCLE (consult-workflow)            index.md · agent-workflow.md · agent-build
 
 ### 5.7 `spec-pdf-feature` — la note de synthèse client d'une feature livrée
 
-**But** : remettre à la cliente une note de synthèse en PDF qui explique ce que fait le produit à l'issue d'une feature livrée, en langage métier, sans rien de l'histoire du chantier. Ce n'est pas le PDF de recette (`recette-navigateur`) : la note explique les règles, la recette prouve, scénario par scénario, que le produit les applique.
+**But** : remettre à la cliente une note de synthèse en PDF qui explique ce que fait le produit à l'issue d'une feature livrée, en langage métier, sans rien de l'histoire du chantier, et la page « À lire d'abord » qui ouvre l'envoi : contexte, état d'avancement, documents joints (dont le PDF de recette), attentes, lexique. Ce n'est pas le PDF de recette (`recette-navigateur`) : la note explique les règles, la recette prouve, scénario par scénario, que le produit les applique.
 
 **Sources** : les `DONE-*` du dossier de la feature (besoin, comportements garantis, libellés exacts), les règles **✅ en vigueur** du référentiel qu'ils citent (une règle **⛔ caduque** est remplacée par celle qu'elle désigne et n'apparaît jamais ; une règle amendée vaut telle que ses amendements la modifient), le glossaire. Jamais les lots à venir ni les documents de chantier.
 
