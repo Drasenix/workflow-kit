@@ -132,7 +132,7 @@ Sans jargon (ni pattern, job, transaction, lock, webhook, DTO, listener…), san
 
 ### Recette nuances (dans la même pause que le résumé)
 
-Le Build relit `## Registre des décisions`, les ADR et les puces `[À CONSIGNER]` / `[AMENDE SP-*]`, et identifie les **règles métier validées, durables et hors spec officiel** (critères : `workflow-kit/core/agent-build.md` § Spec parallèle). Il propose les entrées `SP-*` (ID, type `AMENDE`/`PRECISE`/`ETEND`, ancre officielle, règle, supersession éventuelle) dans `## Nuances consignées`, et les présente **en même temps** que le résumé.
+Le Build relit `## Registre des décisions`, les ADR et les puces `[À CONSIGNER]` / `[AMENDE SP-*]`, et identifie les **règles métier validées, durables et hors spec officiel** (critères : `.agents/specs/ecrire-une-regle.md`). Il propose les entrées `SP-*` (ID, type `AMENDE`/`PRECISE`/`ETEND`, ancre officielle, règle, supersession éventuelle) dans `## Nuances consignées`, et les présente **en même temps** que le résumé.
 
 - Aucune règle introduite ni amendée : `## Nuances consignées` porte `Aucune`.
 - **Pause fusionnée :** l'utilisateur valide, ajuste ou refuse. Le « go » vaut droit d'écriture du spec parallèle.

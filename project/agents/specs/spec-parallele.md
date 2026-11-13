@@ -4,13 +4,11 @@
 >
 > **Primauté** : une entrée `SP-*` **en vigueur** prime sur la page officielle correspondante.
 >
-> **Périmètre** : règles de **comportement / flux / calculs**. Définitions d'entités → `.agents/domain-glossary.md`. Méthodes de code → `.agents/reference-utilitaires.md`.
->
-> **Écriture** : **Build uniquement**, après validation explicite de l'utilisateur, à la **recette nuances de l'étape 6**, ou à la **clôture d'un chantier PO** (`/cloturer-chantier`, skill `cadrage-po`). Le raffineur et `@review` détectent et proposent, ils n'écrivent jamais.
+> **Écriture** : dans le workflow, **Build uniquement**, après validation explicite de l'utilisateur, à la **recette nuances de l'étape 6**, ou à la **clôture d'un chantier PO** (`/cloturer-chantier`, skill `cadrage-po`). Le raffineur et `@review` détectent et proposent, ils n'écrivent jamais. Hors du workflow : dans le commit du changement, selon `.agents/specs/ecrire-une-regle.md`.
 >
 > **Lecture** : jamais le fichier entier. Index puis entrées ciblées (grep).
 >
-> **Cycle de vie** : une règle qui change = nouvelle entrée + ancienne marquée caduque. Jamais de réécriture de l'histoire. Une règle modifiée en partie reste en vigueur et reçoit `Amendé par : <nouvelle> (date) — <ce qui change>` (vérifié par le contrôle d'intégrité).
+> **Écrire une entrée** (quand, ce qui n'y va pas, remplacer ou amender, modèle) : `.agents/specs/ecrire-une-regle.md`, copie tenue par le kit.
 >
 > Dernière mise à jour : YYYY-MM-DD
 
@@ -45,18 +43,4 @@ Liste fermée : extension sur validation utilisateur.
 
 ## Entrées
 
-> Format d'une entrée (à dupliquer) :
->
-> ### SP-<DOM>-01 : <titre>
->
-> > **Statut** : en vigueur (validé YYYY-MM-DD) · **Type** : AMENDE / PRECISE / ETEND
-> > **Ancre officielle** : <Partie.Section> (p. X)
-> > **Source** : feature `<chemin DONE>` *(ou, à la clôture d'un chantier PO : cadrage PO <sujet>, décision du <date>)*
-> > **Remplace** : SP-… *(si applicable)*
-> > **Mots-clés** : <mot1>, <mot2>
-> > **Gardé par** : `<Test>::<methode>` *(selon la convention déclarée dans « Statuts & types » ; avant implémentation : son marqueur d'attente)*
->
-> **Règle.** <règle en vigueur, langage métier>
->
-> **Cas limites.**
-> - <cas>
+> Format d'une entrée : `.agents/specs/ecrire-une-regle.md`.
