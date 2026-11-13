@@ -21,7 +21,7 @@ Ce fichier porte les règles **communes** aux deux phases. Les règles propres �
 | 7 | **Passage DONE (mécanique)** | Build | Renommage `.agents/feature/<slug>.md` → `DONE-<slug>.md` + ligne 7 → OK dans le tableau Progression | **Auto (jalon 6→7)** | Réalisation |
 | X | **Backtrack** | Build | Sur demande utilisateur, reprise à l'étape indiquée | | Les deux |
 
-> **Après le commit de livraison (hors étapes)** : le Build propose la compaction du fichier clos (skill `compacter-feature`) : garde l'apprentissage, retire le pilotage. Garde-fous : `workflow-kit/core/phase-realisation.md` § « Compaction post-livraison ».
+> **Après le commit de livraison (hors étapes)** : le Build propose la compaction du fichier clos (skill `compacter-feature`) : garde l'apprentissage, retire le pilotage. Garde-fous : `workflow-kit/core/phase-realisation.md` § « Compaction post-livraison ». Puis il propose la recette manuelle (`workflow-kit/core/phase-realisation.md` § « Recette post-livraison »).
 
 ## Orchestration par subagents
 

@@ -27,7 +27,7 @@ description: "Recette jouee par l'agent dans le navigateur a partir d'une fiche 
 
 1. Preparer : application locale, worker, boite mail de developpement, seeder relance.
 2. Derouler chaque scenario dans un navigateur pilote : texte releve, capture, verifications hors ecran, constat.
-3. Livrer : captures, README, `sources/scenarios.json`, PDF de recette (voir `generer-pdf.py` de la version complete), tableau des constats de la fiche, rapport.
+3. Livrer : captures, README, `sources/scenarios.json`, PDF de recette (voir `generer-pdf.py` de la version complete), tableau `## Constats` de la fiche (branche `recette/<feature>`), rapport ; proposer `/spec-pdf-feature`.
 
 ## Contexte local (a completer)
 
