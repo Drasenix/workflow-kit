@@ -55,9 +55,18 @@ Champs de renvoi, toujours au masculin : `Amende` / `Amendé par`, `Précise` / 
 
 ## Vérifier
 
-`node .agents/specs/verifier-spec.mjs` (Node seul, sans le kit), et le contrôle des tests cités s'il existe (`.agents/skills/tests/assets/`). Le premier vérifie :
+Deux contrôles, après toute écriture dans la spec **et** après avoir renommé, ajouté ou supprimé un test (une règle peut citer un test qui n'existe plus) :
+
+```bash
+node .agents/specs/verifier-spec.mjs
+python3 -I .agents/skills/tests/assets/verifier-tests-gardes.py
+```
+
+Le premier vérifie :
 1. l'index et les entrées portent les mêmes identifiants, sans doublon ;
 2. le statut de l'index est celui de l'entrée (même date, même remplaçante) ;
 3. toute règle citée (`SP-…`) existe ;
 4. chaque entrée porte ses `Mots-clés` ;
 5. une règle en vigueur citée dans la ligne `Amende` d'une autre porte `Amendé par` en retour (vers la remplaçante, si celle qui amende est devenue caduque).
+
+Le second vérifie que chaque test cité dans une ligne « Gardé par » existe encore, sous son nom exact.
