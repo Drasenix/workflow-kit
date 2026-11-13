@@ -65,13 +65,7 @@ Ne pas recopier tout le stdout si tout passe — juste confirmer `OK`.
 
 ## Tests qui gardent les règles de la spec parallèle
 
-La ligne `> **Gardé par**` d'une entrée `SP-*` cite les tests qui gardent la règle. Un test renommé ou supprimé la rend fausse sans que rien ne casse : le contrôler.
+La ligne `> **Gardé par**` d'une entrée `SP-*` cite les tests qui gardent la règle. Un test renommé ou supprimé la rend fausse sans que rien ne casse : `node .agents/specs/verifier-spec.mjs` le contrôle (6ᵉ vérification, toute techno ; voir `.agents/specs/ecrire-une-regle.md`).
 
-```bash
-python3 -I .agents/skills/tests/assets/verifier-tests-gardes.py
-```
-
-- **Quand** : à l'étape 6, après l'écriture des `SP-*` (avec `check-meta --spec`), et après tout renommage ou suppression de test.
-- **Ce qu'il vérifie** : chaque référence entre backticks des entrées en vigueur — `Classe::methode`, abréviations `Classe::test_prefixe…` et `…_suite_du_nom` (dans la dernière classe citée), `ClasseTest` seule — existe dans le dossier `tests/`. Une classe qui n'est pas un test est signalée : « Gardé par » ne cite que des tests.
-- **Convention `feature`** (« Gardé par » cite la feature, pas des tests, déclarée dans la section « Statuts & types » de la spec) : le contrôle répond « sans objet ».
+- **Quand** : à l'étape 6, après l'écriture des `SP-*`, et après tout renommage ou suppression de test.
 - **Écart** : corriger la citation (nouveau nom du test), ou écrire honnêtement « non couvert par un test » ; jamais supprimer la référence sans la remplacer.
