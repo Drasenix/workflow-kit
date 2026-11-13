@@ -277,7 +277,7 @@ THEN
 
 ## Nuances consignées (étape 6)
 
-> Règle : toute **règle métier validée et durable** hors spec officiel est consignée en `SP-*` dans `.agents/specs/spec-parallele.md` (écriture Build, après validation utilisateur — recette fusionnée avec le résumé métier).
+> Une entrée `SP-*` par règle à consigner (critères : `.agents/specs/ecrire-une-regle.md`) ; recette fusionnée avec le résumé métier.
 > Porter `Aucune` si la feature n'introduit ni n'amende aucune règle.
 
 | `SP-*` | Type | Ancre officielle | Statut |
