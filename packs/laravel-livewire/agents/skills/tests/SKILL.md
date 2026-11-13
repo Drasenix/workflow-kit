@@ -62,3 +62,15 @@ Rapporter uniquement :
 2. Les échecs avec le message d'erreur et la localisation.
 
 Ne pas recopier tout le stdout si tout passe — juste confirmer `OK`.
+
+## Tests cités par la spec parallèle
+
+La ligne `> **Gardé par**` d'une entrée `SP-*` cite les tests qui gardent la règle. Un test renommé ou supprimé la rend fausse sans que rien ne casse : le contrôler.
+
+```bash
+python3 -I .agents/skills/tests/assets/tests-cites.py
+```
+
+- **Quand** : à l'étape 6, après l'écriture des `SP-*` (avec `check-meta --spec`), et après tout renommage ou suppression de test.
+- **Ce qu'il vérifie** : chaque référence entre backticks des entrées en vigueur — `Classe::methode`, abréviations `Classe::test_prefixe…` et `…_suite_du_nom` (dans la dernière classe citée), `ClasseTest` seule — existe dans le dossier `tests/`. Une classe qui n'est pas un test est signalée : « Gardé par » ne cite que des tests.
+- **Écart** : corriger la citation (nouveau nom du test), ou écrire honnêtement « non couvert par un test » ; jamais supprimer la référence sans la remplacer.
