@@ -55,7 +55,7 @@ Champs de renvoi, toujours au masculin : `Amende` / `Amendé par`, `Précise` / 
 
 ## Vérifier
 
-Deux contrôles, après toute écriture dans la spec **et** après avoir renommé, ajouté ou supprimé un test (une règle peut citer un test qui n'existe plus) :
+Deux contrôles, après toute écriture dans la spec **et** après avoir renommé ou supprimé un test (une règle peut citer un test qui n'existe plus) :
 
 ```bash
 node .agents/specs/verifier-spec.mjs
@@ -69,4 +69,4 @@ Le premier vérifie :
 4. chaque entrée porte ses `Mots-clés` ;
 5. une règle en vigueur citée dans la ligne `Amende` d'une autre porte `Amendé par` en retour (vers la remplaçante, si celle qui amende est devenue caduque).
 
-Le second vérifie que chaque test cité dans une ligne « Gardé par » existe encore, sous son nom exact.
+Le second n'existe que dans les projets dont le pack le fournit : présent, il est obligatoire ; absent, il n'y a rien à lancer. Il vérifie que chaque test cité dans une ligne « Gardé par » existe encore, sous son nom exact.
