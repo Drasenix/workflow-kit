@@ -5,6 +5,7 @@ import { parseArgs } from 'node:util';
 import { checkFiles, checkMeta } from '../lib/check.mjs';
 import { projectRoot } from '../lib/check-meta.mjs';
 import { checkCompaction, compactFeature } from '../lib/compact.mjs';
+import { derive, parseList, printDerive } from '../lib/derive.mjs';
 import { init } from '../lib/init.mjs';
 import { resolveRuntimes, sync } from '../lib/sync.mjs';
 import { verify } from '../lib/verify.mjs';
@@ -20,6 +21,9 @@ const HELP = `workflow-kit <commande> [options]
   check <fichiers...>  Controle d'un fichier de feature (jalons 1->2 et 6->7, avant commit, apres backtrack)
   check-meta         Fichiers meta du projet : integrite du spec parallele + references mortes
                      --spec : integrite seule ; --refs : references seules
+  derive             Derive de la spec (etape 0 de /raffiner) : commits d'autres auteurs a relire depuis votre dernier passage
+                     --regles <SP-…|prefixe> : tests garants de ces regles ; --fichiers <chemins> : ces fichiers ;
+                     --auteur <email> : vous (defaut : git config user.email). Informatif, code 0
   compact <fichier>  Squelette compacte d'un fichier de feature clos (skill compacter-feature)
                      --check : controle le resultat ; --dry-run : decrit sans ecrire
   worktree           Prepare un worktree git (opencode, git worktree add, Claude Code) : liens vers le kit et .opencode
@@ -49,6 +53,9 @@ const { values, positionals } = parseArgs({
     'dry-run': { type: 'boolean', default: false },
     spec: { type: 'boolean', default: false },
     refs: { type: 'boolean', default: false },
+    regles: { type: 'string', multiple: true },
+    fichiers: { type: 'string', multiple: true },
+    auteur: { type: 'string', multiple: true },
     help: { type: 'boolean', short: 'h', default: false },
   },
 });
@@ -74,6 +81,13 @@ try {
     if (!root) throw new Error('check-meta : aucun dossier .agents/ trouve depuis le dossier courant (ou --target)');
     const both = !values.spec && !values.refs;
     process.exitCode = checkMeta(root, { spec: both || values.spec, refs: both || values.refs });
+  } else if (command === 'derive') {
+    const root = projectRoot(values.target || process.cwd());
+    if (!root) throw new Error('derive : aucun dossier .agents/ trouve depuis le dossier courant (ou --target)');
+    const regles = parseList(values.regles);
+    const fichiers = parseList(values.fichiers);
+    if (!regles.length && !fichiers.length) throw new Error('derive : --regles et/ou --fichiers requis (ex. derive --regles SP-VL --fichiers app/Foo.php)');
+    process.exitCode = printDerive(derive({ root, regles, fichiers, auteurs: parseList(values.auteur) }), { regles, fichiers });
   } else if (command === 'compact') {
     const file = positionals[1];
     if (!file) throw new Error('compact : fichier manquant (ex. compact .agents/feature/DONE-x.md)');

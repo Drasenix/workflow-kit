@@ -87,6 +87,8 @@ Une CLI Node (Node ≥ 18, aucune dépendance), `workflow-kit/bin/workflow-kit.m
 - **Mise à jour des seeds et régénération des adaptateurs** : `sync`.
 - **Audit du kit** : `verify`.
 - **Contrôle d'un fichier de feature** : `check <fichier>` ; fichiers meta du projet seuls : `check-meta` (skill `controle-livraison`).
+- **Dérive de la spec** (étape 0 de `/raffiner`) : `derive --regles <SP-*> --fichiers <chemins>` liste les commits d'autres auteurs à relire.
+- **Sans le kit** (collaborateur, session cloud) : la synchronisation pose dans le projet des copies autonomes, toujours écrasées, à ne pas modifier : `.agents/specs/verifier-spec.mjs` (intégrité de la spec parallèle, Node seul) et, pack Laravel, `.agents/skills/tests/assets/verifier-tests-gardes.py`. `check-meta` signale une copie périmée.
 - **Compaction d'un fichier de feature clos** : `compact <fichier>` (skill `compacter-feature`).
 
 Exemple :

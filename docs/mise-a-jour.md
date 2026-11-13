@@ -141,5 +141,5 @@ node workflow-kit/bin/workflow-kit.mjs verify
 ## Voir aussi
 
 - `README.md` : modèle « kit imbriqué + adaptateurs », écrasement et quarantaine.
-- `bin/workflow-kit.mjs` (`init`, `sync`, `verify`, `check`, `check-meta`, `compact`) et `lib/` : installation, matérialisation, migration, audit, contrôle et compaction des fichiers de feature.
+- `bin/workflow-kit.mjs` (`init`, `sync`, `verify`, `check`, `check-meta`, `derive`, `compact`) et `lib/` : installation, matérialisation, migration, audit, contrôle et compaction des fichiers de feature.
 - `adapters/` : ce qui est généré pour chaque outil IA.

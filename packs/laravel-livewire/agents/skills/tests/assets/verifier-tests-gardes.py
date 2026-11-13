@@ -13,6 +13,9 @@ Une référence `Classe::methode` dont la classe n'est pas un test est signalée
 Les parenthèses qui citent un test supprimé (« … supprimé `…` ») sont ignorées.
 Projet à convention `feature` (« Gardé par » cite la feature, pas des tests) : contrôle sans objet.
 Code de sortie 1 s'il y a un écart.
+
+Tenu par workflow-kit (pack, `agents/skills/tests/assets/`). Dans un projet, ce fichier est une COPIE que la
+synchronisation du kit écrase : ne pas le modifier là. Python standard seul : utilisable sans le kit.
 """
 import argparse
 import collections
