@@ -20,7 +20,7 @@ Note de synthèse destinée à la cliente : ce que fait le produit à l'issue d'
 Lecture ciblée, jamais un fichier entier.
 
 1. **Les `DONE-*` du dossier** : le besoin (`## Résumé métier`), les comportements garantis (scénarios), les libellés exacts des écrans et des messages. Protocole de lecture : `workflow-kit/core/skills/doc/SKILL.md` § « Protocole de lecture (obligatoire) ». Les sections de pilotage, de dette, de leçons et de vigilances ne nourrissent jamais la note.
-2. **Les règles** : `.agents/specs/spec-parallele.md`, index puis entrées ciblées. Périmètre : les entrées que citent les `DONE-*` (section de traçabilité) et celles dont la ligne `Gardé par` cite ces `DONE-*`.
+2. **Les règles** : `.agents/specs/spec-parallele.md`, index puis entrées ciblées. Périmètre : les entrées que citent les `DONE-*` (section de traçabilité) et celles dont la ligne `Source` cite ces `DONE-*` (`Source` = origine de la règle ; `Gardé par` = ses tests).
    - **✅ en vigueur seulement.** Une entrée **⛔ caduc (→ SP-…)** est remplacée par celle qu'elle désigne ; son contenu n'apparaît jamais dans la note.
    - **Version amendée.** Une entrée en vigueur peut porter `Amendé par` ou `Précisé par` : elle vaut telle que les entrées citées la modifient. La note décrit l'état qui résulte de l'ensemble, jamais une phrase qu'une entrée plus récente a changée (« le produit ne crée jamais de code », amendée par « il en attribue un quand le client n'en a pas » : seule la seconde existe pour la note).
    - Écart entre un `DONE-*` et une règle en vigueur : la règle prime.
