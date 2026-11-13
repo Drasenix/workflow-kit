@@ -204,6 +204,7 @@ Une **nouvelle** session sur l'agent par défaut (le Build) : opencode, l'agent 
 - **Code vert** (`@dev` repris) : un écart mineur au plan est déclaré, un écart majeur l'arrête et te revient.
 - **Revue** (`@review`) : plan de refacto éventuel et **récapitulatif technique** (utilitaires, conventions) — tu contestes ce que tu veux, le reste est accepté (**pause 5**).
 - **Clôture** (Build) : test global, résumé métier et nuances `SP-*` (**pause 6**), passage DONE, proposition de commit puis de compaction.
+- **Après la livraison** (sur proposition, jamais imposé) : recette manuelle (`/recette` : fiche à part et seeder jetable sur la branche `recette/<feature>`, pour une feature, ou pour un chantier une fois son dernier lot livré), recette jouée par l'agent (`/recette-navigateur` : captures, constats, PDF de recette pour le client), puis note de synthèse et page d'accueil du dossier client (`/spec-pdf-feature`).
 
 **Trou métier pendant la réalisation** (comportement que les GWT ne spécifient pas) : retour au raffineur sur le seul point en question — `/raffiner` dans une nouvelle session, ou rebasculer sur `raffineur` avec Tab (opencode), ou `claude --agent raffineur`. Il met les GWT à jour et refait un gel limité ; la réalisation reprend dans une nouvelle session (`/realiser [feature]`), à `@test` sur les scénarios touchés. Une simple formulation se corrige sur place par le Build.
 
@@ -452,6 +453,8 @@ SOCLE (consult-workflow)            index.md · agent-workflow.md · agent-build
 | Diagnostiquer un ticket antidaté | `/analyse-flashback [date/domaine]` |
 | Poser une question métier | `/doc [question]` |
 | Dépolluer un fichier de feature clos | `/compacter-feature [fichier]` |
+| Recetter une feature livrée (fiche + seeder) | `/recette [feature ou dossier]` |
+| Faire jouer la recette par l'agent (PDF pour la cliente) | `/recette-navigateur [feature]` |
 | Expliquer une feature livrée à la cliente (note PDF) | `/spec-pdf-feature [feature]` |
 | Auditer le kit (agnostisme, neutralité) | `workflow-kit verify` |
 | Créer un nouveau pack techno | copier `packs/_blank/`, remplir, voir `packs/_schema.md` |

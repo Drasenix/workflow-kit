@@ -185,3 +185,11 @@ Une fois le fichier clos (`DONE-*`, `ABANDON-*`, `IRREPRODUCTIBLE-*`) committé,
 - pas de compaction si une **feature en cours** cite des sections destinées à être supprimées ;
 - **nom du fichier inchangé** ;
 - **validation du diff** par l'utilisateur, commit séparé **sur demande explicite** uniquement.
+
+## Recette post-livraison
+
+Après le commit de livraison (et la compaction si elle est faite), **proposer** la recette manuelle (skill `.agents/skills/recette/SKILL.md`, `/recette <feature>`) :
+- feature isolée : aussitôt ;
+- lot d'un chantier : seulement s'il est le dernier du dossier (plus aucun `LOT-*` ni feature sans préfixe de clôture), et alors sur le dossier entier.
+
+La suite se propose de skill en skill, jamais imposée : recette jouée par l'agent (`.agents/skills/recette-navigateur/SKILL.md`), puis note de synthèse et dossier client (skill `spec-pdf-feature`).

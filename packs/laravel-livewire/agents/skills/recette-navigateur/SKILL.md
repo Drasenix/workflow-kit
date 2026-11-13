@@ -14,7 +14,7 @@ L'agent **joue lui-même** une recette manuelle déjà écrite : il la déroule 
 
 ## Entrées
 
-- **Fiche de recette** : section `## Recette manuelle` d'un `DONE-*.md`, ou `RECETTE.md` du dossier de la feature, avec son **seeder jetable** (skill `recette`). Pas de fiche → s'arrêter et proposer `/recette` : les scénarios ne s'improvisent pas.
+- **Fiche de recette** (skill `recette`, sur la branche `recette/<feature>`) : `RECETTE.md` du dossier d'un chantier, ou `RECETTE-<slug>.md` à côté d'un `DONE` ; ancien format : section `## Recette manuelle` d'un `DONE-*.md`. Avec son **seeder jetable**. Pas de fiche → s'arrêter et proposer `/recette` : les scénarios ne s'improvisent pas.
 - **Destinataire** : le PDF est écrit pour le client (§ Le PDF de recette) ; le détail technique reste dans `captures/README.md`, la fiche et le rapport.
 - **Périmètre** : les scénarios essentiels de la fiche ; options et scénarios à longue attente (plus de 15 min) seulement sur demande.
 - **Dossier de livraison**, hors dépôt : celui du § Contexte local (`<dossier de recettes>/<projet>/<feature>/`). Absent → le demander une fois, puis le noter dans le contexte local.
@@ -77,8 +77,9 @@ Dans le dossier de livraison :
    - produire le HTML : `python3 .agents/skills/recette-navigateur/assets/generer-pdf.py sources/scenarios.json <images> <html>` ; une **figure atomique** par résultat (titre, capture et légende solidaires) : aucun titre orphelin, aucune dernière page blanche ;
    - imprimer avec Chrome sans interface (`--headless --no-pdf-header-footer --print-to-pdf=<fichier> <html>`), là où il est installé (poste, ou conteneur de l'application : y copier le HTML et les images) ;
    - `recette-<feature>.pdf` ; `sources/scenarios.json` reste dans le dossier de livraison : il régénère le PDF.
-4. **Fiche** : remplir son tableau des constats (OK / KO + numéro de capture) sur la branche de recette. C'est le seul fichier du dépôt touché.
+4. **Fiche** : remplir son tableau `## Constats` (OK / KO + numéro de capture) sur la branche `recette/<feature>` ; ancien format sans tableau : l'ajouter en fin de fiche. C'est le seul fichier du dépôt touché.
 5. **Rapport** : synthèse OK / KO / non joués ; chaque KO en contexte → problème → capture ; restaurations faites et `git status` ; chemin du dossier de livraison.
+6. **Suite** : proposer `/spec-pdf-feature <feature>` pour la note de synthèse et la page d'accueil du dossier client (même dossier de livraison).
 
 ## Le PDF de recette
 

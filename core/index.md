@@ -64,7 +64,8 @@ L'agent principal (raffineur ou Build) lit **toujours** `workflow-kit/core/index
 | `cadrage-po` | « je commence [sujet] » en mode cadrage PO / mise en place du chantier (SPECS/BACKLOG/FICHE-REUNION) ; clôture du chantier (`/cloturer-chantier`, session Build) : décisions vers la spec parallèle, un `LOT-*` par lot, suppression des trois fichiers |
 | `doc` | question métier / cliente / audit rapide (« comment ça marche X ? ») — lecture seule, réponse en deux blocs |
 | `.agents/skills/tests/SKILL.md` | avant tout run de test (ciblé ou global) : commandes, calibrage, fallback |
-| `.agents/skills/recette/SKILL.md` | après une US passée en `DONE-*` : recette manuelle (scénarios + seeder jetable) |
+| `.agents/skills/recette/SKILL.md` | après une feature passée en `DONE-*` (ou le dernier lot d'un chantier) : recette manuelle — scénarios, seeder jetable, fiche à part sur la branche `recette/<feature>` |
+| `.agents/skills/recette-navigateur/SKILL.md` | une fiche de recette écrite : l'agent la joue dans le navigateur (captures, constats, PDF de recette pour le client) |
 | `controle-livraison` | **lancée par l'agent principal** (raffineur à la fin de l'étape 1 et au jalon 1→2, Build au jalon 6→7), avant de proposer tout commit contenant un fichier de feature, et après chaque backtrack ; ou à la demande (`/controle-livraison`) : traces meta non tranchées, Progression incohérente |
 | `compacter-feature` | après le commit de livraison d'un fichier clos (`DONE-*`, `ABANDON-*`, `IRREPRODUCTIBLE-*`) : compaction (garde l'apprentissage, retire le pilotage) |
 | `spec-pdf-feature` | `/spec-pdf-feature [feature]` : note de synthèse client (PDF) d'une feature livrée — règles en vigueur du référentiel, langage métier, état final seulement (jamais l'histoire du chantier) ; dossier de livraison et impression demandés à chaque usage, rien n'est commité |
