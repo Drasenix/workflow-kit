@@ -1,6 +1,6 @@
 ---
 name: "recette-navigateur"
-description: "Recette jouee par l'agent dans le navigateur a partir d'une fiche de recette : captures, constats, dossier de recette et PDF (interne ou version client). A completer pour la stack du projet."
+description: "Recette jouee par l'agent dans le navigateur a partir d'une fiche de recette : captures, constats, dossier de recette et PDF de recette pour le client. A completer pour la stack du projet."
 ---
 
 # recette-navigateur
@@ -11,10 +11,10 @@ description: "Recette jouee par l'agent dans le navigateur a partir d'une fiche 
 
 - « fais la recette toi-meme », « refais les captures », « recette client » apres une recette ecrite (skill `recette`).
 
-## Modes
+## Le PDF de recette
 
-- `interne` (defaut) : tout est montre, KO compris.
-- `client` : la recette en version client, constats en langage metier, verifications hors ecran dites en clair ; un KO n'y figure qu'avec l'accord de l'utilisateur.
+- Ecrit pour le client : constats en langage metier, verifications hors ecran dites en clair ; un KO n'y figure qu'avec l'accord de l'utilisateur.
+- Le detail technique reste dans le README du dossier de livraison, la fiche et le rapport.
 
 ## Garde-fous
 
@@ -27,7 +27,7 @@ description: "Recette jouee par l'agent dans le navigateur a partir d'une fiche 
 
 1. Preparer : application locale, worker, boite mail de developpement, seeder relance.
 2. Derouler chaque scenario dans un navigateur pilote : texte releve, capture, verifications hors ecran, constat.
-3. Livrer : captures, README, `sources/scenarios.json`, PDF (interne ou client, voir `generer-pdf.py` de la version complete), tableau des constats de la fiche, rapport.
+3. Livrer : captures, README, `sources/scenarios.json`, PDF de recette (voir `generer-pdf.py` de la version complete), tableau des constats de la fiche, rapport.
 
 ## Contexte local (a completer)
 
