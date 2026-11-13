@@ -30,7 +30,7 @@ Les deux arrêts sont les pauses des étapes 0 et 1 : entre eux, l'échange est 
   > Chantier `<dossier>` non clos : `SPECS.md` est encore présent. Clôture d'abord le chantier dans une session Build (`/cloturer-chantier <dossier>`), puis relance `/raffiner <lot>`.
 
   Puis s'arrêter.
-- **Lot d'un chantier clos** : un fichier `LOT-<nn>-<slug>.md` de `.agents/feature/**/` correspond au lot demandé (numéro ou intitulé ; plusieurs ou aucun → demander). Le renommer sans le préfixe (`git mv` → `<nn>-<slug>.md`, dans le même dossier) : c'est la feature active. Sa section `## Périmètre du lot` (US, `SP-*`, décisions, transverse à préserver) est le **périmètre** transmis à `@doc` et `@explorateur` ; ses `## Questions specs (étape 0)` pré-remplies sont reprises à l'étape 0, complétées par les trous que remontent les sous-agents
+- **Lot d'un chantier clos** : un fichier `LOT-<nn>-<slug>.md` de `.agents/feature/**/` correspond au lot demandé (numéro ou intitulé ; plusieurs ou aucun → demander). **Dépendances** : sa ligne `> Lot : <nn> — <intitulé> · dépend de : <nn>, …` ; un lot requis sans `DONE-<nn>-*.md` dans le même dossier → le nommer et demander à l'utilisateur s'il faut continuer (un travail en parallèle reste possible) ; sans réponse positive, ne rien renommer. Le renommer sans le préfixe (`git mv` → `<nn>-<slug>.md`, dans le même dossier) : c'est la feature active. Sa section `## Périmètre du lot` (US, `SP-*`, décisions, transverse à préserver) est le **périmètre** transmis à `@doc` et `@explorateur` ; ses `## Questions specs (étape 0)` pré-remplies sont reprises à l'étape 0, complétées par les trous que remontent les sous-agents
 
 ## Étape 0 — Compréhension
 

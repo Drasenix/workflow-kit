@@ -30,7 +30,7 @@ Lire la Progression de la feature active : l'étape en cours est la **première 
 
 - étape 0 ou 1 (y compris après un retour au raffinement), ou nouvelle feature → `/raffiner [feature]` ;
 - étape 2 à 7 → `/realiser [feature]` ;
-- aucune feature active → lister les lots à venir (`.agents/feature/**/LOT-*.md`, dans l'ordre de leur numéro) et demander lequel démarrer (`/raffiner [lot ou feature]`) ;
+- aucune feature active → lister les lots à venir (`.agents/feature/**/LOT-*.md`, dans l'ordre de leur numéro), chacun **prêt** (chaque lot de sa ligne `dépend de` a son `DONE-<nn>-*.md` dans le même dossier) ou **en attente** du lot nommé, et demander lequel démarrer (`/raffiner [lot ou feature]`) ;
 - un dossier de `.agents/feature/` contient encore `SPECS.md` → le signaler : chantier PO non clos, ses lots se démarrent après `/cloturer-chantier <dossier>` (session Build).
 
 Si la session a déjà mené une phase, la commande de l'autre phase se lance dans une **nouvelle** session.
