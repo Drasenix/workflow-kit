@@ -33,7 +33,7 @@ Squelette portable du workflow de développement multi-agents (raffineur + Build
 ```
 workflow-kit/
 ├─ README.md  workflow.config.json  package.json
-├─ bin/workflow-kit.mjs          CLI : init | sync | verify | check | check-meta | compact  (Node >= 18, aucune dépendance)
+├─ bin/workflow-kit.mjs          CLI : init | sync | verify | check | check-meta | derive | compact  (Node >= 18, aucune dépendance)
 ├─ lib/                          sync, init, verify, check, compact, migrate, gitignore, frontmatter…
 ├─ adapters/
 │  ├─ opencode/  index.mjs  opencode.agent.json

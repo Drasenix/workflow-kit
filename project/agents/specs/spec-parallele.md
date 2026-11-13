@@ -33,12 +33,13 @@ Liste fermée : extension sur validation utilisateur.
 
 ## Contrôle d'intégrité
 
-> Exécuté par `@review` à l'étape 5 et par le Build après chaque écriture : `node workflow-kit/bin/workflow-kit.mjs check-meta --spec` (mécanique, ne se fait pas à la main). 4 vérifications, tout écart = signalement.
+> Mécanique, ne se fait pas à la main : `node .agents/specs/verifier-spec.mjs` (Node seul, fonctionne **sans le kit** ; copie tenue par workflow-kit, ne pas la modifier). Avec le kit, `node workflow-kit/bin/workflow-kit.mjs check-meta --spec` lance le même contrôle. Exécuté par `@review` à l'étape 5, par le Build après chaque écriture, et par quiconque modifie ce fichier hors du workflow. 5 vérifications, tout écart = signalement.
 
 1. **Index ↔ entrées** : autant de lignes `| SP-…` que d'entrées `### SP-…`, mêmes IDs.
 2. **Statuts cohérents** : statut de l'index = ligne `> **Statut**` de l'entrée.
 3. **Supersessions valides** : chaque cible de `caduc (→ SP-…)` / `**Remplace**` existe comme entrée.
 4. **Mots-clés présents** : chaque entrée porte `> **Mots-clés** : …`.
+5. **Renvois réciproques** : une règle en vigueur citée dans la ligne `**Amende**` d'une autre porte `**Amendé par**` vers elle (vers son successeur si l'amendeur est devenu caduc).
 
 ---
 

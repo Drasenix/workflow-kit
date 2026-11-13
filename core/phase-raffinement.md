@@ -35,11 +35,12 @@ Les deux arrêts sont les pauses des étapes 0 et 1 : entre eux, l'échange est 
 ## Étape 0 — Compréhension
 
 1. Invoquer **en parallèle** `@doc` en **mode raffinement** (périmètre + questions) et `@explorateur` (périmètre + questions). Le `@doc` de la commande `/doc` reste disponible pour les questions ad hoc de l'utilisateur.
-2. Reporter dans le fichier de feature :
+2. **Dérive de la spec**, au retour des deux agents : `node workflow-kit/bin/workflow-kit.mjs derive --regles <les SP-* rendus par @doc> --fichiers <les fichiers cités par @explorateur>`. La commande liste les commits d'**autres auteurs** (collaborateurs qui travaillent sans le workflow) qui ont modifié un test garant de ces règles depuis leur dernière mise à jour, ou ces fichiers depuis votre dernier commit dessus. Relire chacun : message, puis diff. Un commit qui change un comportement qu'une règle décrit encore autrement est une question bloquante (comportement actuel du code qui contredit la spec), avec le commit pour source ; la règle est amendée à l'étape 6 une fois l'utilisateur fixé. Les autres commits relus sont sans suite. `[ok]` : rien à relire.
+3. Reporter dans le fichier de feature :
    - `## Specs consultées (étape 0)` : les **références** rendues par `@doc` (pages/sections, `SP-*` avec statut, termes du glossaire), sans recopier leur contenu, et les **sources externes** consultées en ligne par le raffineur (URL, date, ce qu'elles établissent) ;
-   - `## Contexte technique (étape 0)` : les faits de `@explorateur` utiles à la réalisation, avec leur `fichier:ligne` — point d'entrée, tests existants touchés, contraintes techniques. Le comportement actuel sert aux baselines ; les zones d'ombre bloquantes deviennent des questions. `Aucun` si rien d'utile ;
+   - `## Contexte technique (étape 0)` : les faits de `@explorateur` utiles à la réalisation, avec leur `fichier:ligne` — point d'entrée, tests existants touchés, contraintes techniques, et la dérive (commits relus, avec leur verdict). Le comportement actuel sert aux baselines ; les zones d'ombre bloquantes deviennent des questions. `Aucun` si rien d'utile ;
    - `## Questions specs (étape 0)` : les **questions bloquantes** (ci-dessous).
-3. **ARRÊT 1** : présenter la synthèse, puis attendre la réponse de l'utilisateur.
+4. **ARRÊT 1** : présenter la synthèse, puis attendre la réponse de l'utilisateur.
 
 ### Questions bloquantes
 
@@ -61,6 +62,7 @@ Arbre indenté (lisible en CLI) :
 - **Sources externes**, s'il y en a : URL et ce qu'elles établissent ;
 - **Termes du glossaire** consultés ;
 - **Ce que fait le code aujourd'hui** : point d'entrée, comportement actuel, tests existants, contraintes ;
+- **Dérive de la spec** : commits d'autres auteurs relus et leur verdict, ou `[ok]` ;
 - **Questions bloquantes**, ou `Aucune`.
 
 ## Étape 1 — Rédaction
