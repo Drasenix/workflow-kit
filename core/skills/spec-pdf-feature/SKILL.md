@@ -22,7 +22,7 @@ Le dossier client d'une feature livrée : une **note de synthèse** (ce que fait
 Lecture ciblée, jamais un fichier entier.
 
 1. **Les `DONE-*` du dossier** : le besoin (`## Résumé métier`), les comportements garantis (scénarios), les libellés exacts des écrans et des messages. Protocole de lecture : `workflow-kit/core/skills/doc/SKILL.md` § « Protocole de lecture (obligatoire) ». Les sections de pilotage, de dette, de leçons et de vigilances ne nourrissent jamais la note.
-2. **Les règles** : `.agents/specs/spec-parallele.md`, index puis entrées ciblées. Périmètre : les entrées que citent les `DONE-*` (section de traçabilité) et celles dont la ligne `Source` ou `Gardé par` cite ces `DONE-*` (`Source` = origine de la règle ; `Gardé par` = ses tests, ou la feature qui l'implémente selon la convention du projet).
+2. **Les règles** : `.agents/specs/spec-parallele.md`, index puis entrées ciblées. Périmètre : les entrées que citent les `DONE-*` (section de traçabilité) et celles dont la ligne `Source` ou `Gardé par` cite ces `DONE-*` (`Gardé par` cite la feature en convention `feature`).
    - **✅ en vigueur seulement.** Une entrée **⛔ caduc (→ SP-…)** est remplacée par celle qu'elle désigne ; son contenu n'apparaît jamais dans la note.
    - **Version amendée.** Une entrée en vigueur peut porter `Amendé par` ou `Précisé par` : elle vaut telle que les entrées citées la modifient. La note décrit l'état qui résulte de l'ensemble, jamais une phrase qu'une entrée plus récente a changée (« le produit ne crée jamais de code », amendée par « il en attribue un quand le client n'en a pas » : seule la seconde existe pour la note).
    - Écart entre un `DONE-*` et une règle en vigueur : la règle prime.
