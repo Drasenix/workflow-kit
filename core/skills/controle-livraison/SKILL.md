@@ -42,7 +42,7 @@ L'utilisateur peut aussi le demander à tout moment (« contrôle la feature »,
 | Livraison | `### Nouveaux utilitaires à référencer` : chaque puce porte `→ ✅ référencé` ou `→ ⛔ …` | utilitaire non tranché |
 | Livraison | `## Conventions (fichiers-rôles)` : statut de chaque ligne commençant par ✅ ou ⛔ | fichier meta non mis à jour |
 | Livraison | `## Nuances consignées` : chaque `SP-*` présent dans l'index **et** les entrées de `.agents/specs/spec-parallele.md` | `SP-*` absent |
-| Livraison | `SP-*` de `## Périmètre du lot` et de `## Nuances consignées` (entrées en vigueur) : ligne `> **Gardé par**` présente, ni vide ni « à compléter » | « Gardé par » non complété |
+| Livraison | `SP-*` de `## Périmètre du lot` et de `## Nuances consignées` (entrées en vigueur) : ligne `> **Gardé par**` présente, ni vide, ni « à compléter », ni « (feature à venir) » | « Gardé par » non complété |
 | Livraison (projet) | Intégrité de `.agents/specs/spec-parallele.md` : index ↔ entrées, statuts identiques (« en vigueur » / « caduc » + cible), toute référence `SP-*` vise une entrée, `Mots-clés` présents | écart d'intégrité |
 | Livraison (projet) | Références mortes : chaque chemin entre backticks de `.agents/*.md` et du spec parallèle existe, **casse comprise** (Windows l'ignore, Linux non). Un chemin ignoré par git ou cité sous son nom d'avant clôture (`x.md` pour `DONE-x.md`) n'est pas signalé | référence morte |
 

@@ -29,6 +29,7 @@ Liste fermée : extension sur validation utilisateur.
 
 - **Statuts** : `en vigueur (validé YYYY-MM-DD)` · `hypothèse (retenue provisoire, en attente de confirmation)` · `caduc (→ SP-…)`
 - **Types** : `AMENDE` (remplace la page) · `PRECISE` (complète une règle) · `ETEND` (cas non couvert)
+- **Gardé par** (convention du projet) : `tests` — les tests qui gardent la règle (`<Test>::<methode>`) ; en attente : `à compléter à l'étape 6 du lot qui l'implémente`. *(Autre convention possible : `feature` — la feature qui implémente la règle, `<id> (`DONE-<slug>.md`)` ; en attente : `— (feature à venir)`. Une seule par projet.)*
 
 ## Contrôle d'intégrité
 
@@ -52,7 +53,7 @@ Liste fermée : extension sur validation utilisateur.
 > > **Source** : feature `<chemin DONE>` *(ou, à la clôture d'un chantier PO : cadrage PO <sujet>, décision du <date>)*
 > > **Remplace** : SP-… *(si applicable)*
 > > **Mots-clés** : <mot1>, <mot2>
-> > **Gardé par** : `<Test>::<methode>` *(les tests qui gardent la règle ; avant son implémentation : à compléter à l'étape 6 du lot qui l'implémente)*
+> > **Gardé par** : `<Test>::<methode>` *(selon la convention déclarée dans « Statuts & types » ; avant implémentation : son marqueur d'attente)*
 >
 > **Règle.** <règle en vigueur, langage métier>
 >
