@@ -13,7 +13,7 @@
 > Date : YYYY-MM-DD
 > Lot : <lot, chantier, dépendances> *(si la feature découle d'un lot)*
 > Périmètre : <périmètre> *(si présent)*
-> Clôturé le YYYY-MM-DD · test global <N> verts · version de travail : `git show <hash>:<chemin du fichier>`
+> Clôturé le YYYY-MM-DD · test global <N> verts
 
 ## Résumé métier
 
@@ -35,7 +35,7 @@
 
 <introduction de la section, intacte hors consignes du gabarit>
 
-> Déjà couverts ailleurs (texte complet : version de travail) : <B1 — titre> · <B2 — titre>.
+> Déjà couverts ailleurs : <B1 — titre> · <B2 — titre>.
 
 <intacte : scénarios GWT et leurs lignes « Source »>
 
@@ -84,7 +84,7 @@ Couverts : EC-… (voir scénarios).
 
 <intacte, si présente>
 
-> Écarté à la compaction (texte complet : version de travail) : <libellé du bloc libre> (<motif : trace de revue · pilotage du développement · copie : fichier-rôle · → ADR-n / Dette connue / Leçons / fichier-rôle>) · … *(seulement s'il y a des blocs libres ; dernière ligne, toutes variantes)*
+> Écarté à la compaction : <libellé du bloc libre> (<motif : trace de revue · pilotage du développement · copie : fichier-rôle · → ADR-n / Dette connue / Leçons / fichier-rôle>) · … *(seulement s'il y a des blocs libres ; dernière ligne, toutes variantes)*
 
 ---
 
@@ -94,7 +94,7 @@ Couverts : EC-… (voir scénarios).
 
 > Date : YYYY-MM-DD
 > Lot / Périmètre : <si présents>
-> Abandonné le YYYY-MM-DD · version de travail : `git show <hash>:<chemin du fichier>`
+> Abandonné le YYYY-MM-DD
 
 ## Raison de l'abandon
 
@@ -129,7 +129,7 @@ Couverts : EC-… (voir scénarios).
 # <Nom de la feature>
 
 > Date : YYYY-MM-DD
-> Clôturé irreproductible le YYYY-MM-DD · version de travail : `git show <hash>:<chemin du fichier>`
+> Clôturé irreproductible le YYYY-MM-DD
 
 ## Symptôme signalé
 
@@ -148,7 +148,7 @@ Couverts : EC-… (voir scénarios).
 
 ## Registre des décisions
 
-<repris tel quel s'il a été tenu en direct ; sinon les décisions de la version de travail qui ne sont portées ni par un ADR, ni par le périmètre, ni par un scénario ; section omise si elle est vide>
+<repris tel quel s'il a été tenu en direct ; sinon les décisions de la version complète qui ne sont portées ni par un ADR, ni par le périmètre, ni par un scénario ; section omise si elle est vide>
 
 ## Conditions de réouverture
 
