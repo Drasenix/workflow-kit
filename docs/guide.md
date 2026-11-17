@@ -172,7 +172,7 @@ Deux phases, chacune dans sa session. **Raffinement** (étapes 0-1) : l'utilisat
 | 6 | Résumé métier + nuances | Build | `## Résumé métier` + `SP-*` | **OUI** |
 | 7 | DONE | Build | Renommage `DONE-<slug>.md` | auto |
 
-**À la livraison** (hors étapes) : le Build propose de **compacter** le fichier clos (skill `compacter-feature`, § 5.5). On garde ce qui a une valeur d'apprentissage, on retire ce qui ne servait que pendant la réalisation ; l'état d'avant compaction n'est pas archivé (compaction possible avant tout commit).
+**À la livraison** (hors étapes) : le Build propose de **compacter** le fichier clos (skill `compacter-feature`, § 5.5). On garde ce qui a une valeur d'apprentissage, on retire ce qui ne servait que pendant la réalisation.
 
 ### 4.1 Mener une feature, pas à pas
 
@@ -249,7 +249,7 @@ Chargées **à la demande** (via leur `description`), jamais systématiquement. 
 - `cadrage-po` — patron PO amont (SPECS / BACKLOG / FICHE-REUNION), et sa clôture. → `/cadrage-po`, `/cloturer-chantier`
 - `analyse-flashback` — analyse du code à une date passée via tags prod. → `/analyse-flashback`
 - `doc` — questions métier, réponse sourcée en 2 blocs. → `/doc`
-- `compacter-feature` — compaction d'un fichier de feature clos, avant ou après son commit de livraison. → `/compacter-feature`
+- `compacter-feature` — compaction d'un fichier de feature clos. → `/compacter-feature`
 - `controle-livraison` — contrôle mécanique d'un fichier de feature (Progression, Definition of Ready, traces non tranchées, fichiers meta). → `/controle-livraison`
 - `retouche` — petite modification hors workflow, menée par l'agent principal seul ; sur demande explicite uniquement (§ 5.6). → `/retouche`
 - `spec-pdf-feature` — dossier client d'une feature livrée : note de synthèse (PDF) et page « À lire d'abord » : règles en vigueur, langage métier, état final seulement (§ 5.7). → `/spec-pdf-feature`
@@ -388,13 +388,13 @@ SOCLE (consult-workflow)            index.md · agent-workflow.md · agent-build
 
 ### 5.5 `compacter-feature` — dépolluer un fichier de feature clos
 
-**But** : un `DONE-*` (ou `ABANDON-*`, `IRREPRODUCTIBLE-*`) garde par défaut tout le document de travail. La skill le réduit à ce qui **sert encore aux agents après coup**, sans archiver l'état d'avant compaction.
+**But** : un `DONE-*` (ou `ABANDON-*`, `IRREPRODUCTIBLE-*`) garde par défaut tout le document de travail. La skill le réduit à ce qui **sert encore aux agents après coup**.
 
 **On garde** : le pourquoi (ADR, registre des décisions datées), le comportement garanti (scénarios GWT), le parcours dans le code (arbre de flux), la dette connue, les leçons de réalisation, les vigilances résiduelles, la recette manuelle.
 
 **On retire** : le pilotage (Progression, texte des questions, contrat, fichiers prévus, checklists, revue) et les **copies** d'une source qui fait foi (spec parallèle, fichiers-rôles, référence des utilitaires, backlog), qui deviennent fausses quand la source évolue.
 
-**Garde-fous** : aucun commit préalable requis ; identifiants cités ailleurs préservés ; rien de transversal supprimé sans être consigné ailleurs ; nom de fichier inchangé ; diff validé par l'utilisateur, commit (avec la livraison ou séparé) sur demande explicite.
+**Garde-fous** : identifiants cités ailleurs préservés ; rien de transversal supprimé sans être consigné ailleurs ; nom de fichier inchangé ; diff validé par l'utilisateur, commit sur demande explicite.
 
 **Mécanique / jugement** : `workflow-kit compact <fichier>` écrit le squelette (sections reprises recopiées à l'octet près, sections à rédiger marquées `[À COMPLÉTER]`, résiduel, blocs libres et renvois externes listés) ; l'agent rédige les sections marquées et tranche chaque bloc libre (gardé, ou cité avec son motif dans la ligne « Écarté à la compaction ») ; `workflow-kit compact <fichier> --check` bloque toute section reprise modifiée ou incomplète, tout arbre de flux absent et tout bloc libre non tranché.
 

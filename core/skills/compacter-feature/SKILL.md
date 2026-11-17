@@ -1,11 +1,11 @@
 ---
 name: "compacter-feature"
-description: "Compacte un fichier de feature clos (DONE-*, ABANDON-*, IRREPRODUCTIBLE-*), avant ou après son commit de livraison : garde ce qui a une valeur d'apprentissage pour les agents (pourquoi, comportement garanti, parcours, dette, leçons, vigilances) et retire ce qui ne servait que pendant la réalisation. Use when the user asks to compact or clean a closed feature file (« compacte DONE-x », « dépollue les DONE ») or at the delivery of a feature, before or after its commit."
+description: "Compacte un fichier de feature clos (DONE-*, ABANDON-*, IRREPRODUCTIBLE-*) : garde ce qui a une valeur d'apprentissage pour les agents (pourquoi, comportement garanti, parcours, dette, leçons, vigilances) et retire ce qui ne servait que pendant la réalisation. Use when the user asks to compact or clean a closed feature file (« compacte DONE-x », « dépollue les DONE ») or at the delivery of a feature."
 ---
 
 # compacter-feature
 
-Un fichier de feature clos garde par défaut tout le **document de travail** : questions, plan (ou contrat dans les fichiers antérieurs), checklists, copies de règles. Cette skill le réduit à ce qui **sert encore après coup**. L'état d'avant compaction n'est pas archivé : aucun commit préalable n'est requis, et le fichier compacté ne cite aucun numéro de commit.
+Un fichier de feature clos garde par défaut tout le **document de travail** : questions, plan (ou contrat dans les fichiers antérieurs), checklists, copies de règles. Cette skill le réduit à ce qui **sert encore après coup**.
 
 - Partie **mécanique** (script) : `node workflow-kit/bin/workflow-kit.mjs compact <chemin>` écrit le squelette ; les sections reprises sont recopiées **à l'octet près**, les sections à rédiger portent le marqueur `[À COMPLÉTER]`. Ce qui se garde est repéré par les **emplacements du gabarit** (`workflow-kit/core/templates/feature.md`) et par le **contenu** (un arbre est un bloc de code en `├─` / `└─`), jamais par un libellé deviné.
 - Partie **jugement** (agent) : rédiger les sections marquées à partir du résiduel, et **trancher chaque bloc libre** listé par le script (garder ou écarter avec motif).
@@ -21,16 +21,15 @@ Un fichier de feature clos garde par défaut tout le **document de travail** : q
 1. **A-t-il une valeur d'apprentissage après coup ?** Pourquoi (ADR, arbitrages), comportement garanti (GWT), parcours dans le code (arbre de flux), dette restante, leçons de réalisation, vigilances → **garder**.
 2. **Ne servait-il qu'à piloter la réalisation, ou recopie-t-il une source qui fait foi ?** Progression, texte des questions, plan (signatures, choix structurants déjà repris en ADR, écarts au plan) ou contrat, fichiers prévus, contexte technique, arbitrages du challenge, checklists, décisions techniques, plan de refacto ; copies du spec parallèle, des fichiers-rôles, de `.agents/reference-utilitaires.md`, du backlog → **retirer**. Une copie qui périme est un **passif** : un agent peut s'y fier après une supersession.
 
-Le fichier compacté est une **photo à la date de livraison** : on n'y ajoute **rien de postérieur** (pas de « constaté le … », pas de note de péremption). La date et le hash de la ligne de clôture suffisent à le situer.
+Le fichier compacté est une **photo à la date de livraison** : on n'y ajoute **rien de postérieur** (pas de « constaté le … », pas de note de péremption). La date de la ligne de clôture suffit à le situer.
 
 ## Garde-fous
 
-1. **Version complète d'abord.** Le script part du fichier tel qu'il est sur le disque, commité ou non, et refuse un fichier déjà compacté. Il garde la version complète dans le dossier git du worktree pour `--check` (jamais commitée) ; sans cette copie, `--check` prend la dernière version commitée non compactée.
-2. **Intégrité des identifiants.** Tout identifiant interne cité ailleurs (listé par le script) reste présent dans le fichier compacté.
-3. **Rien de transversal n'est supprimé sans être consigné ailleurs.** Sinon : proposer la remontée (accord explicite), garder la trace sur une ligne.
-4. **Feature active dépendante.** Si une feature **en cours** cite des sections destinées à être supprimées (plan, texte d'une question…), ne pas compacter : attendre sa clôture, ou demander.
-5. **Nom du fichier inchangé** (il est cité par le spec parallèle et les autres features).
-6. **Pause** : l'utilisateur valide le diff. Commit (avec la livraison, ou séparé : `docs(<domaine>): compacter <fichier>`) **sur demande explicite uniquement**, jamais de push.
+1. **Intégrité des identifiants.** Tout identifiant interne cité ailleurs (listé par le script) reste présent dans le fichier compacté.
+2. **Rien de transversal n'est supprimé sans être consigné ailleurs.** Sinon : proposer la remontée (accord explicite), garder la trace sur une ligne.
+3. **Feature active dépendante.** Si une feature **en cours** cite des sections destinées à être supprimées (plan, texte d'une question…), ne pas compacter : attendre sa clôture, ou demander.
+4. **Nom du fichier inchangé** (il est cité par le spec parallèle et les autres features).
+5. **Pause** : l'utilisateur valide le diff. Commit **sur demande explicite uniquement** (`docs(<domaine>): compacter <fichier>`), jamais de push.
 
 ## Procédure
 
@@ -79,4 +78,4 @@ ABANDON : les **questions restées ouvertes** se rédigent **en texte intégral*
 
 - **Pilote d'abord**, puis un fichier représentatif des cas lourds (refacto appliqué, arbre de flux, renvois croisés) avant de lancer le lot.
 - Ensuite par domaine : un fichier par sous-agent (qui applique cette skill), `--check` de **chaque** fichier par le Build, validation du diff par l'utilisateur.
-- Exclure les fichiers dont une feature active cite des sections à supprimer (garde-fou 4).
+- Exclure les fichiers dont une feature active cite des sections à supprimer (garde-fou 3).
