@@ -102,7 +102,7 @@ Si le kit n'est pas encore dans le projet, lancer la commande depuis une copie d
 ### 3.2 Ce que fait l'installation, dans l'ordre
 
 1. **Place le kit** dans `<projet>/workflow-kit/` (clone, sinon copie locale sans `.git`) et enregistre la stack et les runtimes dans `workflow.config.json`.
-2. **Matérialise les seeds** : `packs/<stack>/agents/**` + `project/agents/**` → `.agents/`, et `project/AGENTS.md` → `AGENTS.md`.
+2. **Matérialise les seeds** : `packs/<stack>/agents/**` + `project/agents/**` → `.agents/`, et `project/AGENTS.md` → `AGENTS.md`. Ajoute ou met à jour ensuite le bloc géré d'`AGENTS.md` (`project/AGENTS.bloc.md`), même quand le fichier existait déjà.
 3. **Génère les adaptateurs** demandés :
    - `opencode` : `.opencode/{agents,command,skills}` (commandes du core et du pack) et fusion de `opencode.json` (permissions `agent.<agent principal>.permission.task` des subagents du Build et du raffineur, `instructions: [".agents/workflow-commands.md"]`). Le reste (`plugin`, `mcp`) est préservé.
    - `claude` : `.claude/{agents,skills}`, un bloc géré dans `CLAUDE.md` (imports `@AGENTS.md` et `@.agents/workflow-commands.md`) et un dans `.worktreeinclude`, et dans `.claude/settings.json` les seules clés `attribution.commit` et `worktree.symlinkDirectories` (voir § 3.6). Le reste de ces fichiers n'est jamais touché.
@@ -120,6 +120,7 @@ Si le kit n'est pas encore dans le projet, lancer la commande depuis une copie d
 - `--force` (ou `--on-conflict overwrite`) écrase aussi les fichiers projet.
 - `.agents/doublons/` reste visible dans `git status` (à traiter à la main, puis supprimer).
 - `CLAUDE.md` : seul le bloc entre les marqueurs `<!-- workflow-kit:start -->` et `<!-- workflow-kit:end -->` est géré par le kit. Si `CLAUDE.md` est un lien (par ex. vers `AGENTS.md`), le kit n'y écrit pas.
+- `AGENTS.md` : jamais écrasé, mais son bloc `workflow-kit` (règles du workflow : workflow présent, règle `SP-*` consignée hors d'une étape de feature) est ajouté ou mis à jour à chaque `sync`. C'est le seul fichier lu par tous les outils, y compris ceux d'un collègue qui ne suit pas le workflow : une règle née du workflow va dans `project/AGENTS.bloc.md`, jamais dans le modèle `project/AGENTS.md`, que les projets déjà installés ne reçoivent pas. `check-meta` signale un bloc absent ou périmé.
 
 ### 3.4 Après l'installation (manuel)
 
@@ -142,7 +143,7 @@ Détails, nuances et pièges : `docs/mise-a-jour.md`.
 
 ### 3.6 Worktrees
 
-Un worktree git ne reçoit que les fichiers suivis : ni le kit (dépôt imbriqué, ignoré), ni `.opencode/`, ni les agents et skills générés dans `.claude/`. Sans eux, une session y tourne sans workflow. Le garde-fou d'`AGENTS.md` le fait remarquer dès le début de session.
+Un worktree git ne reçoit que les fichiers suivis : ni le kit (dépôt imbriqué, ignoré), ni `.opencode/`, ni les agents et skills générés dans `.claude/`. Sans eux, une session y tourne sans workflow. Le garde-fou du bloc `workflow-kit` d'`AGENTS.md` le fait remarquer dès le début de session.
 
 | Worktree créé par | Ce qui l'équipe |
 |---|---|

@@ -14,7 +14,7 @@
 
 Les textes du workflow citent le cœur à `workflow-kit/core/…` : index, règles du Build, workflow, templates sont donc **lus en direct**. Tu modifies `workflow-kit/core` (ou un `pull` le fait), le projet suit, sans copie ni lien.
 
-Ce que l'outil IA charge lui-même (agents, skills, commandes) est **généré** dans `.opencode/` et `.claude/` : il faut relancer `sync` pour le régénérer. Les seeds (`packs/<stack>/agents/**`, `project/agents/**`, `project/AGENTS.md`) et la fusion `opencode.json` / le bloc `CLAUDE.md` sont aussi **matérialisés** par `sync`.
+Ce que l'outil IA charge lui-même (agents, skills, commandes) est **généré** dans `.opencode/` et `.claude/` : il faut relancer `sync` pour le régénérer. Les seeds (`packs/<stack>/agents/**`, `project/agents/**`, `project/AGENTS.md`) et la fusion `opencode.json` / les blocs gérés de `CLAUDE.md` et d'`AGENTS.md` sont aussi **matérialisés** par `sync`. Le bloc d'`AGENTS.md` arrive aussi dans un projet installé avant lui : après le premier `sync`, retirer de la partie projet d'`AGENTS.md` les règles qu'il reprend (workflow présent, règle `SP-*` consignée hors d'une étape de feature), sinon elles sont en double.
 
 ## Règle d'or
 

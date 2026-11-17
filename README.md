@@ -50,7 +50,8 @@ workflow-kit/
 ├─ packs/<stack>/commands/*.md   -> .opencode/command/, .claude/commands/  (commandes des skills techno, générées)
 │  └─ laravel-livewire/  _blank/
 └─ project/
-   ├─ AGENTS.md                  -> AGENTS.md    (GÉNÉRIQUE)
+   ├─ AGENTS.md                  -> AGENTS.md    (GÉNÉRIQUE, posé une fois)
+   ├─ AGENTS.bloc.md             -> bloc géré d'AGENTS.md (règles du workflow, mis à jour à chaque sync)
    ├─ agents/**                  -> .agents/
    │  ├─ domain-glossary.md  reference-utilitaires.md
    │  └─ specs/{README.md,spec-parallele.md,spec.txt}
@@ -68,7 +69,7 @@ node workflow-kit/bin/workflow-kit.mjs init --target C:\www\mon-projet --stack l
 `--runtime` : `opencode`, `claude` ou `both`. L'installation :
 
 1. **Place le kit** dans `<projet>/workflow-kit/` (clone, sinon copie locale sans `.git`) ; la stack et les runtimes sont notés dans `workflow.config.json`.
-2. **Matérialise** `.agents/` (seeds projet) + `AGENTS.md`.
+2. **Matérialise** `.agents/` (seeds projet) + `AGENTS.md`, puis ajoute ou met à jour le **bloc géré d'`AGENTS.md`** (règles du workflow, source `project/AGENTS.bloc.md`).
 3. **Génère les adaptateurs** demandés : `.opencode/` + fusion de `opencode.json` (permissions subagents + `instructions: [".agents/workflow-commands.md"]`), et/ou `.claude/` + bloc géré de `CLAUDE.md`.
 4. **Complète le `.gitignore`** (`workflow-kit/`, `.opencode`, et pour Claude `.claude/agents/*` + `.claude/skills/*`).
 5. **Migre** les anciens chemins `.opencode/…` et `.workflow/…` des fichiers du projet (voir `docs/mise-a-jour.md`).
@@ -102,6 +103,7 @@ Pas à pas, retour au raffinement en cas de trou métier, features ouvertes avan
 - `opencode.json` : seuls les `agent.<agent principal>.permission.task` (Build et raffineur : les subagents que chacun peut invoquer) et `instructions` sont fusionnés (`plugin`/`mcp` intacts) ; un agent retiré du kit y perd son autorisation.
 - **`.claude/settings.json`** : seule la clé `attribution.commit` est fusionnée (valeur vide : aucune ligne `Co-Authored-By` dans les commits) ; le reste du fichier n'est jamais touché, un JSON invalide est signalé et laissé tel quel. `attribution: false` est respecté mais jamais écrit (avant Claude Code 2.1.281, il fait ignorer tout le fichier).
 - **`CLAUDE.md`** : seul le bloc entre `<!-- workflow-kit:start … -->` et `<!-- workflow-kit:end -->` est géré par le kit, le reste n'est jamais touché. Si `CLAUDE.md` est un lien (ex. vers `AGENTS.md`), le kit n'y écrit pas.
+- **`AGENTS.md`** : le fichier appartient au projet (posé une fois, jamais écrasé), mais son bloc `workflow-kit` est ajouté ou mis à jour à **chaque** `sync`, que le fichier vienne du kit, d'un autre outil ou d'une installation ancienne. Il porte les règles qui n'existent que parce que le workflow existe (workflow présent, règle `SP-*` consignée hors d'une étape de feature) ; AGENTS.md étant lu par tous les outils, le texte y est en clair. Source : `project/AGENTS.bloc.md`. `check-meta` signale un bloc absent, périmé ou doublé ; si `AGENTS.md` est un lien, le kit n'y écrit pas.
 - `.claude/` : seul le contenu de `agents/` et `skills/` est gitignoré (`.claude/agents/*`, `.claude/skills/*`) ; `.claude/settings.json` et le reste ne le sont pas. Pour versionner un agent ou une skill à toi, ajoute une exception, par ex. `!.claude/skills/ma-skill/` (elle marche avec `/*`, pas avec `/`).
 - `.agents/doublons/` reste visible dans `git status` (à traiter puis supprimer).
 
@@ -138,7 +140,7 @@ Voir `packs/_schema.md`.
 2. **Neutralité des packs** : aucun terme projet/métier dans `packs/<stack>/agents/**` ni `packs/<stack>/commands/**`.
 3. **Références mortes** : anciens noms (`agent-frontend.md`, `agent-livewire.md`, `agent-opencode.md`…) interdits dans `packs/`.
 4. **Fichiers requis** présents (core + packs).
-5. **Round-trip** : matérialisation générique pour `opencode`, `claude` et `opencode+claude` (jetons résolus, agents valides, bloc `CLAUDE.md`, `.gitignore`, aucun artefact d'un runtime non demandé).
+5. **Round-trip** : matérialisation générique pour `opencode`, `claude` et `opencode+claude` (jetons résolus, agents valides, blocs `CLAUDE.md` et `AGENTS.md`, `.gitignore`, aucun artefact d'un runtime non demandé).
 6. **Migration** : un projet installé avec un ancien modèle (`.opencode` lié au core, ou lien `.workflow`) est converti sans toucher aux anciens cores.
 7. **`.gitignore` Claude** : projet vierge (motifs de dossier) ou avec ses propres agents/skills (fichiers du kit un par un, contenu du projet intact).
 8. **Cohérence interne du core** : chemins, renvois §, sections du gabarit citées, commandes du CLI existent ; aucun reste d'une ancienne version.

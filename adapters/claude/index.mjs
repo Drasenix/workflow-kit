@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseAgent, RETIRED_AGENTS } from '../../lib/frontmatter.mjs';
-import { exists, readUtf8, rel, remove, walk, writeUtf8 } from '../../lib/util.mjs';
+import { exists, readUtf8, rel, remove, upsertBlock, walk, writeUtf8 } from '../../lib/util.mjs';
 
 export const id = 'claude';
 
@@ -44,10 +44,7 @@ function ensureClaudeMd({ target, log }) {
     return;
   }
   const current = exists(p) ? readUtf8(p) : '';
-  const re = new RegExp(`${START.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[\\s\\S]*?${END}`);
-  let next;
-  if (re.test(current)) next = current.replace(re, () => BLOCK);
-  else next = current ? `${current.replace(/\s*$/, '')}\n\n${BLOCK}\n` : `${BLOCK}\n`;
+  const next = upsertBlock(current, START, END, BLOCK);
   if (next !== current) {
     writeUtf8(p, next);
     log.info('[claude] CLAUDE.md : bloc workflow-kit a jour');
@@ -110,8 +107,7 @@ ${WT_END}`;
 function ensureWorktreeInclude({ target, log }) {
   const p = path.join(target, '.worktreeinclude');
   const current = exists(p) ? readUtf8(p) : '';
-  const re = new RegExp(`${WT_START.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[\\s\\S]*?${WT_END}`);
-  const next = re.test(current) ? current.replace(re, () => WT_BLOCK) : current ? `${current.replace(/\s*$/, '')}\n\n${WT_BLOCK}\n` : `${WT_BLOCK}\n`;
+  const next = upsertBlock(current, WT_START, WT_END, WT_BLOCK);
   if (next !== current) {
     writeUtf8(p, next);
     log.info('[claude] .worktreeinclude : bloc workflow-kit a jour');
