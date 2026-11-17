@@ -406,11 +406,13 @@ SOCLE (consult-workflow)            index.md · agent-workflow.md · agent-build
 **But** : traiter une petite modification sans rouvrir le workflow (ni fichier de feature, ni GWT, ni sous-agents, ni pauses), sans retaper à chaque fois les mêmes consignes. C'est **l'utilisateur** qui décide qu'il s'agit d'une retouche, en tapant `/retouche` : la skill ne se choisit jamais d'elle-même.
 
 **Les cinq règles, par ordre d'importance** :
-1. **Les usages d'abord** : avant de modifier une méthode, un composant, une vue ou un libellé existant, chercher ses usages. C'est là que casse une retouche, plus que dans le code ajouté.
+1. **Les usages d'abord** : avant de modifier une méthode, un composant, une vue ou un libellé existant, chercher ses usages. C'est là que casse une retouche, plus que dans le code ajouté. Un test existant touché se cherche aussi dans la spec parallèle (« Gardé par »).
 2. **Un test qui sait échouer** : comportement observable → test d'abord, vu en échec sur une assertion ; bug → test qui le reproduit ; rien d'observable (libellé, mise en forme) → pas de test, le rapport dit où regarder.
 3. **Tests existants : rien en silence** : jamais modifiés pour le seul retour au vert ; toute assertion existante modifiée est recopiée, avant et après, dans le rapport.
 4. **Le périmètre** : critères de `core/qualite-code.md` sur le seul code touché ; ce qui est vu en passant va dans le rapport, pas dans le diff.
 5. **Arrêts** : une migration, ou un choix de comportement que la demande n'a pas fait → arrêt et proposition de `/raffiner`.
+
+**Spec parallèle** : une retouche qui contredit une règle `SP-*`, ou qui s'écarte de la spec officielle, la consigne dans son commit selon `core/specs/ecrire-une-regle.md`, texte soumis à l'utilisateur avant écriture, puis lance `verifier-spec.mjs`. C'est la même consigne que pour un changement fait hors du workflow : aucune voie ne laisse la spec dire autre chose que le code. Les autres fichiers meta (glossaire, référence des utilitaires, fichiers-rôles) sont seulement signalés.
 
 **Fin** : tests ciblés puis global, formatage, relecture du diff complet, rapport de trois lignes (preuves, usages vérifiés, à signaler), puis commit des seuls fichiers de la retouche, avec le pourquoi dans le corps du message (seule trace, faute de fichier de feature).
 
