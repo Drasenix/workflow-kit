@@ -11,7 +11,8 @@ Petite modification menée par l'agent principal seul : pas de fichier de featur
 
 - `git status --short` : noter les fichiers déjà modifiés. Ils ne sont pas à toi : tu ne les touches pas et ils n'iront pas dans le commit.
 - `workflow-kit/core/qualite-code.md` introuvable (worktree non préparé) : le dire à l'utilisateur avant de commencer.
-- Fichiers meta (`.agents/reference-utilitaires.md`, `.agents/specs/spec-parallele.md`, `.agents/domain-glossary.md`, fichiers-rôles) : jamais écrits ici, seulement signalés dans le rapport.
+- Fichiers meta (`.agents/reference-utilitaires.md`, `.agents/domain-glossary.md`, fichiers-rôles) : jamais écrits ici, seulement signalés dans le rapport.
+- Spec parallèle (`.agents/specs/spec-parallele.md`) : un changement qui contredit une règle `SP-*` ou s'écarte de la spec officielle se consigne dans le commit de la retouche, selon `.agents/specs/ecrire-une-regle.md`. Le texte de l'entrée est soumis à l'utilisateur avant d'être écrit. Une retouche ne laisse jamais la spec dire autre chose que le code.
 
 ## Règles, par ordre d'importance
 
@@ -19,7 +20,8 @@ Petite modification menée par l'agent principal seul : pas de fichier de featur
 
 Avant de modifier une méthode, un composant, une vue ou un libellé existant, chercher ses usages (recherche textuelle dans le code, les vues et les gabarits). Chaque usage concerné par la demande est traité ; les tests qui couvrent ces usages sont lancés à la fin.
 
-- Libellé ou nom visible renommé : chercher aussi dans `.agents/` (glossaire, spec parallèle, fichiers-rôles) et signaler les occurrences.
+- Libellé ou nom visible renommé : chercher aussi dans `.agents/`. Occurrences dans la spec parallèle : la consigner (voir « Départ ») ; dans le glossaire et les fichiers-rôles : les signaler.
+- Test existant à modifier, renommer ou supprimer : chercher d'abord son nom dans la spec parallèle. Une règle qui le cite dans « Gardé par » est concernée par la retouche.
 - Une recherche textuelle ne voit pas les appels résolus dynamiquement (nom de méthode construit, événement) : le dire dans le rapport quand le code en contient.
 
 ### 2. Un test qui sait échouer
@@ -48,10 +50,10 @@ Dire ce qui arrête et proposer `/raffiner` ; l'utilisateur décide de continuer
 
 ## Fin
 
-1. **Tests** (avant tout run : `.agents/skills/tests/SKILL.md`) : les tests ciblés de la zone et des usages repérés, puis le test global ; formatage des fichiers modifiés. Commandes : `.agents/workflow-commands.md`.
+1. **Tests** (avant tout run : `.agents/skills/tests/SKILL.md`) : les tests ciblés de la zone et des usages repérés, puis le test global ; formatage des fichiers modifiés. Commandes : `.agents/workflow-commands.md`. Spec parallèle écrite, ou test renommé ou supprimé : `node .agents/specs/verifier-spec.mjs`, qui doit passer.
 2. **Relire `git diff` en entier**, pas sa mémoire de ce qui a été écrit : fichiers hors périmètre, restes de débogage, code commenté.
 3. **Rapport**, trois lignes, `aucun` quand c'est vide :
-   - **Preuves** : extrait de l'échec, puis succès des tests ciblés et du global ; ou « rien d'observable : regarder <écran, action> ».
+   - **Preuves** : extrait de l'échec, puis succès des tests ciblés et du global ; ou « rien d'observable : regarder <écran, action> ». Règle `SP-*` écrite ou amendée, et succès de `verifier-spec.mjs`, s'il y en a.
    - **Usages vérifiés** : usages trouvés, et ceux modifiés.
    - **À signaler** : assertions existantes modifiées (avant/après), occurrences dans `.agents/`, nouvel utilitaire à référencer (proposé, pas écrit), ce qui a été vu en passant.
-4. **Commit**, sur accord de l'utilisateur : les seuls fichiers de la retouche, pas ceux notés au départ. Le corps du message dit pourquoi (contexte, problème, comportement obtenu) : sans fichier de feature, c'est la seule trace.
+4. **Commit**, sur accord de l'utilisateur : les seuls fichiers de la retouche, spec parallèle comprise, pas ceux notés au départ. Le corps du message dit pourquoi (contexte, problème, comportement obtenu) : sans fichier de feature, c'est la seule trace.

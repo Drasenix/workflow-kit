@@ -1,6 +1,6 @@
 # Écrire une règle dans la spec parallèle
 
-> Tenu par workflow-kit (`core/specs/ecrire-une-regle.md`). Dans un projet, ce fichier est une **copie** que la synchronisation du kit écrase : ne pas le modifier là. C'est le seul endroit qui définit le format d'une entrée de `.agents/specs/spec-parallele.md` : statuts, types, modèle, contrôles. **Qui écrit, et quand** : dans le workflow, le Build, après validation de l'utilisateur ; hors du workflow, dans le commit du changement, en demandant à l'utilisateur au moindre doute métier.
+> Tenu par workflow-kit (`core/specs/ecrire-une-regle.md`). Dans un projet, ce fichier est une **copie** que la synchronisation du kit écrase : ne pas le modifier là. C'est le seul endroit qui définit le format d'une entrée de `.agents/specs/spec-parallele.md` : statuts, types, modèle, contrôles. **Qui écrit, et quand** : dans le workflow, le Build, après validation de l'utilisateur ; hors du workflow (changement libre ou `/retouche`), dans le commit du changement, en demandant à l'utilisateur au moindre doute métier.
 
 ## Quand écrire une entrée
 
