@@ -1,0 +1,6 @@
+## Règles du workflow (workflow-kit)
+
+Ces règles valent pour tout changement dans ce dépôt, avec ou sans le workflow de dev. Ce bloc est réécrit à chaque synchronisation du kit : ne pas le modifier ici.
+
+- **Vérifier que le workflow est présent** avant d'en mener une étape : `workflow-kit/core/index.md` doit exister. Absent dans un worktree local (opencode, `git worktree add`…) → le préparer depuis le worktree : `node "$(git rev-parse --path-format=absolute --git-common-dir)/../workflow-kit/bin/workflow-kit.mjs" worktree`, puis revérifier. Toujours absent, ou session cloud → le dire à l'utilisateur dès le début, ne lancer ni `/raffiner` ni `/realiser`, ne pas reconstituer les règles de mémoire. En worktree, vérifier que le fallback de `.agents/workflow-commands.md` exécute bien le worktree, sinon les tests portent sur le checkout principal.
+- **Hors d'une étape de feature** (changement libre ou `/retouche`) : un changement de comportement, de libellé ou de couleur qui contredit une règle `SP-*` de `.agents/specs/spec-parallele.md`, ou qui s'écarte de la spec officielle, se consigne dans le même commit, selon `.agents/specs/ecrire-une-regle.md`. Repère : avant de modifier ou de renommer un test, chercher son nom dans la spec. Doute métier : demander.
