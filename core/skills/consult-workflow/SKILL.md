@@ -48,7 +48,7 @@ Si la session a déjà mené une phase, la commande de l'autre phase se lance da
 - `.agents/reference-utilitaires.md`, `.agents/domain-glossary.md`, `.agents/specs/spec-parallele.md` **en entier** : lecture ciblée seulement (sommaire / index, puis blocs), au moment où une étape en a besoin
 - `.agents/ui-rules.md` / `.agents/component-rules.md` : réservés aux subagents, selon le périmètre
 - Templates du pack : copiés par `@test` / `@dev`
-- Fichiers clos ou hors feature : `DONE-*.md`, `ABANDON-*.md`, `IRREPRODUCTIBLE-*.md`, `PLAN-*.md`, `REFACTO-*.md` (version de travail d'un fichier compacté via `git show`)
+- Fichiers clos ou hors feature : `DONE-*.md`, `ABANDON-*.md`, `IRREPRODUCTIBLE-*.md`, `PLAN-*.md`, `REFACTO-*.md`
 - Docs de chantier PO : `.agents/feature/**/SPECS.md`, `BACKLOG.md`, `FICHE-REUNION.md` (skill `cadrage-po`, lus seulement si l'utilisateur les nomme ou à la clôture du chantier)
 - Lots à venir `LOT-*.md` : listés par l'aiguillage, lus seulement au démarrage de leur raffinement
 - Images `.agents/feature/**/maquettes/**`, living docs `doc/*.md` (opt-in)

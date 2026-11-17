@@ -85,5 +85,4 @@ Chercher avant de lire en entier : les fichiers de feature, `DONE-*` non compact
 - Le `path` du Grep = **dossier**, jamais un fichier (l'outil élargit au parent). Pour cibler un fichier précis → filtre de fichiers de l'outil (`include` sous opencode, `glob` sous Claude Code) avec le nom (`"DONE-xxx.md"`).
 - Pattern le plus **discriminant** d'abord : cibler la section (`^## Résumé métier`, `### SP-XXX`) plutôt qu'un mot-clé fréquent.
 - Ordre de lecture d'une `DONE-*` : `## Résumé métier` (tête) → grep de section (fichier compacté : `## Registre des décisions`, `## Clé de lecture des scénarios`, `## Décisions & Justifications`, `## Arbre de flux`, `## Leçons de réalisation`, `## Vigilances`, `## Dette connue`) → lecture à l'offset.
-- Version de travail d'un fichier compacté : `git show <hash>:<chemin>`, hash donné par la ligne de clôture de l'en-tête.
 - Sortie tronquée / bruit ≥ ~20 matches → resserrer (filtre de fichiers + pattern), ne pas dépouiller.
