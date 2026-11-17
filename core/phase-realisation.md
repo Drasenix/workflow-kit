@@ -178,12 +178,12 @@ Route GET /<ressource>/<id>/<action>
 
 ## Compaction post-livraison
 
-Une fois le fichier clos (`DONE-*`, `ABANDON-*`, `IRREPRODUCTIBLE-*`), **proposer** sa compaction (skill `compacter-feature`, squelette `workflow-kit/core/templates/feature-cloturee.md`), avant ou après le commit de livraison : aucun commit ni push préalable n'est requis, et l'état d'avant compaction n'est pas archivé (le fichier compacté ne cite aucun numéro de commit). Garde-fous :
+Une fois le fichier clos (`DONE-*`, `ABANDON-*`, `IRREPRODUCTIBLE-*`), **proposer** sa compaction (skill `compacter-feature`, squelette `workflow-kit/core/templates/feature-cloturee.md`). Garde-fous :
 - tout **identifiant interne cité ailleurs** (spec parallèle, lots à venir, autres features) reste présent dans le fichier compacté ;
 - **rien de transversal** n'est supprimé sans être consigné ailleurs (sinon proposition de remontée, avec accord) ;
 - pas de compaction si une **feature en cours** cite des sections destinées à être supprimées ;
 - **nom du fichier inchangé** ;
-- **validation du diff** par l'utilisateur ; commit (avec la livraison ou séparé) **sur demande explicite** uniquement.
+- **validation du diff** par l'utilisateur, commit **sur demande explicite** uniquement.
 
 ## Recette post-livraison
 
