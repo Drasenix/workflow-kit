@@ -90,6 +90,7 @@ Une CLI Node (Node ≥ 18, aucune dépendance), `workflow-kit/bin/workflow-kit.m
 - **Dérive de la spec** (étape 0 de `/raffiner`) : `derive --regles <SP-*> --fichiers <chemins>` liste les commits d'autres auteurs à relire.
 - **Sans le kit** (collaborateur, session cloud) : la synchronisation pose dans le projet des copies autonomes, toujours écrasées, à ne pas modifier : `.agents/specs/verifier-spec.mjs` (contrôle de la spec parallèle, tests cités compris, Node seul, toute techno) et `.agents/specs/ecrire-une-regle.md` (format d'une entrée). `check-meta` signale une copie périmée.
 - **Compaction d'un fichier de feature clos** : `compact <fichier>` (skill `compacter-feature`).
+- **Clôture d'une recette** : `cloturer-recette <feature>` (skill `cloturer-recette`), depuis le checkout principal.
 
 Exemple :
 
@@ -239,7 +240,7 @@ Une **nouvelle** session sur l'agent par défaut (le Build) : opencode, l'agent 
 
 Ils ne s'invoquent **pas** entre eux : seul l'agent principal de la session (raffineur ou Build) orchestre. L'utilisateur peut aussi les appeler manuellement avec `@nom`.
 
-### 4.4 Les 10 skills (`core/skills/*/SKILL.md`)
+### 4.4 Les 11 skills (`core/skills/*/SKILL.md`)
 
 Chargées **à la demande** (via leur `description`), jamais systématiquement. Chaque skill est **invocable directement par l'utilisateur** : en la nommant en langage naturel, ou via sa **slash-commande** `/nom` (voir § 4.5).
 
@@ -253,8 +254,9 @@ Chargées **à la demande** (via leur `description`), jamais systématiquement. 
 - `controle-livraison` — contrôle mécanique d'un fichier de feature (Progression, Definition of Ready, traces non tranchées, fichiers meta). → `/controle-livraison`
 - `retouche` — petite modification hors workflow, menée par l'agent principal seul ; sur demande explicite uniquement (§ 5.6). → `/retouche`
 - `spec-pdf-feature` — dossier client d'une feature livrée : note de synthèse (PDF) et page « À lire d'abord » : règles en vigueur, langage métier, état final seulement (§ 5.7). → `/spec-pdf-feature`
+- `cloturer-recette` — clôture d'une recette livrée : environnement du worktree, worktree, branche `recette/<feature>` locale et distante, résidus (§ 5.8). → `/cloturer-recette`
 
-### 4.5 Les 11 slash-commandes (`core/commands/*.md`)
+### 4.5 Les 12 slash-commandes (`core/commands/*.md`)
 
 Chaque skill du kit dispose d'une **slash-commande** `/nom` : c'est le raccourci avec lequel l'utilisateur l'invoque directement. La commande charge la skill correspondante (`/cloturer-chantier` charge `cadrage-po` pour sa clôture) :
 
@@ -271,6 +273,7 @@ Chaque skill du kit dispose d'une **slash-commande** `/nom` : c'est le raccourci
 | `/controle-livraison` | `controle-livraison` |
 | `/retouche` | `retouche` |
 | `/spec-pdf-feature` | `spec-pdf-feature` |
+| `/cloturer-recette` | `cloturer-recette` |
 
 Elles prennent `$ARGUMENTS` et demandent la précision manquante si besoin.
 
@@ -439,6 +442,15 @@ SOCLE (consult-workflow)            index.md · agent-workflow.md · agent-build
 
 **Exemple** : `/spec-pdf-feature facturation/prepaiement`. L'agent demande où livrer et comment imprimer, lit les deux `DONE-*` et les treize règles en vigueur qu'ils citent, relance le test global, rédige une note de deux pages (la facture, l'écran, le contrôle des factures de plusieurs mois, les achats ponctuels, les treize règles, ce qui n'est pas touché), retire du texte un « initialement » repéré par le contrôle, puis livre le PDF et rend son rapport.
 
+
+### 5.8 `cloturer-recette` — jeter une recette livrée
+
+**But** : une branche `recette/<feature>` porte la fiche de recette, le seeder jetable et les constats ; elle ne part jamais en production. Une fois la recette livrée (PDF et captures dans le dossier de livraison, hors dépôt), il reste un worktree, son environnement (services, conteneurs, volumes), la branche en local et sur `origin`, et quelques résidus de l'agent. La skill retire tout cela en une commande, sans toucher au dossier de livraison.
+
+**Partage du travail** : le script `cloturer-recette <feature>` fait le mécanique, depuis le checkout principal : contrôles (préfixe `recette/`, worktree propre, commits poussés : sinon arrêt sans rien supprimer), démontage par la commande propre au projet (`--teardown`, lue dans la ligne « nettoyage worktree » de `.agents/workflow-commands.md`), arrêt si des fichiers d'un autre propriétaire restent (créés par un conteneur : la commande de démontage doit les rendre), retrait du worktree, suppression de la branche locale puis distante. `--dry-run` décrit sans rien faire. L'agent simule, clôture, puis retire les résidus hors dépôt (captures d'outil, onglets, dossiers temporaires qu'il a créés).
+
+**Exemple** : `/cloturer-recette aide-helpkit`. L'agent lit la commande de démontage du projet, lance la simulation (démontage, worktree `../projet-aide-helpkit`, branche locale, branche sur `origin`), clôture, supprime le dossier de captures de l'outil de navigation et ses scripts temporaires, puis rapporte ce qui est parti et le chemin du dossier de livraison, gardé.
+
 ---
 
 ## 6. Aide-mémoire
@@ -461,5 +473,6 @@ SOCLE (consult-workflow)            index.md · agent-workflow.md · agent-build
 | Recetter une feature livrée (fiche + seeder) | `/recette [feature ou dossier]` |
 | Faire jouer la recette par l'agent (PDF pour la cliente) | `/recette-navigateur [feature]` |
 | Expliquer une feature livrée à la cliente (note PDF) | `/spec-pdf-feature [feature]` |
+| Jeter une recette livrée (worktree, branche, environnement) | `/cloturer-recette [feature]`, depuis le checkout principal |
 | Auditer le kit (agnostisme, neutralité) | `workflow-kit verify` |
 | Créer un nouveau pack techno | copier `packs/_blank/`, remplir, voir `packs/_schema.md` |
