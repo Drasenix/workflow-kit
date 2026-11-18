@@ -79,7 +79,7 @@ Dans le dossier de livraison :
    - `recette-<feature>.pdf` ; `sources/scenarios.json` reste dans le dossier de livraison : il régénère le PDF.
 4. **Fiche** : remplir son tableau `## Constats` (OK / KO + numéro de capture) sur la branche `recette/<feature>` ; ancien format sans tableau : l'ajouter en fin de fiche. C'est le seul fichier du dépôt touché.
 5. **Rapport** : synthèse OK / KO / non joués ; chaque KO en contexte → problème → capture ; restaurations faites et `git status` ; chemin du dossier de livraison.
-6. **Suite** : proposer `/spec-pdf-feature <feature>` pour la note de synthèse et la page d'accueil du dossier client (même dossier de livraison).
+6. **Suite** : proposer `/spec-pdf-feature <feature>` pour la note de synthèse et la page d'accueil du dossier client (même dossier de livraison) ; une fois la recette close (plus de rejeu prévu), `/cloturer-recette <feature>` jette le worktree, son environnement et la branche de recette.
 
 ## Le PDF de recette
 

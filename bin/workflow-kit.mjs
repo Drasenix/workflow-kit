@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 import { checkFiles, checkMeta } from '../lib/check.mjs';
 import { projectRoot } from '../lib/check-meta.mjs';
+import { cloturerRecette } from '../lib/cloturer.mjs';
 import { checkCompaction, compactFeature } from '../lib/compact.mjs';
 import { derive, parseList, printDerive } from '../lib/derive.mjs';
 import { init } from '../lib/init.mjs';
@@ -28,6 +29,11 @@ const HELP = `workflow-kit <commande> [options]
                      --check : controle le resultat ; --dry-run : decrit sans ecrire
   worktree           Prepare un worktree git (opencode, git worktree add, Claude Code) : liens vers le kit et .opencode
                      du checkout principal, fichiers generes de .claude/ copies (lance depuis le worktree, ou --target)
+  cloturer-recette <feature|recette/feature>  Cloture une branche de recette (skill cloturer-recette) : demontage de
+                     l'environnement du worktree, retrait du worktree, suppression de la branche locale et sur origin.
+                     Lance depuis le checkout principal. --teardown <commande> : demontage propre au projet, lance dans
+                     le worktree ; --dry-run : decrit sans rien faire ; --force : passe outre un worktree non propre ou
+                     des commits non pousses (perdus)
 
 Options communes
   --target <dir>        Projet cible (defaut : cwd)
@@ -56,6 +62,7 @@ const { values, positionals } = parseArgs({
     regles: { type: 'string', multiple: true },
     fichiers: { type: 'string', multiple: true },
     auteur: { type: 'string', multiple: true },
+    teardown: { type: 'string' },
     help: { type: 'boolean', short: 'h', default: false },
   },
 });
@@ -94,6 +101,8 @@ try {
     process.exitCode = values.check ? checkCompaction({ file }) : compactFeature({ file, dryRun: values['dry-run'] });
   } else if (command === 'worktree') {
     process.exitCode = prepareWorktree({ target: values.target || process.cwd() });
+  } else if (command === 'cloturer-recette') {
+    process.exitCode = cloturerRecette({ target: values.target || process.cwd(), branche: positionals[1], teardown: values.teardown, dryRun: values['dry-run'], force: values.force });
   } else {
     console.error(`Commande inconnue : ${command}\n\n${HELP}`);
     process.exitCode = 2;
