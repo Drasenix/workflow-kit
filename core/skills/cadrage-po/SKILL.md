@@ -93,6 +93,14 @@ Format standard d'une question :
 
 **Principe** : on n'invente rien, on part de l'existant. Avant de chercher la moindre Q, l'agent `@doc` dresse l'inventaire de ce qui est **déjà décidé** sur le sujet : entrées `SP-*` en vigueur de la spec parallèle (elles priment), passages de la spec officielle sans ambiguïté, termes du glossaire. Le résultat est recopié dans `SPECS.md` § 3 (règles consolidées), chaque règle avec sa référence (`SP-*` ou page/ligne). C'est la base contre laquelle toute Q est filtrée.
 
+### Constats vérifiés (une seule exploration du code)
+
+Le comportement actuel de l'application est établi **une fois**, à l'état des lieux (`SPECS.md` § 5), par `@explorateur` : une liste de **constats vérifiés**, chacun avec sa référence `fichier:ligne` et, pour toute action, le **chemin réel dans l'interface** (menus, conditions d'affichage) : possible par l'interface, possible seulement par l'adresse ou une page restée ouverte, ou impossible.
+
+- Les contextes des Q et de la fiche ne citent **que** ces constats : les vérifier revient à comparer deux textes, sans relire le code.
+- Un fait nouveau dont une Q a besoin → **une question ciblée** à `@explorateur`, ajoutée aux constats ; jamais un contrôle complet de la fiche.
+- Une Q dont la prémisse tombe est retirée ou passée en constat (§ 5).
+
 ### Filtre des Q par `@doc`
 
 Toute Q **créée ou modifiée** — par une lentille, la revue croisée, un second regard, un retour de l'utilisateur ou une reformulation — est confrontée à l'inventaire par `@doc` avant d'entrer en § 6 :
@@ -115,7 +123,7 @@ Toute Q **créée ou modifiée** — par une lentille, la revue croisée, un sec
 
 La liste est « Done » quand **l'inventaire est fait et toutes les lentilles ont été appliquées** :
 
-0. **Inventaire des règles en vigueur** fait par `@doc` et recopié en § 3 ; chaque Q passée par le filtre.
+0. **Inventaire des règles en vigueur** fait par `@doc` et recopié en § 3 ; **constats vérifiés** établis une fois par `@explorateur` en § 5 ; chaque Q passée par le filtre.
 1. **CRUD × entités** balayé — chaque case est une Q **ou** un « hors scope » explicite.
 2. **Marqueurs d'ambiguïté** de la spec scannés.
 3. **Diff spec ↔ code** fait (les 2 sens).
@@ -123,10 +131,11 @@ La liste est « Done » quand **l'inventaire est fait et toutes les lentilles on
 5. **Frontières** passées en revue.
 6. **Chaque US** a un GWT écrivable.
 7. **Résiduels** listés (Q `[INCONNU]` + décisions de conception).
-8. **Contrôle avant envoi** de la fiche de réunion : un dernier passage de `@doc` sur la liste confirme qu'aucune Q n'est déjà tranchée et qu'aucune contradiction avec une `SP-*` n'est passée sous silence.
-9. **Contextes vérifiés contre le code et les écrans** avant l'envoi : `@explorateur` confirme chaque affirmation sur le comportement actuel (« l’application fait… », « le gestionnaire peut… ») — pour toute action, le **chemin réel dans l'interface** (menus, conditions d'affichage), pas seulement le service : possible par l'interface, possible seulement par l'adresse ou une page restée ouverte, ou impossible. Une Q dont la prémisse tombe est retirée ou passée en constat (§ 5).
+8. **Contrôle avant envoi** de la fiche de réunion, en **un passage** :
+   - `@doc` sur les règles : aucune Q déjà tranchée, aucune décision attribuée à la mauvaise personne (cliente / utilisateur), aucune contradiction avec une `SP-*` ou la spec passée sous silence, aucune proposition présentée comme la spec ;
+   - les contextes comparés aux constats vérifiés (§ 5), sans relire le code.
 
-Les contrôles 8 et 9 se répètent sur les **seules Q modifiées** par leurs corrections, jusqu'à un passage sans correction. Une correction proposée par un contrôle se reprend telle quelle : la reformuler réintroduit des erreurs.
+   **Seuil** : seuls bloquent l'envoi une Q déjà tranchée, une décision mal attribuée, une contradiction tue, un fait faux qui ferait réagir la cliente. Les nuances (libellé exact, détail technique, destinataire secondaire) sont tolérées : la réunion sert aussi à ça. **Au plus un repassage**, sur les seuls points bloquants corrigés. Une correction proposée par un contrôle se reprend telle quelle : la reformuler réintroduit des erreurs.
 
 ### Filet de sécurité
 
@@ -135,7 +144,7 @@ Les contrôles 8 et 9 se répètent sur les **seules Q modifiées** par leurs co
 
 ### Répartition skill / chantier
 
-- **Skill** (ici) : la **méthode** (inventaire et filtre `@doc`, lentilles A–G, DoD) — générique.
+- **Skill** (ici) : la **méthode** (inventaire et filtre `@doc`, constats vérifiés, lentilles A–G, DoD) — générique.
 - **SPECS du chantier** : **l'instance** — la grille CRUD × entités *du domaine*, avec l'état (balayé / Q identifiée / hors scope).
 
 ## Flux
