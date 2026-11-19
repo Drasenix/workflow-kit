@@ -70,7 +70,7 @@ Format standard d'une question :
   - *Trou*          : ce qui est ambigu / manquant
   - *État des lieux*: contradiction spec ⚔️, ou écart spec ↔ code
   - *Décision*      : la règle retenue (quand tranchée)
-  (+ *Exemple* / *Proposition* / *Écart spec* selon le cas)
+  (+ *Déjà tranché* / *Exemple* / *Proposition* / *Écart spec* selon le cas)
 ```
 
 **Regroupement** : un sommaire en tête de § 6 classe les Q par **étape du cycle de vie**, tout en gardant la liste dans l'ordre numérique.
@@ -89,6 +89,18 @@ Format standard d'une question :
 
 **Constat de base** : garantir l'**exhaustivité** de la liste des Q est **impossible** (exigences incomplètes par nature, inconnues inconnues). Le DoD ne peut donc pas être « on a toutes les Q » — il porte sur **la méthode** : « on a appliqué toutes les lentilles ».
 
+### Inventaire des règles en vigueur (avant toute Q)
+
+**Principe** : on n'invente rien, on part de l'existant. Avant de chercher la moindre Q, l'agent `@doc` dresse l'inventaire de ce qui est **déjà décidé** sur le sujet : entrées `SP-*` en vigueur de la spec parallèle (elles priment), passages de la spec officielle sans ambiguïté, termes du glossaire. Le résultat est recopié dans `SPECS.md` § 3 (règles consolidées), chaque règle avec sa référence (`SP-*` ou page/ligne). C'est la base contre laquelle toute Q est filtrée.
+
+### Filtre des Q par `@doc`
+
+Toute Q **créée ou modifiée** — par une lentille, la revue croisée, un second regard, un retour de l'utilisateur ou une reformulation — est confrontée à l'inventaire par `@doc` avant d'entrer en § 6 :
+
+- **déjà tranchée** → pas de Q : elle passe en règle (§ 3) ou, si c'est un écart du code, en correction (§ 5) ;
+- **en partie tranchée** → la Q ne porte que sur la part ouverte, avec une ligne *Déjà tranché* (référence) ;
+- **proposition contraire à une `SP-*` en vigueur** → interdite, sauf si elle le dit explicitement : « Revient sur `SP-xx` (décision du …) ».
+
 ### Lentilles de détection (par ordre de rendement)
 
 - **A. Grille CRUD × entités** — pour chaque entité du domaine, balayer Créer / Lire / Modifier / Supprimer. Chaque case non spécifiée = Q potentielle. *(rendement élevé : révèle les suppressions/modifications oubliées)*
@@ -101,8 +113,9 @@ Format standard d'une question :
 
 ### DoD de la liste des Q (critères de complétude)
 
-La liste est « Done » quand **toutes les lentilles ont été appliquées** :
+La liste est « Done » quand **l'inventaire est fait et toutes les lentilles ont été appliquées** :
 
+0. **Inventaire des règles en vigueur** fait par `@doc` et recopié en § 3 ; chaque Q passée par le filtre.
 1. **CRUD × entités** balayé — chaque case est une Q **ou** un « hors scope » explicite.
 2. **Marqueurs d'ambiguïté** de la spec scannés.
 3. **Diff spec ↔ code** fait (les 2 sens).
@@ -110,6 +123,7 @@ La liste est « Done » quand **toutes les lentilles ont été appliquées** :
 5. **Frontières** passées en revue.
 6. **Chaque US** a un GWT écrivable.
 7. **Résiduels** listés (Q `[INCONNU]` + décisions de conception).
+8. **Contrôle avant envoi** de la fiche de réunion : un dernier passage de `@doc` sur la liste confirme qu'aucune Q n'est déjà tranchée et qu'aucune contradiction avec une `SP-*` n'est passée sous silence.
 
 ### Filet de sécurité
 
@@ -118,13 +132,14 @@ La liste est « Done » quand **toutes les lentilles ont été appliquées** :
 
 ### Répartition skill / chantier
 
-- **Skill** (ici) : la **méthode** (lentilles A–G + DoD) — générique.
+- **Skill** (ici) : la **méthode** (inventaire et filtre `@doc`, lentilles A–G, DoD) — générique.
 - **SPECS du chantier** : **l'instance** — la grille CRUD × entités *du domaine*, avec l'état (balayé / Q identifiée / hors scope).
 
 ## Flux
 
 ```
-1. Cadrage PO            → SPECS (§3 règles, §4 US, §5 existant, §6 Q)
+1. Cadrage PO            → inventaire @doc des règles en vigueur (§3), puis
+                           SPECS (§4 US, §5 existant, §6 Q filtrées par @doc)
 2. Réunion cliente       → FICHE-REUNION (réponses notées pendant la réunion)
 3. Consignation          → SPECS §6 (tags + décisions) + §8 (SP-* préparés)
 4. Clôture du chantier   → /cloturer-chantier, session Build, sur « go » :
@@ -170,7 +185,8 @@ Lien avec le workflow : `SPECS` + `BACKLOG` = phase PO **amont**, qui se termine
 
 - **Pas de `SP-*` sans « go » explicite** : le report dans la spec parallèle se fait à la clôture, sur « go » (même garde-fou que `.agents/reference-utilitaires.md`).
 - **Rien ne cite le chantier** : aucun fichier hors du dossier du chantier ne renvoie à `SPECS.md`, `BACKLOG.md`, `FICHE-REUNION.md` ou à un numéro Q. Ce qui doit survivre est recopié ou porté par un `SP-*` (vérifié à l'étape 5 de la clôture).
-- **Pas d'invention de règle métier** : en cas d'ambiguïté, `[INCONNU]` + question à la cliente — jamais de supposition.
+- **Pas d'invention de règle métier** : en cas d'ambiguïté, `[INCONNU]` + question à la cliente — jamais de supposition. Une proposition `[HYPOTHESE]` ne contredit jamais une `SP-*` en vigueur sans le dire (« Revient sur `SP-xx` »).
+- **Pas de question déjà répondue** : une règle déjà décidée (`SP-*`, spec sans ambiguïté) ne se repose pas à la cliente ; seule une remise en cause explicite, signalée comme telle, le peut.
 - **`FICHE-REUNION.md` = document brut** : on ne le met pas à jour après la réunion ; la consignation se fait dans `SPECS §6`.
 - **Pas de référence à un chantier vivant** : le patron est auto-portant (templates) ; ne pas lier un chantier particulier comme « exemple » (il dériverait).
 - **Docs de chantier non auto-lus** : `SPECS.md`, `BACKLOG.md`, `FICHE-REUNION.md` ne sont **jamais préchargés** par le workflow (cf. skill `consult-workflow`) — lus uniquement sur demande explicite.

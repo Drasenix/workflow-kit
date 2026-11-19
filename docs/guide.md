@@ -326,7 +326,7 @@ SOCLE (consult-workflow)            index.md · agent-workflow.md · agent-build
 | `BACKLOG.md` | Roadmap des lots de dev + releases | Dev |
 | `FICHE-REUNION.md` | Support de réunion brut | Cliente (réunion) |
 
-**Le cœur** : le **système de questions Q**, avec un cycle de vie `[INCONNU]` → `[HYPOTHESE]` → `[VALIDE]`. Les Q sont détectées via 7 « lentilles » : grille CRUD × entités, marqueurs d'ambiguïté, diff spec↔code, analogies inter-domaines, grille des frontières, test des GWT, revue 3-amigos. Le DoD ne porte pas sur « on a toutes les Q » (impossible) mais sur « on a appliqué toutes les lentilles ».
+**Le cœur** : le **système de questions Q**, avec un cycle de vie `[INCONNU]` → `[HYPOTHESE]` → `[VALIDE]`. Les Q sont détectées via 7 « lentilles » : grille CRUD × entités, marqueurs d'ambiguïté, diff spec↔code, analogies inter-domaines, grille des frontières, test des GWT, revue 3-amigos. Le DoD ne porte pas sur « on a toutes les Q » (impossible) mais sur « on a appliqué toutes les lentilles ». **Avant** toute Q, l'agent `@doc` fait l'inventaire des règles en vigueur (`SP-*`, spec, glossaire), recopié en § 3 ; **chaque** Q créée ou modifiée est filtrée par `@doc` (déjà tranchée → règle ou correction, pas de Q ; en partie → seule la part ouverte ; proposition contraire à une `SP-*` → interdite sauf « Revient sur `SP-xx` ») ; un dernier passage `@doc` précède l'envoi de la fiche.
 
 **Flux** :
 
@@ -342,7 +342,7 @@ SOCLE (consult-workflow)            index.md · agent-workflow.md · agent-build
 
 **Exemple** : « je commence le cadrage du module abonnements ». La skill instancie les 3 templates, pose les questions par lentilles (ex. « que se passe-t-il si on supprime un abonné ? » → Q `[INCONNU]`), les tranche en réunion, puis la clôture les reporte en `SP-*` dans la spec parallèle, crée un fichier `LOT-*` par lot et supprime les trois fichiers du chantier.
 
-**Garde-fous** : pas d'invention de règle (ambigu → `[INCONNU]` + question) ; pas de `SP-*` sans « go » ; `FICHE-REUNION.md` reste brut (la consignation se fait dans `SPECS §6`) ; les docs de chantier ne sont **jamais** préchargés, sont temporaires (supprimés à la clôture) et ne sont jamais cités hors de leur dossier ; le raffineur ne démarre aucun lot d'un chantier non clos.
+**Garde-fous** : pas d'invention de règle (ambigu → `[INCONNU]` + question) ; pas de question déjà répondue par une `SP-*` ou la spec ; pas de `SP-*` sans « go » ; `FICHE-REUNION.md` reste brut (la consignation se fait dans `SPECS §6`) ; les docs de chantier ne sont **jamais** préchargés, sont temporaires (supprimés à la clôture) et ne sont jamais cités hors de leur dossier ; le raffineur ne démarre aucun lot d'un chantier non clos.
 
 ### 5.3 `analyse-flashback` — diagnostiquer un ticket antidaté
 
