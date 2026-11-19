@@ -124,6 +124,7 @@ La liste est « Done » quand **l'inventaire est fait et toutes les lentilles on
 6. **Chaque US** a un GWT écrivable.
 7. **Résiduels** listés (Q `[INCONNU]` + décisions de conception).
 8. **Contrôle avant envoi** de la fiche de réunion : un dernier passage de `@doc` sur la liste confirme qu'aucune Q n'est déjà tranchée et qu'aucune contradiction avec une `SP-*` n'est passée sous silence.
+9. **Contextes vérifiés contre le code et les écrans** avant l'envoi : `@explorateur` confirme chaque affirmation sur le comportement actuel (« l’application fait… », « le gestionnaire peut… ») — pour toute action, le **chemin réel dans l'interface** (menus, conditions d'affichage), pas seulement le service : possible par l'interface, possible seulement par l'adresse ou une page restée ouverte, ou impossible. Une Q dont la prémisse tombe est retirée ou passée en constat (§ 5).
 
 ### Filet de sécurité
 
