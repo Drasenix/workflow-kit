@@ -50,12 +50,12 @@ Les fichiers meta du projet sont la mémoire des agents d'une feature à l'autre
    
    La décision passe **d'abord** au Registre (`workflow-kit/core/agent-workflow.md` § « Le Registre d'abord ») — une ligne par décision métier, une ligne pour le récapitulatif technique.
 3. **Tracer** — une décision d'écriture devient une ligne ⬜ de `## Conventions (fichiers-rôles)` ; la puce d'origine est marquée `→ ✅ …` ou `→ ⛔ <raison>`.
-4. **Écrire** — le Build écrit, **après accord explicite** (le mot « go », « oui », « ok » ou « ajoute » apparaît dans la réponse ; pour le technique, le go sur le récapitulatif de la pause 5 vaut accord pour toutes les lignes non contestées), au plus tard à l'étape 6, et passe la ligne à ✅. Une entrée de `.agents/reference-utilitaires.md` s'écrit au gabarit de `.agents/ecrire-un-utilitaire.md` (ligne d'index comprise), puis `node workflow-kit/bin/workflow-kit.mjs check-meta --utilitaires` jusqu'à `[ok]`.
+4. **Écrire** — le Build écrit, **après accord explicite** (le mot « go », « oui », « ok » ou « ajoute » apparaît dans la réponse ; pour le technique, le go sur le récapitulatif de la pause 5 vaut accord pour toutes les lignes non contestées), au plus tard à l'étape 6, et passe la ligne à ✅. Une entrée de `.agents/reference-utilitaires.md` s'écrit au gabarit de `.agents/ecrire-un-utilitaire.md`, puis `node workflow-kit/bin/workflow-kit.mjs check-meta --utilitaires` jusqu'à `[ok]`.
 5. **Contrôler** — le Build lance le contrôle de livraison (skill `controle-livraison` (`workflow-kit/core/skills/controle-livraison/SKILL.md`)) : à la fin de l'étape 1 (avant la pause 1), aux jalons 1→2 et 6→7, **avant de proposer tout commit** qui contient un fichier de feature, et après chaque backtrack. Il refuse toute trace non tranchée ; un contrôle KO se règle avec l'utilisateur selon la procédure de la skill, jamais en contournant.
 
 **Règle de cohérence** : toute feature qui **établit ou modifie une convention** met à jour le fichier-rôle correspondant **dans la même feature** ; ses références restent **valides** (aucun chemin mort, casse comprise) : `node workflow-kit/bin/workflow-kit.mjs check-meta --refs`, lancé par `@review` et inclus dans le contrôle de livraison.
 
-**Nouvel utilitaire** : avant d'écrire du code (étapes 3 et 4), `.agents/reference-utilitaires.md` est consulté par lecture ciblée (index en tête, puis blocs) ; une méthode existante qui couvre le besoin est réutilisée, jamais dupliquée, et une source unique (ligne « Ne pas réécrire ») n'est jamais contournée.
+**Nouvel utilitaire** : avant d'écrire du code (étapes 3 et 4), `.agents/reference-utilitaires.md` est consulté par lecture ciblée (recherche du nom ou des mots du besoin, puis le seul bloc trouvé) ; une méthode existante qui couvre le besoin est réutilisée, jamais dupliquée, et une source unique (ligne « Ne pas réécrire ») n'est jamais contournée.
 
 ## Spec parallèle (garde-fou)
 
@@ -81,7 +81,7 @@ Le lazy-loading est piloté par la skill `consult-workflow` (`workflow-kit/core/
 Chercher avant de lire en entier : les fichiers de feature, `DONE-*` non compactés et fichiers meta sont volumineux.
 
 - **Fichier de feature actif** (`.agents/feature/<slug>.md`) : sommaire (`grep -n '^## \|^### '`), puis `## Progression`, `## Registre des décisions` et la section de l'étape en cours. Jamais tout le fichier pour une décision locale.
-- **Fichiers meta** : `.agents/reference-utilitaires.md` : index en tête (une ligne par entrée), puis les seuls blocs `### …` retenus, grep des mots-clés en complément ; `.agents/domain-glossary.md` : sommaire (`grep -n '^## \|^### '`), grep des mots-clés, puis lecture des seuls blocs retenus. `.agents/specs/spec-parallele.md` : index, puis entrées.
+- **Fichiers meta** : `.agents/reference-utilitaires.md` : grep du nom (`` ### `Nom` ``) ou des mots du besoin, puis lecture du seul bloc `### …` trouvé (le grep donne la ligne) ; `.agents/domain-glossary.md` : sommaire (`grep -n '^## \|^### '`), grep des mots-clés, puis lecture des seuls blocs retenus. `.agents/specs/spec-parallele.md` : index, puis entrées.
 - Le `path` du Grep = **dossier**, jamais un fichier (l'outil élargit au parent). Pour cibler un fichier précis → filtre de fichiers de l'outil (`include` sous opencode, `glob` sous Claude Code) avec le nom (`"DONE-xxx.md"`).
 - Pattern le plus **discriminant** d'abord : cibler la section (`^## Résumé métier`, `### SP-XXX`) plutôt qu'un mot-clé fréquent.
 - Ordre de lecture d'une `DONE-*` : `## Résumé métier` (tête) → grep de section (fichier compacté : `## Registre des décisions`, `## Clé de lecture des scénarios`, `## Décisions & Justifications`, `## Arbre de flux`, `## Leçons de réalisation`, `## Vigilances`, `## Dette connue`) → lecture à l'offset.

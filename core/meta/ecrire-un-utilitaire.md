@@ -1,6 +1,6 @@
 # Écrire une entrée de la référence des utilitaires
 
-> Tenu par workflow-kit (core/meta/ecrire-un-utilitaire.md). Dans un projet, ce fichier est une **copie** que la synchronisation du kit écrase : ne pas le modifier là. C'est le seul endroit qui définit le format de `.agents/reference-utilitaires.md` : ce qui s'y référence, le gabarit d'une entrée, l'index, les contrôles. **Qui écrit, et quand** : le Build, sur accord de l'utilisateur (pause 5 du workflow, ou commit d'un changement fait hors du workflow).
+> Tenu par workflow-kit (core/meta/ecrire-un-utilitaire.md). Dans un projet, ce fichier est une **copie** que la synchronisation du kit écrase : ne pas le modifier là. C'est le seul endroit qui définit le format de `.agents/reference-utilitaires.md` : ce qui s'y référence, le gabarit d'une entrée, la lecture, les contrôles. **Qui écrit, et quand** : le Build, sur accord de l'utilisateur (pause 5 du workflow, ou commit d'un changement fait hors du workflow).
 
 ## À quoi sert la référence
 
@@ -49,23 +49,11 @@ Une méthode privée n'y entre que si elle est la source unique d'une règle.
 - **Référence** : la règle `SP-…` qui fixe le comportement, et la feature d'origine (une seule, sans date).
 - **Longueur** : 300 caractères au plus par ligne. Au-delà, l'entrée porte de l'implémentation ou une règle métier : la déplacer.
 
-## Index
-
-En tête du fichier, une section « Index » (titre de niveau 2) : un tableau d'une ligne par entrée, dans l'ordre du fichier.
-
-```markdown
-## Index
-
-| Entrée | Domaine | Rôle |
-|---|---|---|
-| `<Nom>` | <Domaine> | <rôle en une ligne> |
-```
-
-La première cellule reprend **exactement** le titre de l'entrée, sans `### `. Le domaine est le titre `## ` qui contient l'entrée.
-
 ## Lire la référence
 
-L'index d'abord, puis les seuls blocs `### ` utiles. Une recherche par mot-clé complète l'index sans le remplacer : elle ne trouve que ce qu'on sait déjà nommer.
+Jamais en entier, et sans index : une recherche donne déjà les numéros de ligne, toujours justes.
+- **Avant de toucher une classe** : rechercher son titre (`` ### `<Nom>` ``), puis lire le seul bloc qui commence à cette ligne.
+- **Avant d'écrire une méthode** : rechercher les mots du besoin (« prorata », « restant dû »…), puis lire les blocs trouvés. Les mots portés par `Rôle` et les noms de méthodes sont ceux que la recherche trouve : les écrire pour être trouvés.
 
 ## Déclarer le format
 
@@ -85,10 +73,9 @@ Après toute écriture dans la référence, **et** après avoir renommé ou supp
 node .agents/verifier-utilitaires.mjs
 ```
 
-Node seul, sans le kit, toute techno. Le kit lance le même contrôle (`check-meta --utilitaires`, et le contrôle de livraison). Six vérifications :
-1. l'index et les entrées portent les mêmes titres, sans doublon ;
-2. chaque entrée a un titre entre backticks et porte `Fichier` et `Rôle` ;
-3. chaque fichier cité par `Fichier` existe, casse comprise ;
-4. chaque méthode en tête d'une puce de `Méthodes` est déclarée dans un fichier de l'entrée ; chaque `` `<Nom>::<methode>()` `` cité, dont `<Nom>` est une entrée, est déclaré dans un de ses fichiers ;
-5. chaque `SP-…` cité existe dans la spec parallèle ;
-6. ni numéro de ligne, ni date, ni « accord utilisateur », et 300 caractères au plus par ligne.
+Node seul, sans le kit, toute techno. Le kit lance le même contrôle (`check-meta --utilitaires`, et le contrôle de livraison). Cinq vérifications :
+1. chaque entrée a un titre entre backticks, sans doublon, et porte `Fichier` et `Rôle` ;
+2. chaque fichier cité par `Fichier` existe, casse comprise ;
+3. chaque méthode en tête d'une puce de `Méthodes` est déclarée dans un fichier de l'entrée ; chaque `` `<Nom>::<methode>()` `` cité, dont `<Nom>` est une entrée, est déclaré dans un de ses fichiers ;
+4. chaque `SP-…` cité existe dans la spec parallèle ;
+5. ni numéro de ligne, ni date, ni « accord utilisateur », et 300 caractères au plus par ligne.

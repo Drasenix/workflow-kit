@@ -47,7 +47,7 @@ L'agent principal (raffineur ou Build) lit **toujours** `workflow-kit/core/index
 | 6 (nuances) | Réalisation | Registre, ADR, puces `[À CONSIGNER]`/`[AMENDE SP-*]`, Conventions, Nuances | — | — |
 | 7 (DONE) | Réalisation | Progression + contrôle de livraison | — | — |
 
-> **Lecture ciblée** (tous) : `.agents/reference-utilitaires.md` = index en tête → blocs `### …` retenus (grep des mots-clés en complément) ; `.agents/domain-glossary.md` = sommaire `grep -n '^## \|^### '` → grep des mots-clés → blocs retenus ; `.agents/specs/spec-parallele.md` = index → entrées. Jamais en entier.
+> **Lecture ciblée** (tous) : `.agents/reference-utilitaires.md` = grep du nom ou des mots du besoin → bloc `### …` trouvé ; `.agents/domain-glossary.md` = sommaire `grep -n '^## \|^### '` → grep des mots-clés → blocs retenus ; `.agents/specs/spec-parallele.md` = index → entrées. Jamais en entier.
 > `.agents/ui-rules.md` (UI) / `.agents/component-rules.md` (composants/exports) : **selon le périmètre**, auto-évalué par le subagent, jamais préchargés, jamais lus par `@test`.
 
 ## Hors workflow (opt-in / grep uniquement)
