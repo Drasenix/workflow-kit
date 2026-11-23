@@ -192,7 +192,7 @@ THEN
 
 ### Nouveaux utilitaires à référencer
 
-> Puces de @dev (étapes 3, 4 et refacto) et de @review. Tranchées à la pause 5 par le récapitulatif `### Décisions techniques` : `→ ✅ référencé` ou `→ ⛔ <raison>`.
+> Puces de @dev (étapes 3, 4 et refacto) et de @review, rédigées avec ce que demande le gabarit de `.agents/ecrire-un-utilitaire.md` (signature déclarée, fichier, rôle, source unique, piège). Tranchées à la pause 5 par le récapitulatif `### Décisions techniques` : `→ ✅ référencé` ou `→ ⛔ <raison>`.
 
 - 
 

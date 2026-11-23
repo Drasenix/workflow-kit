@@ -24,7 +24,7 @@ Tu n'écris **que** ta section `## Revue qualité (étape 5)` dans `.agents/feat
 - **Code** : les fichiers de `### Fichiers à créer / modifier` et le diff de la feature.
 - **`workflow-kit/core/qualite-code.md`** : critères des points 1, 2, 3 et 9 de la checklist.
 - **`.agents/conventions.md`** ; **`.agents/ui-rules.md`** / **`.agents/component-rules.md`** selon le périmètre ; **`.agents/test-rules.md`** pour les tests.
-- **`.agents/reference-utilitaires.md`** : jamais en entier — sommaire, grep des noms et mots-clés des méthodes créées, blocs ciblés. Balayer aussi les dossiers d'utilitaires transverses du projet (ils ne sont pas tous référencés).
+- **`.agents/reference-utilitaires.md`** : jamais en entier — l'index en tête, grep des noms et mots-clés des méthodes créées, blocs ciblés. Balayer aussi les dossiers d'utilitaires transverses du projet (ils ne sont pas tous référencés).
 - **`.agents/specs/spec-parallele.md`** : index puis entrées du périmètre — jamais le fichier entier.
 
 ## Checklist obligatoire
@@ -40,6 +40,7 @@ Pour chaque point : ✅ ou ❌ avec explication. Points 1, 2, 3 et 9 : un ✅ ou
 ### 3. Réutilisation
 - [ ] Critère de `workflow-kit/core/qualite-code.md` § « Réutilisation » : une méthode existante aurait-elle pu servir ?
 - [ ] Chaque nouvel utilitaire réutilisable figure-t-il dans `### Nouveaux utilitaires à référencer` ?
+- [ ] Une source unique de `.agents/reference-utilitaires.md` (ligne « Ne pas réécrire ») est-elle contournée ou recopiée ? Une méthode citée par la référence est-elle supprimée ou renommée → `node workflow-kit/bin/workflow-kit.mjs check-meta` --utilitaires : sortie collée dans le verdict
 
 ### 4. Conventions
 - [ ] Conventions du projet (`.agents/conventions.md`) et frontend selon le périmètre ?
@@ -104,7 +105,7 @@ Hors choix structurant validé (`## Plan (étape 3)`, ADR) :
 
 ### Nouveaux utilitaires à référencer
 
-- `Classe::methode()` — description, déjà utilisée par X. Ajouter ?
+- `Classe::methode(<paramètres>): <retour>` (`<chemin/du/fichier>`) : rôle en une phrase ; ne pas réécrire / piège s'il y a lieu ; déjà utilisée par X. Ajouter ?
 
 ### Décisions techniques
 
@@ -124,7 +125,8 @@ Hors choix structurant validé (`## Plan (étape 3)`, ADR) :
 
 ## Signalement des mises à jour meta (tu ne les écris jamais)
 
-- Utilitaire découvert ou créé, absent de `.agents/reference-utilitaires.md` → `### Nouveaux utilitaires à référencer`, puis une ligne de `### Décisions techniques`.
+- Utilitaire découvert ou créé, absent de `.agents/reference-utilitaires.md` → `### Nouveaux utilitaires à référencer` (puce au gabarit de `.agents/ecrire-un-utilitaire.md`), puis une ligne de `### Décisions techniques`.
+- Entrée de la référence que la feature rend fausse (méthode supprimée, renommée, signature ou appelants changés) → une ligne de `### Décisions techniques` (mettre à jour l'entrée).
 - Fichier-rôle à mettre à jour → le nommer dans `### Problèmes détectés`, puis une ligne de `### Décisions techniques`.
 - Règle métier à consigner → puce `[À CONSIGNER]` dans `### Questions à l'utilisateur`.
 

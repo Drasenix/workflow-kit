@@ -20,8 +20,9 @@ const HELP = `workflow-kit <commande> [options]
   sync     Rematerialise les seeds et les adaptateurs .opencode/ .claude/ (apres un pull du kit)
   verify   Audit du kit (agnosticisme, packs, references, round-trip, coherence interne du core, cas du controle)
   check <fichiers...>  Controle d'un fichier de feature (jalons 1->2 et 6->7, avant commit, apres backtrack)
-  check-meta         Fichiers meta du projet : integrite du spec parallele + references mortes
-                     --spec : integrite seule ; --refs : references seules
+  check-meta         Fichiers meta du projet : integrite du spec parallele, format de la reference des utilitaires
+                     (si declare), references mortes ; --spec : integrite seule ; --utilitaires : reference des
+                     utilitaires seule ; --refs : references seules
   derive             Derive de la spec (etape 0 de /raffiner) : commits d'autres auteurs a relire depuis votre dernier passage
                      --regles <SP-…|prefixe> : tests garants de ces regles ; --fichiers <chemins> : ces fichiers ;
                      --auteur <email> : vous (defaut : git config user.email). Informatif, code 0
@@ -59,6 +60,7 @@ const { values, positionals } = parseArgs({
     'dry-run': { type: 'boolean', default: false },
     spec: { type: 'boolean', default: false },
     refs: { type: 'boolean', default: false },
+    utilitaires: { type: 'boolean', default: false },
     regles: { type: 'string', multiple: true },
     fichiers: { type: 'string', multiple: true },
     auteur: { type: 'string', multiple: true },
@@ -86,8 +88,8 @@ try {
   } else if (command === 'check-meta') {
     const root = projectRoot(values.target || process.cwd());
     if (!root) throw new Error('check-meta : aucun dossier .agents/ trouve depuis le dossier courant (ou --target)');
-    const both = !values.spec && !values.refs;
-    process.exitCode = checkMeta(root, { spec: both || values.spec, refs: both || values.refs });
+    const all = !values.spec && !values.refs && !values.utilitaires;
+    process.exitCode = checkMeta(root, { spec: all || values.spec, refs: all || values.refs, utilitaires: all || values.utilitaires });
   } else if (command === 'derive') {
     const root = projectRoot(values.target || process.cwd());
     if (!root) throw new Error('derive : aucun dossier .agents/ trouve depuis le dossier courant (ou --target)');

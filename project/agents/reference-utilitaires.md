@@ -1,30 +1,26 @@
-# Référence : Utilitaires et méthodes réutilisables
+# Référence : utilitaires et méthodes réutilisables
 
-> Méthodes réutilisables du projet : avant d'écrire une nouvelle méthode, vérifier ici si l'équivalent existe déjà.
-> Tenu par le Build, sur accord explicite de l'utilisateur (cf. `workflow-kit/core/agent-build.md` § Fichiers meta).
+> Méthodes réutilisables du projet, et sources uniques à ne jamais réécrire : avant d'écrire une méthode, vérifier ici si l'équivalent existe.
+> Lire l'index d'abord, puis les seuls blocs utiles. Tenu par le Build, sur accord explicite de l'utilisateur (cf. `workflow-kit/core/agent-build.md` § Fichiers meta).
+> **Format** : `.agents/ecrire-un-utilitaire.md`
+
+## Index
+
+| Entrée | Domaine | Rôle |
+|---|---|---|
+| `<Nom>` | <Domaine> | <rôle en une ligne> |
 
 ---
 
-## <Domaine 1>
+## <Domaine>
 
-### <Classe>
-- **Fichier** : `<chemin>`
-- **Type** : Classe statique / Service / Action / Job / Trait
+### `<Nom>`
+- **Fichier** : `<chemin/du/fichier>`
+- **Type** : <facultatif : action, service, modèle, composant…>
+- **Rôle** : <une phrase : ce que fait l'entrée, quand s'en servir>
 - **Méthodes** :
-  - `<methode>(<params>): <return>` : <description>
-- **Utilisé par** : `<Classe>`
-- **Référence** : <ADR / feature / note de sémantique>
-
----
-
-## <Domaine 2>
-
-### <Classe>
-- **Fichier** :
-- **Type** :
-- **Méthodes** :
-- **Utilisé par** :
-
----
-
-> Note : documenter explicitement les entrées à sémantique piégeuse (nom trompeur, comportement contre-intuitif, dualité de statuts) pour éviter les régressions lors d'une réutilisation.
+  - `<methode>(<paramètres>): <retour>` : <ce qu'elle fait, en une phrase>
+- **Ne pas réécrire** : <la règle dont l'entrée est la source unique, s'il y en a une>
+- **Piège** : <ce qui casse si on l'utilise mal, s'il y a lieu>
+- **Utilisé par** : `<Appelant>`
+- **Référence** : `SP-…` · feature `<dossier/slug>`

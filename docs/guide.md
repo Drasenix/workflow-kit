@@ -86,9 +86,9 @@ Une CLI Node (Node ≥ 18, aucune dépendance), `workflow-kit/bin/workflow-kit.m
 - **Nouveau projet** : `init` (interactif si les options manquent).
 - **Mise à jour des seeds et régénération des adaptateurs** : `sync`.
 - **Audit du kit** : `verify`.
-- **Contrôle d'un fichier de feature** : `check <fichier>` ; fichiers meta du projet seuls : `check-meta` (skill `controle-livraison`).
+- **Contrôle d'un fichier de feature** : `check <fichier>` ; fichiers meta du projet seuls : `check-meta` (skill `controle-livraison`) : spec parallèle (`--spec`), référence des utilitaires (`--utilitaires`, si elle déclare le format `.agents/ecrire-un-utilitaire.md` : index, champs, méthodes citées déclarées dans le code, ni numéro de ligne ni historique), références mortes (`--refs`).
 - **Dérive de la spec** (étape 0 de `/raffiner`) : `derive --regles <SP-*> --fichiers <chemins>` liste les commits d'autres auteurs à relire.
-- **Sans le kit** (collaborateur, session cloud) : la synchronisation pose dans le projet des copies autonomes, toujours écrasées, à ne pas modifier : `.agents/specs/verifier-spec.mjs` (contrôle de la spec parallèle, tests cités compris, Node seul, toute techno) et `.agents/specs/ecrire-une-regle.md` (format d'une entrée). `check-meta` signale une copie périmée.
+- **Sans le kit** (collaborateur, session cloud) : la synchronisation pose dans le projet des copies autonomes, toujours écrasées, à ne pas modifier : `.agents/specs/verifier-spec.mjs` (contrôle de la spec parallèle, tests cités compris, Node seul, toute techno) et `.agents/specs/ecrire-une-regle.md` (format d'une entrée) ; `.agents/verifier-utilitaires.mjs` (contrôle de la référence des utilitaires, méthodes citées comprises, Node seul, toute techno) et `.agents/ecrire-un-utilitaire.md` (format d'une entrée, index). `check-meta` signale une copie périmée.
 - **Compaction d'un fichier de feature clos** : `compact <fichier>` (skill `compacter-feature`).
 - **Clôture d'une recette** : `cloturer-recette <feature>` (skill `cloturer-recette`), depuis le checkout principal.
 
