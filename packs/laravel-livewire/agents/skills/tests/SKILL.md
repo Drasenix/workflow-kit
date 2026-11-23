@@ -26,6 +26,17 @@ Config de test (`phpunit.xml`) : SQLite en mémoire, queue `sync`, mail `array`,
 
 - **Runs ciblés des subagents (`@test`, `@dev`)** — `--filter=`, fichier : **sans** `--parallel` (le parallélisme ciblé provoque des incohérences).
 - **Le global, c'est `--parallel`** — réservé au Build, en fin de workflow. Un run global sans filtre **hors** de ce cadre (gate « Progression entièrement ✅ ») est **interdit**.
+- **Sortie complète du global dans un fichier non commité** (dossier temporaire du système), puis lecture de la fin seulement : en cas d'échec, les tests en cause et leurs messages s'y retrouvent sans relancer de global. Jamais de fichier dans le dépôt.
+
+```bash
+# Linux / macOS
+php artisan test --parallel > "${TMPDIR:-/tmp}/test-global.txt" 2>&1; tail -n 40 "${TMPDIR:-/tmp}/test-global.txt"
+```
+
+```powershell
+# Windows (PowerShell)
+php artisan test --parallel *> "$env:TEMP\test-global.txt"; Get-Content "$env:TEMP\test-global.txt" -Tail 40
+```
 
 ## Calibrage des process (`--processes=N`) — méthode, pas valeur figée
 

@@ -18,6 +18,7 @@ description: "Execution des tests : run cible, run global, calibrage, fallback. 
 
 - Runs cibles des subagents : sans parallelisme.
 - Run global : reserve au Build, en fin de workflow.
+- Sortie complete du run global redirigee vers un fichier non commite (dossier temporaire du systeme), puis lecture de la fin seulement : en cas d'echec, les tests en cause s'y retrouvent sans relancer de global.
 
 ## Fallback
 

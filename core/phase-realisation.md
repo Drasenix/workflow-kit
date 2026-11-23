@@ -114,6 +114,7 @@ Le run global (sans filtre) est la **responsabilité exclusive du Build** : **au
 L'utilisateur donne son **"go"**. Le Build exécute alors le global. Un « go refacto » ou un « skip refacto » donné à la pause 5 vaut ce go : pas de nouvelle question (§ « Refacto via backtrack 4→5 »).
 
 - [ ] **Check obligatoire AVANT de lancer le global** : `## Progression` entièrement OK (lignes 0 à 5), sinon **STRICTEMENT INTERDIT**.
+- [ ] **Sortie complète dans un fichier non commité** : le Build redirige toute la sortie du global vers un fichier **hors du suivi git** (dossier temporaire du système, ou chemin ignoré par le projet), puis n'en lit que la fin (résumé, échecs). Jamais un affichage tronqué seul : en cas d'échec, les tests en cause et leurs messages se lisent dans ce fichier, sans relancer de global (le second est réservé à la re-vérification après correction). Commande : `.agents/skills/tests/SKILL.md`.
 - [ ] **Diagnostic** : vert → fin. Rouge → le Build diagnostique (classes en erreur, messages) et fait une **pause utilisateur**
 - [ ] **Décision utilisateur** : retour étape 4 / investigation manuelle / ignorer
 - [ ] **Max 2 globaux** par feature (1 initial, 1 de re-vérification après correction) : le second uniquement si le premier échoue et que l'utilisateur corrige
