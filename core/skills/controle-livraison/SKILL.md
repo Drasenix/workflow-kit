@@ -59,7 +59,7 @@ Un fichier sans `## Progression` (compacté, ancien format) n'est pas contrôlé
 3. **`[KO]`** → ne pas continuer. Pour chaque écart, selon sa nature :
    - **à trancher** (case, tag, utilitaire) : le présenter à l'utilisateur, inscrire sa décision au `## Registre des décisions` **d'abord**, puis marquer la puce `→ ✅ <où>` ou `→ ⛔ <raison>` et, si une écriture est décidée, ajouter la ligne ⬜ dans `## Conventions (fichiers-rôles)` ;
    - **référence morte / intégrité** : corriger le fichier meta (chemin, casse, index ↔ entrée) ; mention volontaire d'un fichier disparu → `<!-- refs:historique -->` ;
-   - **à écrire** (ligne ⬜ des fichiers meta, `SP-*` absent) : l'écriture a déjà été validée → le Build l'écrit (`.agents/reference-utilitaires.md` au gabarit de `.agents/ecrire-un-utilitaire.md` puis `check-meta --utilitaires`, `.agents/domain-glossary.md`, fichier-rôle, `.agents/specs/spec-parallele.md` puis `node workflow-kit/bin/workflow-kit.mjs check-meta --spec`, chacun jusqu'à `[ok]`), puis passe la ligne à ✅ ;
+   - **à écrire** (ligne ⬜ des fichiers meta, `SP-*` absent) : l'écriture a déjà été validée → le Build l'écrit (`.agents/reference-utilitaires.md` au gabarit de `.agents/ecrire-un-utilitaire.md` puis `node .agents/verifier-utilitaires.mjs --sommaire`, `.agents/domain-glossary.md`, fichier-rôle, `.agents/specs/spec-parallele.md` puis `node workflow-kit/bin/workflow-kit.mjs check-meta --spec`, chacun jusqu'à `[ok]`), puis passe la ligne à ✅ ;
    - **structurel** (Progression, statut inconnu, backtrack non tracé) : corriger le tableau ou le Registre ; incohérence réelle → pause utilisateur (`workflow-kit/core/agent-workflow.md` § Incohérence de Progression).
 4. **Relancer** le script jusqu'à `[ok]`.
 

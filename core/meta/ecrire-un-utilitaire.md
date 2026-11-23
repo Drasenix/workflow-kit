@@ -1,6 +1,6 @@
 # Écrire une entrée de la référence des utilitaires
 
-> Tenu par workflow-kit (core/meta/ecrire-un-utilitaire.md). Dans un projet, ce fichier est une **copie** que la synchronisation du kit écrase : ne pas le modifier là. C'est le seul endroit qui définit le format de `.agents/reference-utilitaires.md` : ce qui s'y référence, le gabarit d'une entrée, la lecture, les contrôles. **Qui écrit, et quand** : le Build, sur accord de l'utilisateur (pause 5 du workflow, ou commit d'un changement fait hors du workflow).
+> Tenu par workflow-kit (core/meta/ecrire-un-utilitaire.md). Dans un projet, ce fichier est une **copie** que la synchronisation du kit écrase : ne pas le modifier là. C'est le seul endroit qui définit le format de `.agents/reference-utilitaires.md` : ce qui s'y référence, le gabarit d'une entrée, le sommaire, la lecture, les contrôles. **Qui écrit, et quand** : le Build, sur accord de l'utilisateur (pause 5 du workflow, ou commit d'un changement fait hors du workflow).
 
 ## À quoi sert la référence
 
@@ -43,17 +43,29 @@ Une méthode privée n'y entre que si elle est la source unique d'une règle.
 
 - **Titre** : le nom tel qu'il s'écrit dans le code, entre backticks. Quand une même classe a plusieurs entrées, un qualificatif entre parenthèses les distingue : `` ### `<Nom>` (scopes de requête) ``.
 - **Obligatoires** : `Fichier` (ou `Fichiers`, plusieurs chemins séparés par des virgules) et `Rôle`. Les autres lignes ne s'écrivent que si elles ont un contenu.
+- **Rôle** : une phrase de 120 caractères au plus, avec les mots du besoin (« prorata », « restant dû »…) : c'est la ligne de l'entrée dans le sommaire, la seule qu'un agent lit avant de concevoir. Un agent reconnaît ce qu'il a sous les yeux, pas ce qu'il ne sait pas nommer.
 - **Méthodes** : le nom **déclaré** dans le code, une puce par méthode, signature typée. Un membre qui n'est pas une méthode (propriété, constante, cas d'énumération) s'écrit sans parenthèses. Hors de cette liste, `` `<Nom>::<methode>()` `` ne cite qu'une méthode déclarée, jamais une méthode héritée du framework.
 - **Ne pas réécrire** et **Piège** : les deux lignes que la référence existe pour porter. Ne jamais les perdre en raccourcissant une entrée.
 - **Utilisé par** : les appelants principaux, pas l'inventaire complet.
 - **Référence** : la règle `SP-…` qui fixe le comportement, et la feature d'origine (une seule, sans date).
 - **Longueur** : 300 caractères au plus par ligne. Au-delà, l'entrée porte de l'implémentation ou une règle métier : la déplacer.
 
+## Sommaire
+
+`.agents/reference-utilitaires-sommaire.md` : une ligne par entrée (son titre et son `Rôle`), groupées par domaine. Il est **généré**, jamais écrit à la main :
+
+```bash
+node .agents/verifier-utilitaires.mjs --sommaire
+```
+
+À relancer après toute écriture dans la référence. Le contrôle signale un sommaire absent ou pas à jour.
+
 ## Lire la référence
 
-Jamais en entier, et sans index : une recherche donne déjà les numéros de ligne, toujours justes.
-- **Avant de toucher une classe** : rechercher son titre (`` ### `<Nom>` ``), puis lire le seul bloc qui commence à cette ligne.
-- **Avant d'écrire une méthode** : rechercher les mots du besoin (« prorata », « restant dû »…), puis lire les blocs trouvés. Les mots portés par `Rôle` et les noms de méthodes sont ceux que la recherche trouve : les écrire pour être trouvés.
+- **Avant de concevoir** (plan, étape 3) **ou de juger une duplication** (revue, étape 5) : lire le **sommaire en entier**. C'est la mémoire de ce qui existe : un agent ne trouve par recherche que ce qu'il sait déjà nommer, mais il reconnaît ce qu'il a sous les yeux.
+- **Puis**, pour chaque utilitaire retenu : rechercher son titre dans la référence (`` ### `<Nom>` ``) et lire le seul bloc qui commence à cette ligne.
+- **Avant de toucher une classe** : rechercher son titre dans la référence, même chose.
+- **La référence ne se lit jamais en entier.**
 
 ## Déclarer le format
 
@@ -70,12 +82,13 @@ Sans cette ligne (fichier pas encore migré), les contrôles ne s'appliquent pas
 Après toute écriture dans la référence, **et** après avoir renommé ou supprimé une méthode qu'elle cite :
 
 ```bash
-node .agents/verifier-utilitaires.mjs
+node .agents/verifier-utilitaires.mjs --sommaire
 ```
 
-Node seul, sans le kit, toute techno. Le kit lance le même contrôle (`check-meta --utilitaires`, et le contrôle de livraison). Cinq vérifications :
-1. chaque entrée a un titre entre backticks, sans doublon, et porte `Fichier` et `Rôle` ;
+Node seul, sans le kit, toute techno. Le kit lance le même contrôle (`check-meta --utilitaires`, et le contrôle de livraison). Six vérifications :
+1. chaque entrée a un titre entre backticks, sans doublon, et porte `Fichier` et `Rôle`, de 120 caractères au plus ;
 2. chaque fichier cité par `Fichier` existe, casse comprise ;
 3. chaque méthode en tête d'une puce de `Méthodes` est déclarée dans un fichier de l'entrée ; chaque `` `<Nom>::<methode>()` `` cité, dont `<Nom>` est une entrée, est déclaré dans un de ses fichiers ;
 4. chaque `SP-…` cité existe dans la spec parallèle ;
-5. ni numéro de ligne, ni date, ni « accord utilisateur », et 300 caractères au plus par ligne.
+5. ni numéro de ligne, ni date, ni « accord utilisateur », et 300 caractères au plus par ligne ;
+6. le sommaire existe et correspond à la référence.

@@ -45,7 +45,7 @@ Si la session a déjà mené une phase, la commande de l'autre phase se lance da
 
 - `workflow-kit/core/agents/*.md` : prompts auto-injectés à la délégation (seule exception : `raffineur.md`, lu par la skill `raffiner` quand l'agent principal en endosse le rôle)
 - Les règles de la phase **qui n'est pas celle de la session** (`phase-raffinement.md` en réalisation, `phase-realisation.md` en raffinement)
-- `.agents/reference-utilitaires.md`, `.agents/domain-glossary.md`, `.agents/specs/spec-parallele.md` **en entier** : lecture ciblée seulement (sommaire / index, puis blocs), au moment où une étape en a besoin
+- `.agents/reference-utilitaires.md`, `.agents/domain-glossary.md`, `.agents/specs/spec-parallele.md` **en entier** : lecture ciblée seulement (sommaire / index, puis blocs), au moment où une étape en a besoin ; `.agents/reference-utilitaires-sommaire.md` est fait pour être lu en entier, aux étapes 3 et 5
 - `.agents/ui-rules.md` / `.agents/component-rules.md` : réservés aux subagents, selon le périmètre
 - Templates du pack : copiés par `@test` / `@dev`
 - Fichiers clos ou hors feature : `DONE-*.md`, `ABANDON-*.md`, `IRREPRODUCTIBLE-*.md`, `PLAN-*.md`, `REFACTO-*.md`

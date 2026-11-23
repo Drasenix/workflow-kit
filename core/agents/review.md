@@ -24,7 +24,7 @@ Tu n'écris **que** ta section `## Revue qualité (étape 5)` dans `.agents/feat
 - **Code** : les fichiers de `### Fichiers à créer / modifier` et le diff de la feature.
 - **`workflow-kit/core/qualite-code.md`** : critères des points 1, 2, 3 et 9 de la checklist.
 - **`.agents/conventions.md`** ; **`.agents/ui-rules.md`** / **`.agents/component-rules.md`** selon le périmètre ; **`.agents/test-rules.md`** pour les tests.
-- **`.agents/reference-utilitaires.md`** : jamais en entier — grep des noms et mots-clés des méthodes créées, blocs ciblés. Balayer aussi les dossiers d'utilitaires transverses du projet (ils ne sont pas tous référencés).
+- **`.agents/reference-utilitaires-sommaire.md`** : **en entier**, puis comparer chaque méthode créée par la feature à ce qui existe. Dans `.agents/reference-utilitaires.md` (jamais en entier) : les seuls blocs des utilitaires concernés (grep du titre). Balayer aussi les dossiers d'utilitaires transverses du projet (ils ne sont pas tous référencés).
 - **`.agents/specs/spec-parallele.md`** : index puis entrées du périmètre — jamais le fichier entier.
 
 ## Checklist obligatoire

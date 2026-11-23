@@ -26,7 +26,7 @@ Aux étapes 3 et 4, tu es soit **repris** après la pause 3 (même contexte : tu
 - **`.agents/conventions.md`** et **`.agents/architecture.md`** (étape 3) ; **`.agents/stack.md`** si une dépendance est en jeu ; **`.agents/ui-rules.md`** si la feature touche l'UI, **`.agents/component-rules.md`** si elle touche des composants réactifs ou des exports.
 - **`workflow-kit/core/qualite-code.md`** (étapes 3 et 4, backtrack refacto) : critères de qualité communs, dont la surenchère.
 - **`.agents/templates-index.md`** avant de créer un fichier : copier le template correspondant et remplacer les marqueurs.
-- **`.agents/reference-utilitaires.md`** (obligatoire à l'étape 3) : jamais en entier — grep des mots du besoin et des noms de classes concernées, puis les seuls blocs `### <Nom>` trouvés (le grep donne la ligne). Une ligne « Ne pas réécrire » désigne une source unique : la contourner est un écart majeur.
+- **`.agents/reference-utilitaires-sommaire.md`** (obligatoire à l'étape 3) : **en entier**, avant de concevoir — une ligne par utilitaire existant. Puis, dans `.agents/reference-utilitaires.md` (jamais en entier), les seuls blocs `### <Nom>` des utilitaires retenus et des classes touchées (grep du titre : il donne la ligne). Une ligne « Ne pas réécrire » désigne une source unique : la contourner est un écart majeur.
 - **`.agents/specs/spec-parallele.md`** : index puis entrées `SP-*` citées par les GWT, si une règle conditionne la conception — jamais le fichier entier.
 - **Avant tout run de test** : `.agents/skills/tests/SKILL.md`.
 

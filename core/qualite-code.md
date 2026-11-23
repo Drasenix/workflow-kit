@@ -20,7 +20,7 @@ Factoriser seulement des copies qui changeraient pour la **même raison** (même
 
 ## Réutilisation
 
-- Une méthode existante couvre le besoin : l'utiliser plutôt que d'en écrire une. Chercher dans `.agents/reference-utilitaires.md` (lecture ciblée) et dans les dossiers d'utilitaires transverses du projet (ils ne sont pas tous référencés).
+- Une méthode existante couvre le besoin : l'utiliser plutôt que d'en écrire une. Chercher dans `.agents/reference-utilitaires-sommaire.md` (lu en entier), puis dans les blocs retenus de `.agents/reference-utilitaires.md`, et dans les dossiers d'utilitaires transverses du projet (ils ne sont pas tous référencés).
 
 ## Surenchère
 
