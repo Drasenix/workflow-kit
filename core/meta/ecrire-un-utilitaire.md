@@ -4,16 +4,15 @@
 
 ## À quoi sert la référence
 
-Avant d'écrire une méthode, un agent y cherche si l'équivalent existe déjà, et ce qu'il ne doit jamais réécrire ailleurs. Elle dit **ce qui est vrai aujourd'hui** dans le code : ni l'histoire du code, ni les règles métier.
+Avant d'écrire une méthode, un agent y cherche si l'équivalent existe déjà : il l'appelle au lieu de le réécrire. Elle dit **ce qui est vrai aujourd'hui** dans le code : ni l'histoire du code, ni les règles métier.
 
 ## Quand référencer
 
 Une méthode, une classe ou un composant :
 - **réutilisable** ailleurs que là où il est né ;
-- ou **source unique** d'une règle qu'aucun autre code ne doit réécrire (un filtre, un calcul, le seul chemin d'une écriture) ;
-- ou **piégeux** : nom trompeur, comportement contre-intuitif, effet de bord.
+- ou **source unique** d'une règle qu'aucun autre code ne doit réécrire (un filtre, un calcul, le seul chemin d'une écriture) : son `Rôle` nomme cette règle.
 
-Une méthode privée n'y entre que si elle est la source unique d'une règle.
+Une méthode privée n'y entre que si elle est la source unique d'une règle. Un nom trompeur ne se signale pas ici : il se corrige, par un renommage.
 
 ## Ce qui n'y va pas
 
@@ -35,17 +34,15 @@ Une méthode privée n'y entre que si elle est la source unique d'une règle.
 - **Rôle** : <une phrase : ce que fait l'entrée, quand s'en servir>
 - **Méthodes** :
   - `<methode>(<paramètres>): <retour>` : <ce qu'elle fait, en une phrase>
-- **Ne pas réécrire** : <la règle dont l'entrée est la source unique>
-- **Piège** : <ce qui casse si on l'utilise mal>
 - **Utilisé par** : `<Appelant>`, `<Appelant>`
 - **Référence** : `SP-…` · feature `<dossier/slug>`
 ```
 
+- **Format fermé** : ces six champs seulement, dans cet ordre, chacun une fois. Aucun autre champ, aucune ligne hors gabarit : le contrôle les refuse. Une contrainte d'usage (paramètre attendu, effet de bord) s'écrit dans la phrase de la méthode concernée.
 - **Titre** : le nom tel qu'il s'écrit dans le code, entre backticks. Quand une même classe a plusieurs entrées, un qualificatif entre parenthèses les distingue : `` ### `<Nom>` (scopes de requête) ``.
 - **Obligatoires** : `Fichier` (ou `Fichiers`, plusieurs chemins séparés par des virgules) et `Rôle`. Les autres lignes ne s'écrivent que si elles ont un contenu.
-- **Rôle** : une phrase de 120 caractères au plus, avec les mots du besoin (« prorata », « restant dû »…) : c'est la ligne de l'entrée dans le sommaire, la seule qu'un agent lit avant de concevoir. Un agent reconnaît ce qu'il a sous les yeux, pas ce qu'il ne sait pas nommer.
+- **Rôle** : une phrase de 120 caractères au plus, avec les mots du besoin (« prorata », « restant dû »…) : c'est la ligne de l'entrée dans le sommaire, la seule qu'un agent lit avant de concevoir. Un agent reconnaît ce qu'il a sous les yeux, pas ce qu'il ne sait pas nommer. Pour une source unique, il nomme la règle portée.
 - **Méthodes** : le nom **déclaré** dans le code, une puce par méthode, signature typée. Un membre qui n'est pas une méthode (propriété, constante, cas d'énumération) s'écrit sans parenthèses. Hors de cette liste, `` `<Nom>::<methode>()` `` ne cite qu'une méthode déclarée, jamais une méthode héritée du framework.
-- **Ne pas réécrire** et **Piège** : les deux lignes que la référence existe pour porter. Ne jamais les perdre en raccourcissant une entrée.
 - **Utilisé par** : les appelants principaux, pas l'inventaire complet.
 - **Référence** : la règle `SP-…` qui fixe le comportement, et la feature d'origine (une seule, sans date).
 - **Longueur** : 300 caractères au plus par ligne. Au-delà, l'entrée porte de l'implémentation ou une règle métier : la déplacer.
@@ -85,10 +82,11 @@ Après toute écriture dans la référence, **et** après avoir renommé ou supp
 node .agents/verifier-utilitaires.mjs --sommaire
 ```
 
-Node seul, sans le kit, toute techno. Le kit lance le même contrôle (`check-meta --utilitaires`, et le contrôle de livraison). Six vérifications :
+Node seul, sans le kit, toute techno. Le kit lance le même contrôle (`check-meta --utilitaires`, et le contrôle de livraison). Sept vérifications :
 1. chaque entrée a un titre entre backticks, sans doublon, et porte `Fichier` et `Rôle`, de 120 caractères au plus ;
 2. chaque fichier cité par `Fichier` existe, casse comprise ;
 3. chaque méthode en tête d'une puce de `Méthodes` est déclarée dans un fichier de l'entrée ; chaque `` `<Nom>::<methode>()` `` cité, dont `<Nom>` est une entrée, est déclaré dans un de ses fichiers ;
 4. chaque `SP-…` cité existe dans la spec parallèle ;
 5. ni numéro de ligne, ni date, ni « accord utilisateur », et 300 caractères au plus par ligne ;
-6. le sommaire existe et correspond à la référence.
+6. le sommaire existe et correspond à la référence ;
+7. format fermé : chaque entrée n'a que les champs du gabarit, une fois chacun, dans l'ordre, et aucune ligne hors gabarit (les séparateurs `---` sont admis).

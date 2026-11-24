@@ -40,7 +40,7 @@ Pour chaque point : ✅ ou ❌ avec explication. Points 1, 2, 3 et 9 : un ✅ ou
 ### 3. Réutilisation
 - [ ] Critère de `workflow-kit/core/qualite-code.md` § « Réutilisation » : une méthode existante aurait-elle pu servir ?
 - [ ] Chaque nouvel utilitaire réutilisable figure-t-il dans `### Nouveaux utilitaires à référencer` ?
-- [ ] Une source unique de `.agents/reference-utilitaires.md` (ligne « Ne pas réécrire ») est-elle contournée ou recopiée ? Une méthode citée par la référence est-elle supprimée ou renommée → `node workflow-kit/bin/workflow-kit.mjs check-meta` --utilitaires : sortie collée dans le verdict
+- [ ] Un utilitaire de `.agents/reference-utilitaires.md` est-il recopié au lieu d'être appelé ? Une méthode citée par la référence est-elle supprimée ou renommée → `node workflow-kit/bin/workflow-kit.mjs check-meta` --utilitaires : sortie collée dans le verdict
 
 ### 4. Conventions
 - [ ] Conventions du projet (`.agents/conventions.md`) et frontend selon le périmètre ?
@@ -105,7 +105,7 @@ Hors choix structurant validé (`## Plan (étape 3)`, ADR) :
 
 ### Nouveaux utilitaires à référencer
 
-- `Classe::methode(<paramètres>): <retour>` (`<chemin/du/fichier>`) : rôle en une phrase ; ne pas réécrire / piège s'il y a lieu ; déjà utilisée par X. Ajouter ?
+- `Classe::methode(<paramètres>): <retour>` (`<chemin/du/fichier>`) : rôle en une phrase ; déjà utilisée par X. Ajouter ?
 
 ### Décisions techniques
 

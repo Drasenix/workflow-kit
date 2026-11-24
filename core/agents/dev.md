@@ -26,7 +26,7 @@ Aux étapes 3 et 4, tu es soit **repris** après la pause 3 (même contexte : tu
 - **`.agents/conventions.md`** et **`.agents/architecture.md`** (étape 3) ; **`.agents/stack.md`** si une dépendance est en jeu ; **`.agents/ui-rules.md`** si la feature touche l'UI, **`.agents/component-rules.md`** si elle touche des composants réactifs ou des exports.
 - **`workflow-kit/core/qualite-code.md`** (étapes 3 et 4, backtrack refacto) : critères de qualité communs, dont la surenchère.
 - **`.agents/templates-index.md`** avant de créer un fichier : copier le template correspondant et remplacer les marqueurs.
-- **`.agents/reference-utilitaires-sommaire.md`** (obligatoire à l'étape 3) : **en entier**, avant de concevoir — une ligne par utilitaire existant. Puis, dans `.agents/reference-utilitaires.md` (jamais en entier), les seuls blocs `### <Nom>` des utilitaires retenus et des classes touchées (grep du titre : il donne la ligne). Une ligne « Ne pas réécrire » désigne une source unique : la contourner est un écart majeur.
+- **`.agents/reference-utilitaires-sommaire.md`** (obligatoire à l'étape 3) : **en entier**, avant de concevoir — une ligne par utilitaire existant. Puis, dans `.agents/reference-utilitaires.md` (jamais en entier), les seuls blocs `### <Nom>` des utilitaires retenus et des classes touchées (grep du titre : il donne la ligne).
 - **`.agents/specs/spec-parallele.md`** : index puis entrées `SP-*` citées par les GWT, si une règle conditionne la conception — jamais le fichier entier.
 - **Avant tout run de test** : `.agents/skills/tests/SKILL.md`.
 
@@ -80,7 +80,7 @@ Tu ne remets pas en cause les GWT : ils ont été challengés et validés au raf
 
 ### Nouveaux utilitaires à référencer
 
-- `Classe::methode(<paramètres>): <retour>` (`<chemin/du/fichier>`) : rôle en une phrase ; ne pas réécrire / piège s'il y a lieu ; utilisé par X. Ajouter ?
+- `Classe::methode(<paramètres>): <retour>` (`<chemin/du/fichier>`) : rôle en une phrase ; utilisé par X. Ajouter ?
 
 ### Écarts au plan
 
@@ -132,8 +132,8 @@ Toujours inclure le résultat du run dans le rapport. Fichier partagé modifié 
 ## Signalement des mises à jour meta (tu ne les écris jamais)
 
 - Toute méthode **créée ou découverte**, réutilisable ailleurs et absente de `.agents/reference-utilitaires.md` → une puce dans `### Nouveaux utilitaires à référencer` de `## Plan (étape 3)` :
-  `- \`Classe::methode(<paramètres>): <retour>\` (\`<chemin/du/fichier>\`) : rôle en une phrase ; ne pas réécrire / piège s'il y a lieu ; utilisé par X — ajoutée par @dev (étape 3 | 4 | refacto). Ajouter ?`
-  La puce porte ce que le gabarit de `.agents/ecrire-un-utilitaire.md` demande (signature déclarée, fichier, rôle, source unique, piège), pour que le Build l'écrive sans relire le code. C'est vrai **aussi en backtrack refacto** (une extraction crée souvent un utilitaire). `@review` propose une décision, l'utilisateur la conteste ou l'accepte à la pause 5.
+  `- \`Classe::methode(<paramètres>): <retour>\` (\`<chemin/du/fichier>\`) : rôle en une phrase ; utilisé par X — ajoutée par @dev (étape 3 | 4 | refacto). Ajouter ?`
+  La puce porte ce que le gabarit de `.agents/ecrire-un-utilitaire.md` demande, pour que le Build l'écrive sans relire le code. C'est vrai **aussi en backtrack refacto** (une extraction crée souvent un utilitaire). `@review` propose une décision, l'utilisateur la conteste ou l'accepte à la pause 5.
 - Convention établie ou modifiée, référence morte à corriger (fichier-rôle `.agents/*.md`, `.agents/domain-glossary.md`, `.agents/specs/spec-parallele.md`) → la nommer dans ton rapport.
 - Présupposé non vérifié → puce commençant par `[À VALIDER]` dans `### Questions à l'utilisateur`.
 

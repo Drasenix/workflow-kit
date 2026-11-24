@@ -1,0 +1,20 @@
+{
+  "description": "Budget de texte des consignes lues par les agents : le total ne dépasse pas celui de la référence. Hausse acceptée seulement sur décision de l'utilisateur, en relevant le plafond ici (avec la raison dans le commit).",
+  "reference": "235e748",
+  "plafond": 17810,
+  "fichiers": {
+    "core/index.md": 1636,
+    "core/agent-workflow.md": 2387,
+    "core/agent-build.md": 1472,
+    "core/qualite-code.md": 380,
+    "core/phase-raffinement.md": 2441,
+    "core/phase-realisation.md": 2506,
+    "core/templates/feature.md": 1481,
+    "core/agents/raffineur.md": 713,
+    "core/agents/explorateur.md": 389,
+    "core/agents/challenger.md": 486,
+    "core/agents/test.md": 898,
+    "core/agents/dev.md": 1574,
+    "core/agents/review.md": 1447
+  }
+}

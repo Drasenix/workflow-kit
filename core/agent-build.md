@@ -37,7 +37,7 @@ Les fichiers meta du projet sont la mémoire des agents d'une feature à l'autre
 |---|---|---|
 | Fichier | Contenu | Signalé par | Nature |
 |---|---|---|---|
-| `.agents/reference-utilitaires.md` | méthodes réutilisables, sources uniques à ne pas réécrire (format : `.agents/ecrire-un-utilitaire.md`) | `@dev`, `@review` → `### Nouveaux utilitaires à référencer` | technique |
+| `.agents/reference-utilitaires.md` | méthodes réutilisables, sources uniques d'une règle (format : `.agents/ecrire-un-utilitaire.md`) | `@dev`, `@review` → `### Nouveaux utilitaires à référencer` | technique |
 | `.agents/domain-glossary.md` | définitions d'entités, termes | raffineur → puce `[À CONSIGNER] glossaire : …` ; `@dev` (plan) → références mortes (rapport) | métier |
 | `.agents/specs/spec-parallele.md` | règles de comportement / flux / calcul hors spec | raffineur, `@review` → `[À CONSIGNER]`, `[AMENDE SP-*]` ; `@dev` (plan) → références mortes (rapport) | métier |
 | Fichiers-rôles : `.agents/conventions.md`, `.agents/architecture.md`, `.agents/stack.md`, `.agents/commands.md`, `.agents/test-rules.md`, `.agents/ui-rules.md`, `.agents/component-rules.md`, `.agents/templates-index.md` | conventions | `@dev` (dont références mortes), `@review` | technique |
@@ -55,7 +55,7 @@ Les fichiers meta du projet sont la mémoire des agents d'une feature à l'autre
 
 **Règle de cohérence** : toute feature qui **établit ou modifie une convention** met à jour le fichier-rôle correspondant **dans la même feature** ; ses références restent **valides** (aucun chemin mort, casse comprise) : `node workflow-kit/bin/workflow-kit.mjs check-meta --refs`, lancé par `@review` et inclus dans le contrôle de livraison.
 
-**Nouvel utilitaire** : avant d'écrire du code (étapes 3 et 4), `.agents/reference-utilitaires.md` est consulté : `.agents/reference-utilitaires-sommaire.md` en entier, puis les seuls blocs retenus de la référence ; une méthode existante qui couvre le besoin est réutilisée, jamais dupliquée, et une source unique (ligne « Ne pas réécrire ») n'est jamais contournée.
+**Nouvel utilitaire** : avant d'écrire du code (étapes 3 et 4), `.agents/reference-utilitaires.md` est consulté : `.agents/reference-utilitaires-sommaire.md` en entier, puis les seuls blocs retenus de la référence ; une méthode existante qui couvre le besoin est appelée, jamais dupliquée.
 
 ## Spec parallèle (garde-fou)
 
