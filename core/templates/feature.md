@@ -174,7 +174,7 @@ THEN
 
 Recherches (à `<commit>`) : `<terme>` → <N> ; … (ou `Aucune`)
 
-> Recherche littérale des décisions à coder, fichiers suivis hors `.agents/` et `tests/` : `git grep -F -c "<terme>" <commit>`. Relancée par le contrôle.
+> Ligne écrite par `node workflow-kit/bin/workflow-kit.mjs recherches "<terme>" …` (recherche littérale des décisions à coder), relancée par le contrôle.
 
 ### Choix structurants
 

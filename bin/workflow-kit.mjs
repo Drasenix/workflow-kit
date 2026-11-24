@@ -2,7 +2,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
-import { checkFiles, checkMeta } from '../lib/check.mjs';
+import { checkFiles, checkMeta, ligneRecherches } from '../lib/check.mjs';
 import { projectRoot } from '../lib/check-meta.mjs';
 import { cloturerRecette } from '../lib/cloturer.mjs';
 import { checkCompaction, compactFeature } from '../lib/compact.mjs';
@@ -27,6 +27,8 @@ const HELP = `workflow-kit <commande> [options]
                      --tolerances : tolerances seules (aucune ne remonte par rapport a --base, defaut master ou main) ;
                      --conventions : regles etiquetees des fichiers-roles et sommaire des regles a jour
   regles             Genere .agents/regles-architecture.md depuis les lignes "Regle :" des tests d'architecture
+  recherches <terme...>  Ligne "Recherches" du plan (etape 3) : chaque terme cherche litteralement au commit courant,
+                     fichiers suivis hors .agents/ et tests/ (nombre de lignes) ; sans terme : Aucune
   derive             Derive de la spec (etape 0 de /raffiner) : commits d'autres auteurs a relire depuis votre dernier passage
                      --regles <SP-…|prefixe> : tests garants de ces regles ; --fichiers <chemins> : ces fichiers ;
                      --auteur <email> : vous (defaut : git config user.email). Informatif, code 0
@@ -101,6 +103,10 @@ try {
     const root = projectRoot(values.target || process.cwd());
     if (!root) throw new Error('regles : aucun dossier .agents/ trouve depuis le dossier courant (ou --target)');
     console.log(`[ok] ${writeSommaireRegles(root)} regenere`);
+  } else if (command === 'recherches') {
+    const root = projectRoot(values.target || process.cwd());
+    if (!root) throw new Error('recherches : aucun dossier .agents/ trouve depuis le dossier courant (ou --target)');
+    console.log(ligneRecherches(root, positionals.slice(1)));
   } else if (command === 'derive') {
     const root = projectRoot(values.target || process.cwd());
     if (!root) throw new Error('derive : aucun dossier .agents/ trouve depuis le dossier courant (ou --target)');

@@ -67,7 +67,7 @@ Pour chaque point : ✅ ou ❌ avec explication. Points 1, 2, 3 et 9 : un ✅ ou
 - [ ] Préparation de base inutile (aucune écriture réelle) ?
 
 ### 7. Conformité au plan
-- [ ] Signatures publiques, fichiers et réutilisations prévus dans `## Plan (étape 3)` : conformes au code ? Chaque ligne de « Code existant réutilisé » : son appel figure dans le diff (recherche), sinon `❌ Réutilisation non appelée`.
+- [ ] Signatures publiques, fichiers et réutilisations prévus dans `## Plan (étape 3)` : conformes au code ? Chaque ligne de « Code existant réutilisé » : son appel figure dans le diff, ou déjà sur le chemin du point d'entrée (plan : « appel inchangé »), sinon `❌ Réutilisation non appelée`.
 - [ ] Chaque écart déclaré dans `### Écarts au plan` est-il mineur et justifié ? Un écart majeur (fichier ou couche non prévu, signature publique modifiée, réutilisation abandonnée) doit avoir été validé (Registre) → sinon `❌ Écart majeur non validé`.
 - [ ] 🔴 Écart au plan absent de `### Écarts au plan` → `❌ Écart non déclaré`.
 
