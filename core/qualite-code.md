@@ -37,6 +37,11 @@ Ce qu'aucun besoin présent ne justifie :
 - Sous-classe ou implémentation nouvelle qui refuse une entrée acceptée par son parent, ou rend autre chose que ce qu'il promet.
 - Trait nouveau qui utilise une propriété ou une méthode de la classe hôte sans la déclarer (méthode abstraite).
 
+## Valeurs et conventions
+
+- Une valeur métier (statut, code d'erreur, type) s'écrit à un seul endroit ; une question posée aux données est une méthode nommée ; deux sens sous un même mot relèvent du glossaire (`[À CONSIGNER]`).
+- Une convention mécanisable est un test d'architecture (`.agents/regles-architecture.md`) ; sinon elle porte « Non mécanisable » et sa raison.
+
 ## Nommage
 
 - Un nom du code (fichier, de test compris ; classe ; méthode ; variable ; commentaire) décrit le **comportement**, jamais le **chantier** qui l'a produit (retours de démo, réunion, lot, ticket) : le code survit au chantier, son nom n'y apprend rien. Un slug de feature qui nomme un chantier ne se recopie pas dans le code.

@@ -11,6 +11,7 @@ import { init } from '../lib/init.mjs';
 import { resolveRuntimes, sync } from '../lib/sync.mjs';
 import { verify } from '../lib/verify.mjs';
 import { prepareWorktree } from '../lib/worktree.mjs';
+import { writeSommaireRegles } from '../lib/regles.mjs';
 
 const kitRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -23,7 +24,9 @@ const HELP = `workflow-kit <commande> [options]
   check-meta         Fichiers meta du projet : integrite du spec parallele, format de la reference des utilitaires
                      (si declare), references mortes, tolerances des tests d'architecture ; --spec : integrite
                      seule ; --utilitaires : reference des utilitaires seule ; --refs : references seules ;
-                     --tolerances : tolerances seules (aucune ne remonte par rapport a --base, defaut master ou main)
+                     --tolerances : tolerances seules (aucune ne remonte par rapport a --base, defaut master ou main) ;
+                     --conventions : regles etiquetees des fichiers-roles et sommaire des regles a jour
+  regles             Genere .agents/regles-architecture.md depuis les lignes "Regle :" des tests d'architecture
   derive             Derive de la spec (etape 0 de /raffiner) : commits d'autres auteurs a relire depuis votre dernier passage
                      --regles <SP-…|prefixe> : tests garants de ces regles ; --fichiers <chemins> : ces fichiers ;
                      --auteur <email> : vous (defaut : git config user.email). Informatif, code 0
@@ -63,6 +66,7 @@ const { values, positionals } = parseArgs({
     refs: { type: 'boolean', default: false },
     utilitaires: { type: 'boolean', default: false },
     tolerances: { type: 'boolean', default: false },
+    conventions: { type: 'boolean', default: false },
     base: { type: 'string' },
     regles: { type: 'string', multiple: true },
     fichiers: { type: 'string', multiple: true },
@@ -91,8 +95,12 @@ try {
   } else if (command === 'check-meta') {
     const root = projectRoot(values.target || process.cwd());
     if (!root) throw new Error('check-meta : aucun dossier .agents/ trouve depuis le dossier courant (ou --target)');
-    const all = !values.spec && !values.refs && !values.utilitaires && !values.tolerances;
-    process.exitCode = checkMeta(root, { spec: all || values.spec, refs: all || values.refs, utilitaires: all || values.utilitaires, tolerances: all || values.tolerances, base: values.base ?? null });
+    const all = !values.spec && !values.refs && !values.utilitaires && !values.tolerances && !values.conventions;
+    process.exitCode = checkMeta(root, { spec: all || values.spec, refs: all || values.refs, utilitaires: all || values.utilitaires, tolerances: all || values.tolerances, conventions: all || values.conventions, base: values.base ?? null });
+  } else if (command === 'regles') {
+    const root = projectRoot(values.target || process.cwd());
+    if (!root) throw new Error('regles : aucun dossier .agents/ trouve depuis le dossier courant (ou --target)');
+    console.log(`[ok] ${writeSommaireRegles(root)} regenere`);
   } else if (command === 'derive') {
     const root = projectRoot(values.target || process.cwd());
     if (!root) throw new Error('derive : aucun dossier .agents/ trouve depuis le dossier courant (ou --target)');

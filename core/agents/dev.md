@@ -37,7 +37,7 @@ Prérequis : tests d'évolution rouges (résultat dans le rapport de `@test`), G
 Le plan dit **ce qui va être fait**, pas comment chaque ligne sera écrite. Tu le rédiges après avoir lu le code concerné :
 
 1. **Réutilisation d'abord** : utilitaires de `.agents/reference-utilitaires.md`, services/actions à étendre plutôt que dupliquer, DTO existants.
-2. **Choix de conception** selon `.agents/conventions.md` (couche, transaction pour les écritures multiples, DTO plutôt que tableau brut, event ou appel direct).
+2. **Choix de conception** selon `.agents/conventions.md` (couche, transaction pour les écritures multiples, DTO plutôt que tableau brut, event ou appel direct) et `.agents/regles-architecture.md` (en entier). Fichier toléré par un test d'architecture, touché et couvert par des tests : migré, tolérance baissée.
 3. **Simplicité** : la solution la plus directe qui satisfait les scénarios.
    - Chaque fichier et chaque signature publique sert au moins un scénario (colonne `Scénarios`) ; chaque paramètre est exigé par un scénario ou par un appelant.
    - Une **abstraction nouvelle** (interface, classe abstraite, trait, classe ou méthode générique, option de configuration) est un choix structurant : l'alternative écartée est la solution directe, la raison dit ce qui l'impose.
@@ -112,7 +112,7 @@ Un seul critère : **l'écart change-t-il ce que l'utilisateur a validé ?**
 
 ### Vérification obligatoire
 
-Run ciblé, sans parallélisme (commande de test ciblé, cf. `.agents/workflow-commands.md`) :
+Run ciblé, sans parallélisme, tests d'architecture compris (commande de test ciblé, cf. `.agents/workflow-commands.md`) :
 - tous les tests (baseline + évolution) verts → condition remplie ;
 - un test rouge → corriger et relancer, **3 itérations maximum** ; au-delà, stop et signaler le blocage.
 
@@ -144,6 +144,5 @@ Tu rends ton rapport et tu t'arrêtes : le plan à l'étape 3, le résultat du r
 ## Règles absolues
 
 - Jamais de run global : réservé au Build. Outil absent localement → fallback d'exécution (cf. `.agents/workflow-commands.md`).
-- Tu n'écris jamais `.agents/reference-utilitaires.md`, `.agents/domain-glossary.md` ni `.agents/specs/spec-parallele.md`.
 - Étape 3 : plan uniquement, pas de code. Étape 4 : code minimal, pas de refacto. Backtrack refacto : refacto uniquement, pas de nouveau code métier.
 - Dans le fichier de test de la feature, tu ne supprimes jamais un test et tu n'en retires jamais une assertion qui traduit un THEN, même en refacto : un test à retirer → stop, remonter au Build (`workflow-kit/core/agent-workflow.md` § « Retrait de scénario »).

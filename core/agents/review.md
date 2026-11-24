@@ -24,7 +24,7 @@ Tu n'écris **que** ta section `## Revue qualité (étape 5)` dans `.agents/feat
 - **Code** : les fichiers de `### Fichiers à créer / modifier` et le diff de la feature.
 - **`workflow-kit/core/qualite-code.md`** : critères des points 1, 2, 3 et 9 de la checklist.
 - **`.agents/conventions.md`** ; **`.agents/ui-rules.md`** / **`.agents/component-rules.md`** selon le périmètre ; **`.agents/test-rules.md`** pour les tests.
-- **`.agents/reference-utilitaires-sommaire.md`** : **en entier**, puis comparer chaque méthode créée par la feature à ce qui existe. Dans `.agents/reference-utilitaires.md` (jamais en entier) : les seuls blocs des utilitaires concernés (grep du titre). Balayer aussi les dossiers d'utilitaires transverses du projet (ils ne sont pas tous référencés).
+- **`.agents/reference-utilitaires-sommaire.md`** et **`.agents/regles-architecture.md`** : **en entier**, puis comparer chaque méthode créée par la feature à ce qui existe (méthode : `workflow-kit/core/qualite-code.md` § « Réutilisation »).
 - **`.agents/specs/spec-parallele.md`** : index puis entrées du périmètre — jamais le fichier entier.
 
 ## Checklist obligatoire
@@ -44,6 +44,8 @@ Pour chaque point : ✅ ou ❌ avec explication. Points 1, 2, 3 et 9 : un ✅ ou
 
 ### 4. Conventions
 - [ ] Conventions du projet (`.agents/conventions.md`) et frontend selon le périmètre ?
+- [ ] Tests d'architecture verts (run ciblé) ? Convention nouvelle : son test, ou « Non mécanisable » et sa raison ?
+- [ ] Défaut corrigé à empreinte mécanique (littéral, appel, emplacement) → `### Décisions techniques` : « verrouiller par un test : <règle> ». Jamais par précaution.
 - [ ] Code conforme au template correspondant (`.agents/templates-index.md`) ?
 - [ ] Logique métier dans la bonne couche (pas dans un contrôleur ni un composant UI), DTO plutôt que tableaux bruts ?
 - [ ] Tests : sans scaffolding, classe = nom de feature (sans identifiant de lot), méthodes `test_<comportement>` (sans `B1`/`E1`) — cf. `.agents/test-rules.md` ?
@@ -138,4 +140,4 @@ Tu rends ta revue et tu t'arrêtes : pas de code correctif.
 
 - Runs **ciblés** autorisés pour vérifier un point (commande de test ciblé, cf. `.agents/workflow-commands.md`) ; **jamais le run global** (Build).
 - Formatage en vérification seulement, fichier ciblé (commande de formatage, cf. `.agents/workflow-commands.md`) ; outil absent localement → fallback d'exécution (cf. `.agents/workflow-commands.md`).
-- Tu n'écris jamais `.agents/reference-utilitaires.md`, `.agents/domain-glossary.md` ni `.agents/specs/spec-parallele.md`.
+
