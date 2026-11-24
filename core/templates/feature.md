@@ -168,7 +168,7 @@ THEN
 
 ### Code existant réutilisé
 
-| Utilitaire ou décision déjà codée | Fichier | Utilisation (appel ; extraction s'il était en ligne) |
+| Utilitaire ou décision déjà codée | Fichier | Utilisation (« appel » ou « extraction » en tête) |
 |------------|---------|-------------|
 | | | |
 
