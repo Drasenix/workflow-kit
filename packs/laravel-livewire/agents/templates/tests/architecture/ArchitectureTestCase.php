@@ -122,10 +122,12 @@ abstract class ArchitectureTestCase extends TestCase
 
         $chemin = __DIR__.'/tolerances/'.$regle.'.json';
         if (getenv('ARCHITECTURE_GENERER_TOLERANCES') === '1') {
-            if (! is_dir(dirname($chemin))) {
-                mkdir(dirname($chemin), 0777, true);
+            if ($trouve === []) {
+                is_file($chemin) && unlink($chemin); // rien à tolérer : pas de fichier
+            } else {
+                is_dir(dirname($chemin)) || mkdir(dirname($chemin), 0777, true);
+                file_put_contents($chemin, json_encode($trouve, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)."\n");
             }
-            file_put_contents($chemin, json_encode((object) $trouve, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)."\n");
             $this->markTestSkipped("tolérances de « {$regle} » générées : ".count($trouve).' fichier(s)');
         }
 
