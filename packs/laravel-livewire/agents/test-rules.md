@@ -42,6 +42,18 @@ rg -n "NomDeLaClasse|NomDeLaMethode" tests/ --glob "*Test.php"
 
 Si la couverture existe déjà, ne pas réécrire et marquer `⏭️ déjà couvert par <Test>` dans le fichier de feature.
 
+## Tests d'architecture
+
+Une convention du projet devient un **test** quand elle est mécanisable : il dit non avant la revue. Ils testent la **structure** du code (où une valeur s'écrit, quelle couche appelle quoi), pas un comportement.
+
+- **Où** : `tests/Feature/Architecture/`, une classe par règle ou par famille, qui étend `ArchitectureTestCase` (templates : `templates/tests/architecture/`).
+- **Ligne `Règle :`** : le docblock de chaque méthode commence par `Règle : <la convention en une phrase>`. Le sommaire des règles est généré à partir de ces lignes.
+- **Listes calculées, jamais recopiées** : un littéral interdit vient de sa source de vérité (table de référence en base de test, cas d'une énumération, dossiers), lue par le test à chaque exécution.
+- **Exceptions** : choix assumés et permanents, écrits dans le test avec leur raison (`'app/<Dossier>/' => '<raison>'`).
+- **Tolérances** : la dette existante, dans `tests/Feature/Architecture/tolerances/<regle>.json` (fichier => occurrences). Le test échoue si un fichier dépasse sa tolérance, **et** si un fichier assaini ne la baisse pas (cliquet). Une tolérance ne remonte jamais : `node workflow-kit/bin/workflow-kit.mjs check-meta --tolerances` compare à la branche principale.
+- **Tolérance initiale** : à la création d'une règle seulement, `ARCHITECTURE_GENERER_TOLERANCES=1 php artisan test tests/Feature/Architecture/<Regle>Test.php` écrit la photo de l'existant. Jamais pour faire passer un test rouge.
+- **Quand baisser** : une feature qui touche un fichier toléré et couvert par des tests le migre, puis baisse sa tolérance.
+
 ## Scaffolding interdit
 
 Aucune ligne de séparation, aucun commentaire de workflow (`// Tests baseline`, `// Helpers`), aucune parenthèse de statut TDD (`(doivent passer au vert)`). Le fichier est propre dès l'écriture.

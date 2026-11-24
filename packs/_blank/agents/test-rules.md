@@ -16,3 +16,11 @@
 ## Config de test
 
 - <config>
+
+## Tests d'architecture
+
+Une convention mecanisable devient un test de structure (ou s'ecrit une valeur, quelle couche appelle quoi).
+
+- <dossier des tests d'architecture>, une ligne `Règle : <convention>` en tete de chaque test (le sommaire des regles en est genere).
+- Les listes de litteraux interdits sont calculees par le test a partir de la source de verite du projet (table, enumerations, dossiers), jamais ecrites a la main.
+- Exceptions (choix assumes, dans le test, avec leur raison) distinctes des tolerances (dette, `tolerances/<regle>.json`, qui ne font que baisser ; controle `check-meta --tolerances`).

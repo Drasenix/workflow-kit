@@ -30,6 +30,8 @@
 |---|---|---|
 | Un test unitaire (règles métier pures, sans DB) | `templates/tests/unit-test.php` | `@test` |
 | Un test d'intégration (DB, RefreshDatabase, seed) | `templates/tests/test.php` | `@test` |
+| La base des tests d'architecture (exceptions, tolérances, cliquet) | `templates/tests/architecture/ArchitectureTestCase.php` | Build |
+| Un test d'architecture (une convention devenue test) | `templates/tests/architecture/RegleTest.php` | Build, `@dev` (refacto) |
 
 ## Feature
 
