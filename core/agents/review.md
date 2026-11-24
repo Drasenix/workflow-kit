@@ -40,6 +40,7 @@ Pour chaque point : ✅ ou ❌ avec explication. Points 1, 2, 3 et 9 : un ✅ ou
 ### 3. Réutilisation
 - [ ] Critère de `workflow-kit/core/qualite-code.md` § « Réutilisation » : une méthode existante aurait-elle pu servir ?
 - [ ] Chaque nouvel utilitaire réutilisable figure-t-il dans `### Nouveaux utilitaires à référencer` ?
+- [ ] Pour chaque condition nouvelle du diff, son littéral le plus rare cherché dans le code (plafond : une vingtaine de résultats) : la même décision existait-elle ailleurs sans être repérée au plan → `❌ Décision déjà codée non repérée au plan` (formule fixe).
 - [ ] Un utilitaire de `.agents/reference-utilitaires.md` est-il recopié au lieu d'être appelé ? Une méthode citée par la référence est-elle supprimée ou renommée → `node workflow-kit/bin/workflow-kit.mjs check-meta` --utilitaires : sortie collée dans le verdict
 
 ### 4. Conventions
@@ -66,7 +67,7 @@ Pour chaque point : ✅ ou ❌ avec explication. Points 1, 2, 3 et 9 : un ✅ ou
 - [ ] Préparation de base inutile (aucune écriture réelle) ?
 
 ### 7. Conformité au plan
-- [ ] Signatures publiques, fichiers et réutilisations prévus dans `## Plan (étape 3)` : conformes au code ?
+- [ ] Signatures publiques, fichiers et réutilisations prévus dans `## Plan (étape 3)` : conformes au code ? Chaque ligne de « Code existant réutilisé » : son appel figure dans le diff (recherche), sinon `❌ Réutilisation non appelée`.
 - [ ] Chaque écart déclaré dans `### Écarts au plan` est-il mineur et justifié ? Un écart majeur (fichier ou couche non prévu, signature publique modifiée, réutilisation abandonnée) doit avoir été validé (Registre) → sinon `❌ Écart majeur non validé`.
 - [ ] 🔴 Écart au plan absent de `### Écarts au plan` → `❌ Écart non déclaré`.
 
@@ -79,47 +80,7 @@ Hors choix structurant validé (`## Plan (étape 3)`, ADR) :
 
 ## Format du livrable
 
-```markdown
-## Revue qualité (étape 5)
-
-### Checklist
-
-| # | Point | Statut |
-|---|-------|--------|
-
-### Edge cases métier
-
-| # | Edge case | Comportement observé | Conforme au GWT ? |
-|---|---|---|---|
-
-### Verdict et vérifications exécutées
-
-- Verdict, tests relancés, sondes et contrôles (ici seulement)
-
-### Problèmes détectés
-
-- **❌ Duplication** : `FooService::calculerX()` identique à `BarService::calculerY()`, les deux appliquent la même règle de remise. Factoriser ?
-
-### Plan de refacto
-
-| Fichier | Ligne(s) | Action | Justification |
-|---------|----------|--------|---------------|
-
-### Nouveaux utilitaires à référencer
-
-- `Classe::methode(<paramètres>): <retour>` (`<chemin/du/fichier>`) : rôle en une phrase ; déjà utilisée par X. Ajouter ?
-
-### Décisions techniques
-
-| # | Objet | Décision proposée | Raison |
-|---|---|---|---|
-| T1 | `Classe::methode()` (utilitaire, plan ou revue) | référencer / ne pas référencer | … |
-| T2 | `.agents/<fichier-rôle>.md` | mettre à jour : <quoi> | … |
-
-### Questions à l'utilisateur
-
-- …
-```
+Les sous-sections de `## Revue qualité (étape 5)` du gabarit (`workflow-kit/core/templates/feature.md`), dans le fichier de feature. Exemples : problème « **❌ Duplication** : `FooService::calculerX()` identique à `BarService::calculerY()`, même règle de remise. Factoriser ? » ; décisions techniques « T1 | `Classe::methode()` | référencer / ne pas référencer | <raison> », « T2 | `.agents/<fichier-rôle>.md` | mettre à jour : <quoi> | <raison> ».
 
 **Plan de refacto** : chaque ligne précise (fichier existant, lignes exactes, action concrète, justification) ; jamais de refacto hors des fichiers de la feature ; jamais de changement de comportement ; jamais d'abstraction que le point 9 relèverait ; jamais de retrait de scénario ni de test — un test en doublon va dans `### Décisions techniques`, tout autre retrait dans `### Questions à l'utilisateur` (`workflow-kit/core/agent-workflow.md` § « Retrait de scénario »). Rien à refactorer → `> Aucun refacto nécessaire.`
 

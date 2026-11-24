@@ -168,9 +168,13 @@ THEN
 
 ### Code existant réutilisé
 
-| Utilitaire | Fichier | Utilisation |
+| Utilitaire ou décision déjà codée | Fichier | Utilisation (appel ; extraction s'il était en ligne) |
 |------------|---------|-------------|
 | | | |
+
+Recherches (à `<commit>`) : `<terme>` → <N> ; … (ou `Aucune`)
+
+> Recherche littérale des décisions à coder, fichiers suivis hors `.agents/` et `tests/` : `git grep -F -c "<terme>" <commit>`. Relancée par le contrôle.
 
 ### Choix structurants
 
