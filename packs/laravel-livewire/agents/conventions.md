@@ -15,8 +15,9 @@
 
 | Type | Emplacement | Quand l'utiliser |
 |---|---|---|
-| **Action** | `app/Actions/` | Unité de logique métier exécutable, 1 responsabilité, méthode `execute()` ou `handle()`. Préférée pour toute opération non triviale. |
-| **Service** | `app/Services/` | Encapsulation d'une intégration externe ou d'un comportement transverse. |
+| **Action** | `app/Actions/` | Unité de logique métier exécutable, 1 responsabilité. **Non statique** : dépendances par le constructeur, méthode `execute()` d'instance, l'appelant la reçoit par injection (template `templates/backend/action.php`). Préférée pour toute opération non triviale. |
+| **Service** | `app/Services/` | Encapsulation d'une intégration externe ou d'un comportement transverse nommé (génération PDF, journal…). Y sont aussi admis les calculs purs (`*Calculator`, sans écriture) et les lectures (`*Query`, sans écriture). Jamais une opération métier : elle va dans une Action. |
+| **Exception métier** | `app/Exceptions/<Domaine>/` | Un refus ou un échec signalé à l'appelant, qui l'attrape et l'affiche (template `templates/backend/exception.php`). |
 | **DTO** | `app/DTO/` | Transfert typé entre couches, pour éviter les tableaux associatifs opaques. |
 | **Enum** | `app/Enums/<Domaine>/` | Toute valeur énumérée (types, statuts). |
 | **Job** | `app/Jobs/` | Traitement asynchrone (queue `database`). |
@@ -29,7 +30,12 @@
 - **Pas de requêtes Eloquent directes dans Blade / vue Livewire.** Charger en amont (`with`, computed properties).
 - **Éviter les N+1.** Utiliser `with()` pour les relations.
 - **Mass assignment** : toujours protéger avec `$fillable` ou `$guarded`.
-- **Transactions** : envelopper toute opération multi-écritures dans `DB::transaction()`.
+- **Transactions** : envelopper toute opération multi-écritures dans `DB::transaction(fn () => …)`, jamais `beginTransaction()` / `commit()` / `rollBack()` à la main.
+- **Signaler un échec** : par une exception métier, jamais par un tableau `['status' => 'success'|'error']` ; en cas de succès, la méthode rend son résultat.
+- **Dépendances** : par injection (constructeur ; `boot()` dans un composant Livewire), jamais `app(X::class)` ni `resolve()` hors `app/Providers/`.
+- **Job** : il ne fait que s'exécuter en file. Une règle qu'il porte et dont un autre code a besoin vit dans une classe dédiée, que le Job appelle aussi.
+- **Taille** : un fichier de `app/` ne dépasse pas 400 lignes ; avant d'ajouter du code à une classe trop longue, on extrait la partie modifiée.
+- Ces règles sont gardées par les tests génériques du kit (`tests/Feature/Architecture/Kit/StructureTest.php`, copie tenue par le kit).
 
 ### Responsabilités et abstractions
 

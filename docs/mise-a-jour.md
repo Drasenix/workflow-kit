@@ -23,6 +23,7 @@ Ce que l'outil IA charge lui-même (agents, skills, commandes) est **généré**
 | `core/**` hors agents, skills, commandes (index, règles du Build, workflow, templates) | lu en direct | aucune, mais nouvelle session de l'outil |
 | `core/agents/**`, `core/skills/**`, `core/commands/**` | `.opencode/` et `.claude/` sont des copies générées | `sync`, puis nouvelle session |
 | `packs/<stack>/agents/**` | seeds copiés vers `.agents/**` | `sync` |
+| `packs/<stack>/copies/**` | copies tenues par le kit, posées au même chemin dans le projet (ex. `tests/Feature/Architecture/ArchitectureTestCase.php`, `tests/Feature/Architecture/Kit/`), **toujours écrasées** | `sync`, puis commit des copies dans le projet |
 | `packs/<stack>/commands/**` | copies générées dans `.opencode/command/` et `.claude/commands/` | `sync`, puis nouvelle session |
 | `project/**` (`AGENTS.md`, glossaire, specs, `reference-utilitaires`) | seeds projet | `sync` |
 | `adapters/**` | `opencode.json`, `.opencode/`, `.claude/`, `CLAUDE.md` | `sync` |
@@ -110,6 +111,16 @@ Cette version sépare la feature en deux sessions : **raffinement** (étapes 0-1
 ## Nuance sur les seeds
 
 Sans `--force`, `sync` **n'écrase jamais** un fichier projet déjà présent : la version du kit part en quarantaine dans `.agents/doublons/`. Conséquence : un seed déjà matérialisé puis modifié côté kit ne se propage pas tout seul. Reporter le changement à la main, ou relancer avec `--force` (écrase), ou traiter `.agents/doublons/`.
+
+### Tests d'architecture génériques (pack `laravel-livewire`)
+
+Depuis l'introduction de `packs/laravel-livewire/copies/`, `sync` pose et réécrit `tests/Feature/Architecture/ArchitectureTestCase.php` et `tests/Feature/Architecture/Kit/StructureTest.php`. Au premier `sync` :
+
+1. Si le projet avait enrichi son `ArchitectureTestCase.php`, reporter ses ajouts dans le kit avant le `sync` (sinon ils sont écrasés).
+2. Supprimer le seed devenu inutile `.agents/templates/tests/architecture/ArchitectureTestCase.php` et sa ligne dans `.agents/templates-index.md`.
+3. Générer les tolérances des règles génériques : `ARCHITECTURE_GENERER_TOLERANCES=1 php artisan test tests/Feature/Architecture/Kit/StructureTest.php`, relire les JSON produits dans `tests/Feature/Architecture/tolerances/`.
+4. Une exception permanente propre au projet : `tests/Feature/Architecture/exceptions-projet.php` (`return ['<regle>' => ['<chemin>' => '<raison>']];`), jamais une modification de la copie.
+5. Reporter dans le seed projet `.agents/templates/backend/action.php` le modèle non statique et ajouter `exception.php` (seeds déjà présents : non écrasés, voir « Nuance sur les seeds » ci-dessus).
 
 ## `workflow.config.json`
 

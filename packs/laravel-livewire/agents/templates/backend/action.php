@@ -4,7 +4,9 @@ namespace App\Actions\<Domaine>;
 
 class <Nom>Action
 {
-    public static function execute(<Param> $param): <Return>
+    public function __construct(private <Service> $service) {}
+
+    public function execute(<Param> $param): <Return>
     {
         //
     }

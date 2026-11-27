@@ -19,7 +19,8 @@
 | J'ai besoin de… | Template | Agent concerné |
 |---|---|---|
 | Un DTO typé | `templates/backend/dto.php` | `@dev` |
-| Une Action statique | `templates/backend/action.php` | `@dev` |
+| Une Action (non statique, dépendances par le constructeur) | `templates/backend/action.php` | `@dev` |
+| Une exception métier (un refus signalé à l'appelant, jamais un tableau de statut) | `templates/backend/exception.php` | `@dev` |
 | Un Event | `templates/backend/event.php` | `@dev` |
 | Un Listener | `templates/backend/listener.php` | `@dev` |
 | Un export Excel/CSV (si `maatwebsite/excel` installé) | `templates/backend/excel-export.php` | `@dev` |
@@ -30,8 +31,9 @@
 |---|---|---|
 | Un test unitaire (règles métier pures, sans DB) | `templates/tests/unit-test.php` | `@test` |
 | Un test d'intégration (DB, RefreshDatabase, seed) | `templates/tests/test.php` | `@test` |
-| La base des tests d'architecture (exceptions, tolérances, cliquet) | `templates/tests/architecture/ArchitectureTestCase.php` | Build |
 | Un test d'architecture (une convention devenue test) | `templates/tests/architecture/RegleTest.php` | Build, `@dev` (refacto) |
+
+> La base des tests d'architecture (`tests/Feature/Architecture/ArchitectureTestCase.php`) et les règles génériques (`tests/Feature/Architecture/Kit/`) sont des **copies tenues par le kit** : posées par `workflow-kit sync`, jamais modifiées dans le projet. Voir `.agents/test-rules.md` § « Tests d'architecture ».
 
 ## Feature
 
@@ -49,3 +51,4 @@
 | `<Model>` | Modèle Eloquent | `MonModel` |
 | `<Param>` | Type du paramètre d'Action | `MonModel`, `int` |
 | `<Return>` | Type de retour d'Action | `array`, `void`, `bool` |
+| `<cas>` | Nom du cas de refus (fabrique de l'exception) | `dejaFinalise`, `horsPerimetre` |

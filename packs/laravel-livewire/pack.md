@@ -24,6 +24,11 @@
 | `skills/recette-navigateur/SKILL.md` + `assets/` | Skill de recette jouée par l'agent dans le navigateur (captures, constats, PDF) ; gabarit HTML du PDF et script de rognage des captures |
 | `skills/migrate-fresh/SKILL.md` | Skill de reset DB dev |
 
+| Copie tenue par le kit (`copies/`, posée au même chemin, écrasée à chaque sync) | Rôle |
+|---|---|
+| `tests/Feature/Architecture/ArchitectureTestCase.php` | Base des tests d'architecture : exceptions (du test et `exceptions-projet.php`), tolérances à cliquet, message de correction |
+| `tests/Feature/Architecture/Kit/StructureTest.php` | Règles génériques de structure : statut en tableau, transaction manuelle, Action statique, service locator, Job utilisé comme service, taille de fichier, Calculator et Query qui écrivent |
+
 | Commande (`commands/`) | Rôle |
 |---|---|
 | `recette.md` | `/recette` : charge la skill `recette` (générée dans `.opencode/command/` et `.claude/commands/`) |

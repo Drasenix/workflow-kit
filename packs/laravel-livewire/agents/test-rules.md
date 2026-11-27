@@ -46,8 +46,10 @@ Si la couverture existe déjà, ne pas réécrire et marquer `⏭️ déjà couv
 
 Une convention du projet devient un **test** quand elle est mécanisable : il dit non avant la revue. Ils testent la **structure** du code (où une valeur s'écrit, quelle couche appelle quoi), pas un comportement.
 
-- **Où** : `tests/Feature/Architecture/`, une classe par règle ou par famille, qui étend `ArchitectureTestCase` (templates : `templates/tests/architecture/`).
+- **Où** : `tests/Feature/Architecture/`, une classe par règle ou par famille, qui étend `ArchitectureTestCase` (template : `templates/tests/architecture/RegleTest.php`).
+- **Copies tenues par le kit** : `ArchitectureTestCase.php` et les règles génériques de `tests/Feature/Architecture/Kit/` (structure : statut en tableau, transaction manuelle, Action statique, service locator, Job utilisé comme service, taille de fichier, Calculator et Query qui écrivent) sont posées par `workflow-kit sync` et réécrites à chaque synchronisation : ne jamais les modifier dans le projet. Leurs tolérances restent au projet ; une exception permanente propre au projet va dans `exceptions-projet.php`, à créer au besoin à côté de la base dans `tests/Feature/Architecture/` (`return ['<regle>' => ['<chemin>' => '<raison>']];`).
 - **Ligne `Règle :`** : le docblock de chaque méthode commence par `Règle : <la convention en une phrase>`. Le sommaire des règles est généré à partir de ces lignes.
+- **Correction** : `assertRegleRespectee(…, correction: '<ce qu'il faut faire à la place, avec le modèle à copier>')`. Le message d'échec guide l'agent vers la bonne forme ; « interdit » seul ne suffit pas.
 - **Listes calculées, jamais recopiées** : un littéral interdit vient de sa source de vérité (table de référence en base de test, cas d'une énumération, dossiers), lue par le test à chaque exécution.
 - **Exceptions** : choix assumés et permanents, écrits dans le test avec leur raison (`'app/<Dossier>/' => '<raison>'`).
 - **Tolérances** : la dette existante, dans `tests/Feature/Architecture/tolerances/<regle>.json` (fichier => occurrences). Le test échoue si un fichier dépasse sa tolérance, **et** si un fichier assaini ne la baisse pas (cliquet). Une tolérance ne remonte jamais : `node workflow-kit/bin/workflow-kit.mjs check-meta --tolerances` compare à la branche principale.

@@ -47,6 +47,7 @@ workflow-kit/
 │  ├─ commands/{consult-workflow,raffiner,realiser,cadrage-po,cloturer-chantier,analyse-flashback,doc,compacter-feature,controle-livraison,retouche,spec-pdf-feature,cloturer-recette}.md
 │  └─ templates/{feature,feature-cloturee}.md
 ├─ packs/<stack>/agents/**       -> .agents/     (SEEDS TECHNO)
+├─ packs/<stack>/copies/**       -> <projet>/  (COPIES TENUES PAR LE KIT, écrasées à chaque sync : tests d'architecture génériques…)
 ├─ packs/<stack>/commands/*.md   -> .opencode/command/, .claude/commands/  (commandes des skills techno, générées)
 │  └─ laravel-livewire/  _blank/
 └─ project/
