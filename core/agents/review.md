@@ -45,7 +45,7 @@ Pour chaque point : ✅ ou ❌ avec explication. Points 1, 2, 3 et 9 : un ✅ ou
 
 ### 4. Conventions
 - [ ] Conventions du projet (`.agents/conventions.md`) et frontend selon le périmètre ?
-- [ ] Tests d'architecture verts (run ciblé) ? Convention nouvelle : son test, ou « Non mécanisable » et sa raison ?
+- [ ] Tests d'architecture verts (run ciblé), ligne « Tolérances » du plan tenue, bilan dans le verdict ? Convention nouvelle : son test, ou « Non mécanisable » et sa raison ?
 - [ ] Défaut corrigé à empreinte mécanique (littéral, appel, emplacement) → `### Décisions techniques` : « verrouiller par un test : <règle> ». Jamais par précaution.
 - [ ] Code conforme au template correspondant (`.agents/templates-index.md`) ?
 - [ ] Logique métier dans la bonne couche (pas dans un contrôleur ni un composant UI), DTO plutôt que tableaux bruts ?

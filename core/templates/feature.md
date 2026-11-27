@@ -166,6 +166,8 @@ THEN
 |---------|------|------|-----------|
 | | | | |
 
+Tolérances : <sortie de `node workflow-kit/bin/workflow-kit.mjs tolerances <fichiers modifiés>`>
+
 ### Code existant réutilisé
 
 | Utilitaire ou décision déjà codée | Fichier | Utilisation (« appel » ou « extraction » en tête) |
@@ -243,6 +245,7 @@ Recherches (à `<commit>`) : `<terme>` → <N> ; … (ou `Aucune`)
 
 > Verdict, tests relancés, sondes. Trace de revue : retirée à la compaction (ce qui a mal tourné va dans « Problèmes détectés »).
 
+- Tolérances (<sortie de `workflow-kit tolerances --bilan`>)
 - 
 
 ### Problèmes détectés

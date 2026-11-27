@@ -12,6 +12,7 @@ import { resolveRuntimes, sync } from '../lib/sync.mjs';
 import { verify } from '../lib/verify.mjs';
 import { prepareWorktree } from '../lib/worktree.mjs';
 import { writeSommaireRegles } from '../lib/regles.mjs';
+import { ligneBilanTolerances, ligneTolerancesPlan } from '../lib/tolerances.mjs';
 
 const kitRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -29,6 +30,9 @@ const HELP = `workflow-kit <commande> [options]
   regles             Genere .agents/regles-architecture.md depuis les lignes "Regle :" des tests d'architecture
   recherches <terme...>  Ligne "Recherches" du plan (etape 3) : chaque terme cherche litteralement au commit courant,
                      fichiers suivis hors .agents/ et tests/ (nombre de lignes) ; sans terme : Aucune
+  tolerances <fichier...>  Ligne "Tolerances" du plan (etape 3) : fichiers cites toleres par un test d'architecture,
+                     regles, comptes et nombre de lignes ; --bilan : variation par regle depuis le depart de la branche
+                     (merge-base avec --base, defaut master ou main), a coller dans la revue (etape 5)
   derive             Derive de la spec (etape 0 de /raffiner) : commits d'autres auteurs a relire depuis votre dernier passage
                      --regles <SP-…|prefixe> : tests garants de ces regles ; --fichiers <chemins> : ces fichiers ;
                      --auteur <email> : vous (defaut : git config user.email). Informatif, code 0
@@ -74,6 +78,7 @@ const { values, positionals } = parseArgs({
     fichiers: { type: 'string', multiple: true },
     auteur: { type: 'string', multiple: true },
     teardown: { type: 'string' },
+    bilan: { type: 'boolean', default: false },
     help: { type: 'boolean', short: 'h', default: false },
   },
 });
@@ -107,6 +112,10 @@ try {
     const root = projectRoot(values.target || process.cwd());
     if (!root) throw new Error('recherches : aucun dossier .agents/ trouve depuis le dossier courant (ou --target)');
     console.log(ligneRecherches(root, positionals.slice(1)));
+  } else if (command === 'tolerances') {
+    const root = projectRoot(values.target || process.cwd());
+    if (!root) throw new Error('tolerances : aucun dossier .agents/ trouve depuis le dossier courant (ou --target)');
+    console.log(values.bilan ? ligneBilanTolerances(root, values.base ?? null) : ligneTolerancesPlan(root, positionals.slice(1)));
   } else if (command === 'derive') {
     const root = projectRoot(values.target || process.cwd());
     if (!root) throw new Error('derive : aucun dossier .agents/ trouve depuis le dossier courant (ou --target)');
